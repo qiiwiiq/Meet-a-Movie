@@ -1,18 +1,44 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <Quote :quoteObj="quoteObj" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import movieQuote from "popular-movie-quotes"; // https://github.com/NikhilNamal17/popular-movie-quotes
+import Quote from "@/components/quote";
+import { apiGetFilm } from "@/api/api.js";
 
 export default {
-  name: "Home",
   components: {
-    HelloWorld
-  }
+    Quote,
+  },
+  data() {
+    return {
+      quoteObj: undefined,
+      movieObj: undefined,
+    };
+  },
+  mounted() {
+    this.getQuote();
+  },
+  watch: {
+    quoteObj: {
+      handler: function(obj) {
+        if (obj) {
+          this.getFilm(obj.movie);
+        }
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    getQuote() {
+      this.quoteObj = movieQuote.getSomeRandom(1)[0];
+    },
+    getFilm(movie) {
+      apiGetFilm(movie).then((res) => (this.movieObj = res.data));
+    },
+  },
 };
 </script>
