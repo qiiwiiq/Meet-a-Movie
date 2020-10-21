@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" elevate-on-scroll>
+    <v-app-bar app color="black" dark elevate-on-scroll>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -19,19 +19,40 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main
+      :style="{
+        backgroundImage:
+          'url(' +
+          movieObj.poster +
+          '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
+      }"
+      class="main"
+    >
       <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "App",
+  computed: {
+    ...mapState(["movieObj"])
+  },
   methods: {
     goToMyCollections() {
       this.$router.push({ name: "MyCollections" }).catch(() => {});
-    },
-  },
+    }
+  }
 };
 </script>
+
+<style lang="scss" scoped>
+.main {
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: soft-light;
+}
+</style>
