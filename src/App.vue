@@ -13,9 +13,13 @@
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn icon @click="goToMyCollections">
-        <v-icon>mdi-heart-outline</v-icon>
+      <v-btn text small @click="getQuote">
+        <v-icon class="mr-1">mdi-autorenew</v-icon>
+        New Quote
+      </v-btn>
+      <v-btn text small @click="goToMyCollections">
+        <v-icon class="mr-1">mdi-heart-outline</v-icon>
+        Collections
       </v-btn>
     </v-app-bar>
 
@@ -42,6 +46,9 @@ export default {
     ...mapState(["movieObj"])
   },
   methods: {
+    getQuote() {
+      this.$store.dispatch("getQuote");
+    },
     goToMyCollections() {
       this.$router.push({ name: "MyCollections" }).catch(() => {});
     }

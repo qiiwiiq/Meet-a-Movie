@@ -14,10 +14,8 @@
 </template>
 
 <script>
-import movieQuote from "popular-movie-quotes"; // https://github.com/NikhilNamal17/popular-movie-quotes
 import Quote from "@/components/quote";
 import Movie from "@/components/movie";
-import { apiGetFilm } from "@/api/api.js";
 import { mapState } from "vuex";
 
 export default {
@@ -31,30 +29,10 @@ export default {
     };
   },
   mounted() {
-    this.getQuote();
-  },
-  watch: {
-    quoteObj: {
-      handler: function(obj) {
-        if (obj) {
-          this.getFilm(obj.movie);
-        }
-      },
-      deep: true
-    }
+    this.$store.dispatch("getQuote");
   },
   computed: {
     ...mapState(["quoteObj", "movieObj"])
-  },
-  methods: {
-    getQuote() {
-      this.$store.commit("setQuoteObj", movieQuote.getSomeRandom(1)[0]);
-    },
-    getFilm(movie) {
-      apiGetFilm(movie).then(res => {
-        this.$store.commit("setMovieObj", res.data);
-      });
-    }
   }
 };
 </script>
