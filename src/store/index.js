@@ -11,6 +11,7 @@ export default new Vuex.Store({
     movieObj: {
       poster: "",
     },
+    isIntroShown: false,
   },
   mutations: {
     setQuoteObj(state, payload) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     setMovieObj(state, payload) {
       state.movieObj = payload;
     },
+    updateIntroShownFlag(state, payload) {
+      state.isIntroShown = payload;
+    },
   },
   actions: {
     getQuote({ commit, dispatch, state }) {
@@ -26,6 +30,7 @@ export default new Vuex.Store({
       state.movieObj = {
         poster: "",
       };
+      commit("updateIntroShownFlag", false);
       commit("setQuoteObj", movieQuote.getSomeRandom(1)[0]);
       if (state.quoteObj) {
         dispatch("getFilm", state.quoteObj.movie);

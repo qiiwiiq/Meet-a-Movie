@@ -2,10 +2,10 @@
   <div class="d-flex justify-center">
     <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
       <Quote :quoteObj="quoteObj" />
-      <a @click="isIntroShown = true">Check it!</a>
+      <a @click="enterMovieIntro">Check it!</a>
     </div>
     <div v-if="isIntroShown" class="movie-intro">
-      <v-btn icon @click="isIntroShown = false">
+      <v-btn icon @click="leaveMovieIntro">
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>
       <Movie :movieObj="movieObj" />
@@ -23,16 +23,19 @@ export default {
     Quote,
     Movie
   },
-  data() {
-    return {
-      isIntroShown: false
-    };
-  },
   mounted() {
     this.$store.dispatch("getQuote");
   },
   computed: {
-    ...mapState(["quoteObj", "movieObj"])
+    ...mapState(["quoteObj", "movieObj", "isIntroShown"])
+  },
+  methods: {
+    enterMovieIntro() {
+      this.$store.commit("updateIntroShownFlag", true);
+    },
+    leaveMovieIntro() {
+      this.$store.commit("updateIntroShownFlag", false);
+    }
   }
 };
 </script>
