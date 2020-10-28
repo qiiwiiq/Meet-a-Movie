@@ -12,12 +12,12 @@
             <span class="length pl-2">{{ movieObj.length }}</span>
           </div>
         </div>
-        <div class="text-center">
+        <div class="d-flex flex-column align-center">
           <div class="rating">
             <div class="rating-bg"></div>
             <div class="rating-text">{{ movieObj.rating }}</div>
           </div>
-          <div class="rating_votes">{{ movieObj.rating_votes }}</div>
+          <div class="rating_votes">{{ formatThousands(movieObj.rating_votes) }} votes</div>
         </div>
       </div>
       <div class="cast my-2">{{ actors }}</div>
@@ -40,6 +40,11 @@ export default {
         return "";
       }
     }
+  },
+  methods: {
+    formatThousands(str) {
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
   }
 };
 </script>
@@ -47,9 +52,11 @@ export default {
 <style lang="scss" scoped>
 .poster {
   width: 40%;
+  height: 75vh;
   
   & img {
     width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 }
@@ -78,6 +85,7 @@ export default {
       background-color: yellow;
       width: 50px;
       height: 50px;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
       -webkit-clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
     }
 

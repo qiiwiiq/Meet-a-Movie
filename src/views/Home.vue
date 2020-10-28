@@ -1,8 +1,31 @@
 <template>
-  <div class="d-flex justify-center">
+  <div
+    :style="{
+      backgroundImage:
+        'url(' +
+        movieObj.poster +
+        '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
+    }"
+    class="main-page d-flex justify-center"
+  >
     <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
       <Quote :quoteObj="quoteObj" />
-      <a @click="enterMovieIntro">Check it!</a>
+      <div>
+        <v-btn
+          icon
+          class="mr-2"
+          @click="enterMovieIntro"
+        >
+          <v-icon>mdi-heart-outline</v-icon>
+        </v-btn>
+        <v-btn
+          depressed
+          class="text-none"
+          @click="enterMovieIntro"
+        >
+          Check it!
+        </v-btn>
+      </div>
     </div>
     <div v-if="isIntroShown" class="movie-intro">
       <v-btn icon @click="leaveMovieIntro">
@@ -41,9 +64,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-page {
+  height: 100%;
+  background-size: cover;
+  background-position: bottom 50px;
+  background-blend-mode: soft-light;
+}
+
 .card-quote {
   min-width: 300px;
   max-width: 80%;
+  height: fit-content;
   margin-top: 10vh;
   padding: 25px 40px 25px 30px;
   border: 2px solid #000;

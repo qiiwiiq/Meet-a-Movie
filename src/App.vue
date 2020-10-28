@@ -17,21 +17,13 @@
         <v-icon class="mr-1">mdi-autorenew</v-icon>
         New Quote
       </v-btn>
-      <v-btn text small @click="goToMyCollections">
+      <v-btn text small href="/my-collections">
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
-        Collections
+        Favorites
       </v-btn>
     </v-app-bar>
 
-    <v-main
-      :style="{
-        backgroundImage:
-          'url(' +
-          movieObj.poster +
-          '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
-      }"
-      class="main"
-    >
+    <v-main>
       <router-view />
     </v-main>
   </v-app>
@@ -47,19 +39,11 @@ export default {
   },
   methods: {
     getQuote() {
+      if (this.$router.currentRoute.name !== 'Home') {
+        this.$router.push({ name: "Home" }).catch(() => {});
+      }
       this.$store.dispatch("getQuote");
-    },
-    goToMyCollections() {
-      this.$router.push({ name: "MyCollections" }).catch(() => {});
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.main {
-  background-size: cover;
-  background-position: center;
-  background-blend-mode: soft-light;
-}
-</style>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="quoteObj" class="d-flex flex-column align-end">
-    <div class="quote pb-2">
+    <div class="quote align-self-center pb-2">
       <v-icon large class="quote-mark-pre">
         mdi-format-quote-open
       </v-icon>
