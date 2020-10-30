@@ -2,9 +2,7 @@
   <div
     :style="{
       backgroundImage:
-        'url(' +
-        movieObj.poster +
-        '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
+        'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
     }"
     class="main-page d-flex justify-center"
   >
@@ -50,7 +48,14 @@ export default {
     this.$store.dispatch("getQuote");
   },
   computed: {
-    ...mapState(["quoteObj", "movieObj", "isIntroShown"])
+    ...mapState(["quoteObj", "movieObj", "isIntroShown"]),
+    bgImage: function() {
+      if (this.movieObj.poster) {
+        return this.movieObj.poster;
+      } else {
+        return 'url("../assets/bg.jpg")';
+      }
+    }
   },
   methods: {
     enterMovieIntro() {
@@ -67,7 +72,7 @@ export default {
 .main-page {
   height: 100%;
   background-size: cover;
-  background-position: bottom 50px;
+  background-position: 50% 80%;
   background-blend-mode: soft-light;
 }
 

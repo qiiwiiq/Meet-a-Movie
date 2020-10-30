@@ -26,7 +26,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="main">
       <router-view />
     </v-main>
   </v-app>
@@ -50,3 +50,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.main {
+  background-image: url('./assets/bg.jpg');
+  background-size: cover;
+}
+</style>
