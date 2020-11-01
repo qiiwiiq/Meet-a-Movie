@@ -21,6 +21,9 @@
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
         Favorites
       </v-btn>
+      <v-btn outlined small>
+        Sign up / Login
+      </v-btn>
     </v-app-bar>
 
     <v-main>
