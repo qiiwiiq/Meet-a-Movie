@@ -7,13 +7,32 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    profile: {
+      fbId: '',
+      name: '',
+      email: ''
+    },
     quoteObj: undefined,
     movieObj: {
-      poster: "",
-    },
+      poster: '',
+    }, 
     isIntroShown: false,
   },
   mutations: {
+    setProfile(state, payload) {
+      let profile = state.profile;
+      switch(payload.loginMethod) {
+        case 'fb':
+          profile.fbId = payload.id;
+          profile.name = payload.name;
+          profile.email = payload.email;
+          break;
+        default:
+          profile.fbId = '';
+          profile.name = '';
+          profile.email = '';
+      }
+    },
     setQuoteObj(state, payload) {
       state.quoteObj = payload;
     },
@@ -26,10 +45,8 @@ export default new Vuex.Store({
   },
   actions: {
     getQuote({ commit, dispatch, state }) {
-      state.quoteObj = undefined;
-      state.movieObj = {
-        poster: "",
-      };
+      commit("setQuoteObj", undefined);
+      commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
       commit("setQuoteObj", movieQuote.getSomeRandom(1)[0]);
       if (state.quoteObj) {

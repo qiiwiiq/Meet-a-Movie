@@ -4,9 +4,9 @@
       <img :src="movieObj.poster" />
     </div>
     <div class="movie-info">
-      <div class="d-flex justify-space-between align-center">
+      <div class="d-flex justify-space-between align-center mr-8">
         <div>
-          <div class="movie-title">{{ movieObj.title }}</div>
+          <div class="movie-title mb-2">{{ movieObj.title }}</div>
           <div>
             <span class="year pr-2">{{ movieObj.year }}</span>
             <span class="length pl-2">{{ movieObj.length }}</span>
@@ -17,12 +17,12 @@
             <div class="rating-bg"></div>
             <div class="rating-text">{{ movieObj.rating }}</div>
           </div>
-          <div class="rating_votes">{{ formatThousands(movieObj.rating_votes) }} votes</div>
+          <div class="rating_votes text-center">{{ formatThousands(movieObj.rating_votes) }} votes</div>
         </div>
       </div>
-      <div class="cast my-2">{{ actors }}</div>
-      <div class="plot mb-4">{{ movieObj.plot }}</div>
-      <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
+      <div class="cast my-2 mr-8">{{ actors }}</div>
+      <div class="plot mb-4 mr-8">{{ movieObj.plot }}</div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     formatThousands(str) {
+      if (!str) return;
       return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
   }
@@ -62,11 +63,12 @@ export default {
 }
 
 .movie-info {
-  width: 45%;
+  width: 50%;
 
   .movie-title {
     font-size: 24px;
     font-weight: 700;
+    line-height: 30px;
     text-transform: uppercase;
   }
 
