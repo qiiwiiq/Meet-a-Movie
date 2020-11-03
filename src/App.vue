@@ -22,7 +22,7 @@
         Favorites
       </v-btn>
       <v-btn
-        v-if="profile.name === ''"
+        v-if="user.name === ''"
         depressed
         small
         @click="showLoginDialog = true"
@@ -33,11 +33,10 @@
         v-else
         icon
       >
-        <!-- <img
-          v-if="profilePic"
-          :src="profilePic"
-        /> -->
-        <v-icon>mdi-account-circle</v-icon>
+        <div v-if="user.photoURL" class="user-photo">
+          <img :src="user.photoURL" />
+        </div>
+        <v-icon v-else>mdi-account-circle</v-icon>
       </v-btn>
     </v-app-bar>
 
@@ -50,7 +49,7 @@
       max-width="290"
     >
       <Login
-        :closeLoginDialog="showLoginDialog = false"
+        @closeLoginDialog="showLoginDialog = false"
       />
     </v-dialog>
   </v-app>
@@ -71,30 +70,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["profile", "movieObj"]),
-    profilePic () {
-      let profilePic = '';
-      if (this.profile.fbId) {
-        profilePic = `https://graph.facebook.com/${this.profile.fbId}/picture?width=300`
-      }
-      return profilePic;
-    }
-  },
-  mounted() {
-    window.fbAsyncInit= function() {
-      this.FB.init({
-        appId      : '440698083578526',
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v8.0'
-      });
-      this.FB.AppEvents.logPageView();
-
-      // Get FB Login Status
-      this.FB.getLoginStatus( response => {
-        console.log('res', response);
-      })
-    };
+    ...mapState(["user", "movieObj"]),
   },
   methods: {
     getQuote() {
@@ -111,6 +87,17 @@ export default {
 .main {
   background-image: url('./assets/bg.jpg');
   background-size: cover;
+}
+
+.user-photo {
+  width: 30px;
+  height: 30px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 }
 </style>
 

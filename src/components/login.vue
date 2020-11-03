@@ -12,6 +12,7 @@
       dark
       color="#ea4335"
       class="btn-login ma-2 text-none"
+      @click="loginGoogle"
     >
       <v-icon left>mdi-google</v-icon> Login with GOOGLE
     </v-btn>
@@ -19,26 +20,47 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import "firebase/auth";
+
 export default {
   methods: {
     loginFB () {
-      let vm = this;
-      window.FB.login(function (res) {
-        console.log('FB login', res);
-        vm.getFBProfile();
-      }, {
-        scope: 'email, public_profile',
-        return_scopes: true
+      const vm = this;
+      const providerF = new firebase.auth.FacebookAuthProvider();
+      firebase.auth().signInWithPopup(providerF).then(function(result) {
+        console.log(result);
+        const user = result.user;
+        let payload = {
+          token: result.credential.accessToken,
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        };
+        vm.$store.commit("setUser", payload);
+        vm.$emit("closeLoginDialog");
+      }).catch(function(error) {
+        console.log(error);
       });
     },
-    getFBProfile () {
-      window.FB.api('/me?fields=name,id,email', 
-      (res) => {
-        res.loginMethod = 'fb';
-        this.$store.commit("setProfile", res);
-        this.$emit("closeLoginDialog");
+    loginGoogle () {
+      const vm = this;
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        console.log(result);
+        const user = result.user;
+        let payload = {
+          token: result.credential.accessToken,
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        };
+        vm.$store.commit("setUser", payload);
+        vm.$emit("closeLoginDialog");
+      }).catch(function(error) {
+        console.log(error);
       });
-    },
+    }
   }
 }
 </script>

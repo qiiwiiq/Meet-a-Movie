@@ -7,10 +7,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    profile: {
-      fbId: '',
+    user: {
+      token: '',
       name: '',
-      email: ''
+      email: '',
+      photoURL: ''
     },
     quoteObj: undefined,
     movieObj: {
@@ -19,32 +20,25 @@ export default new Vuex.Store({
     isIntroShown: false,
   },
   mutations: {
-    setProfile(state, payload) {
-      let profile = state.profile;
-      switch(payload.loginMethod) {
-        case 'fb':
-          profile.fbId = payload.id;
-          profile.name = payload.name;
-          profile.email = payload.email;
-          break;
-        default:
-          profile.fbId = '';
-          profile.name = '';
-          profile.email = '';
-      }
+    setUser (state, payload) {
+      let user = state.user;
+      user.token = payload.token;
+      user.name = payload.name;
+      user.email = payload.email;
+      user.photoURL = payload.photoURL;
     },
-    setQuoteObj(state, payload) {
+    setQuoteObj (state, payload) {
       state.quoteObj = payload;
     },
-    setMovieObj(state, payload) {
+    setMovieObj (state, payload) {
       state.movieObj = payload;
     },
-    updateIntroShownFlag(state, payload) {
+    updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
     },
   },
   actions: {
-    getQuote({ commit, dispatch, state }) {
+    getQuote ({ commit, dispatch, state }) {
       commit("setQuoteObj", undefined);
       commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
@@ -53,7 +47,7 @@ export default new Vuex.Store({
         dispatch("getFilm", state.quoteObj.movie);
       }
     },
-    getFilm({ commit }, movie) {
+    getFilm ({ commit }, movie) {
       apiGetFilm(movie).then((res) => {
         commit("setMovieObj", res.data);
       });
