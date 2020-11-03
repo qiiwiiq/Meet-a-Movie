@@ -32,12 +32,19 @@ export default {
         console.log(result);
         const user = result.user;
         let payload = {
+          loginMethod: 'fb',
           token: result.credential.accessToken,
           name: user.displayName,
           email: user.email,
           photoURL: user.photoURL
         };
+        vm.$cookies.set('loginMethod', 'fb');
+        vm.$cookies.set('token', result.credential.accessToken);
+        vm.$cookies.set('name', user.displayName);
+        vm.$cookies.set('email', user.email);
+        vm.$cookies.set('photoURL', user.photoURL);
         vm.$store.commit("setUser", payload);
+        vm.$store.commit("setLoginStatus", true);
         vm.$emit("closeLoginDialog");
       }).catch(function(error) {
         console.log(error);
@@ -50,12 +57,19 @@ export default {
         console.log(result);
         const user = result.user;
         let payload = {
+          loginMethod: 'google',
           token: result.credential.accessToken,
           name: user.displayName,
           email: user.email,
           photoURL: user.photoURL
         };
+        vm.$cookies.set('loginMethod', 'google');
+        vm.$cookies.set('token', result.credential.accessToken);
+        vm.$cookies.set('name', user.displayName);
+        vm.$cookies.set('email', user.email);
+        vm.$cookies.set('photoURL', user.photoURL);
         vm.$store.commit("setUser", payload);
+        vm.$store.commit("setLoginStatus", true);
         vm.$emit("closeLoginDialog");
       }).catch(function(error) {
         console.log(error);

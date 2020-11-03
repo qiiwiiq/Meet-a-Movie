@@ -7,7 +7,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    isLogin: false,
     user: {
+      loginMethod: '',
       token: '',
       name: '',
       email: '',
@@ -20,8 +22,11 @@ export default new Vuex.Store({
     isIntroShown: false,
   },
   mutations: {
-    setUser (state, payload) {
-      let user = state.user;
+    setLoginStatus (state, payload) {
+      state.isLogin = payload;
+    },
+    setUser ({ user }, payload) {
+      user.loginMethod = payload.loginMethod;
       user.token = payload.token;
       user.name = payload.name;
       user.email = payload.email;

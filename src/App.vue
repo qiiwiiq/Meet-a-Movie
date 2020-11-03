@@ -22,7 +22,7 @@
         Favorites
       </v-btn>
       <v-btn
-        v-if="user.name === ''"
+        v-if="!isLogin"
         depressed
         small
         @click="showLoginDialog = true"
@@ -32,6 +32,7 @@
       <v-btn
         v-else
         icon
+        @click="signOut"
       >
         <div v-if="user.photoURL" class="user-photo">
           <img :src="user.photoURL" />
@@ -58,6 +59,8 @@
 <script>
 import Login from "@/components/login";
 import { mapState } from "vuex";
+import firebase from 'firebase/app';
+import "firebase/auth";
 
 export default {
   name: "App",
@@ -70,14 +73,49 @@ export default {
     }
   },
   computed: {
-    ...mapState(["user", "movieObj"]),
+    ...mapState(["isLogin", "user", "movieObj"]),
+  },
+  mounted() {
+    this.initUserFromCookies();
   },
   methods: {
+    initUserFromCookies() {
+      const loginMethod = this.$cookies.get('loginMethod');
+      const token = this.$cookies.get('token');
+      const name = this.$cookies.get('name');
+      const email = this.$cookies.get('email');
+      const photoURL = this.$cookies.get('photoURL');
+      const user = {
+        loginMethod,
+        token,
+        name,
+        email,
+        photoURL
+      };
+      this.$store.commit("setUser", user);
+      if (user.name) {
+        this.$store.commit("setLoginStatus", true);
+      } else {
+        this.$store.commit("setLoginStatus", false);
+      }
+    },
     getQuote() {
       if (this.$router.currentRoute.name !== 'Home') {
         this.$router.push({ name: "Home" }).catch(() => {});
       }
       this.$store.dispatch("getQuote");
+    },
+    signOut() {
+      firebase.auth().signOut();
+      let payload = {
+        loginMethod: '',
+        token: '',
+        name: '',
+        email: '',
+        photoURL: ''
+      };
+      this.$store.commit("setUser", payload);
+      this.$store.commit("setLoginStatus", false);
     }
   }
 };
