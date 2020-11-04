@@ -35,7 +35,7 @@
         bottom
         offset-y
         open-on-hover
-        close-delay="500"
+        close-delay="300"
         nudge-bottom="4"
         content-class="user-menu"
       >
@@ -60,7 +60,7 @@
           </v-list-item>
           <v-list-item
             class="menu-list-item"
-            @click="signOut"
+            @click="signOutDialogOpened = true"
           >
             <v-list-item-title class="menu-list-item-text">Sign Out</v-list-item-title>
           </v-list-item>
@@ -71,6 +71,34 @@
     <v-main class="main">
       <router-view />
     </v-main>
+
+    <v-dialog
+      v-model="signOutDialogOpened"
+      width="400"
+    >
+      <v-card>
+        <v-card-text class="pt-6">
+          Are you sure to leave?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red"
+            text
+            @click="signOutDialogOpened = false"
+          >
+            NO
+          </v-btn>
+          <v-btn
+            color="red"
+            text
+            @click="signOut"
+          >
+            YES
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -83,6 +111,11 @@ import "firebase/auth";
 export default {
   name: "App",
   mixins: [mixin],
+  data() {
+    return {
+      signOutDialogOpened: false
+    }
+  },
   computed: {
     ...mapState(["isLogin", "user", "movieObj"]),
   },
@@ -158,7 +191,7 @@ export default {
   }
   
   &-text {
-    font-size: 12px;
+    font-size: 12px !important;
     text-transform: uppercase;
   }
 }
