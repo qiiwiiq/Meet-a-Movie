@@ -2,7 +2,7 @@
   <div
     :style="{
       backgroundImage:
-        'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 70%, #999 100%)'
+        'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)'
     }"
     class="main-page d-flex justify-center"
   >
@@ -68,7 +68,7 @@ export default {
   },
   data() {
     return {
-      bgImage: 'url("../assets/bg.jpg")',
+      bgImage: '',
       isCollected: false
     }
   },
@@ -84,7 +84,7 @@ export default {
         if (this.movieObj.poster) {
           this.bgImage = this.movieObj.poster;
         } else {
-          this.bgImage = 'url("../assets/bg.jpg")';
+          this.bgImage = '';
         }
       },
       deep: true

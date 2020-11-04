@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="black" dark elevate-on-scroll>
+    <v-app-bar app dark class="navbar">
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -13,11 +13,11 @@
       </div>
 
       <v-spacer></v-spacer>
-      <v-btn text small @click="getQuote">
+      <v-btn text small class="mr-1" @click="getQuote">
         <v-icon class="mr-1">mdi-autorenew</v-icon>
         New Quote
       </v-btn>
-      <v-btn text small href="/my-collections">
+      <v-btn text small class="mr-1" href="/my-collections">
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
         Favorites
       </v-btn>
@@ -32,11 +32,12 @@
       <v-btn
         v-else
         icon
+        class="mr-1"
         @click="signOut"
       >
-        <div v-if="user.photoURL" class="user-photo">
+        <v-avatar v-if="user.photoURL" size="36">
           <img :src="user.photoURL" />
-        </div>
+        </v-avatar>
         <v-icon v-else>mdi-account-circle</v-icon>
       </v-btn>
     </v-app-bar>
@@ -122,20 +123,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.navbar {
+  background-image: linear-gradient(#111 0%, #333 70%, #444 80%, #555 90%, #444 100%);
+}
+
 .main {
   background-image: url('./assets/bg.jpg');
   background-size: cover;
-}
-
-.user-photo {
-  width: 30px;
-  height: 30px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
 }
 </style>
 
