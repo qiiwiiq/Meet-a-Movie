@@ -4,7 +4,7 @@
       backgroundImage:
         'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)'
     }"
-    class="main-page d-flex justify-center"
+    class="page-home d-flex justify-center"
   >
     <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
       <Quote :quoteObj="quoteObj" />
@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-page {
+.page-home {
   height: 100%;
   background-size: cover;
   background-position: 50% 80%;
@@ -115,8 +115,8 @@ export default {
   height: fit-content;
   margin-top: 10vh;
   padding: 25px 30px;
-  border: 2px solid #000;
-  outline: 1px solid #333;
+  border: 2px solid #555;
+  outline: 1px solid #888;
   outline-offset: -10px;
   box-shadow: 0 3px 10px rgba(#000, 0.4);
   background-color: rgba(255, 255, 255, 0.7);

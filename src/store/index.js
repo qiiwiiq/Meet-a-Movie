@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     isLogin: false,
     user: {
-      loginMethod: '',
+      signInMethod: '',
       token: '',
       name: '',
       email: '',
@@ -26,7 +26,7 @@ export default new Vuex.Store({
       state.isLogin = payload;
     },
     setUser ({ user }, payload) {
-      user.loginMethod = payload.loginMethod;
+      user.signInMethod = payload.signInMethod;
       user.token = payload.token;
       user.name = payload.name;
       user.email = payload.email;

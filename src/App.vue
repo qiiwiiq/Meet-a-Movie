@@ -23,11 +23,12 @@
       </v-btn>
       <v-btn
         v-if="!isLogin"
-        depressed
+        outlined
         small
-        @click="showLoginDialog = true"
+        class="mx-1"
+        href="/sign-in"
       >
-        Sign up / Login
+        Sign in
       </v-btn>
       <v-btn
         v-else
@@ -45,34 +46,18 @@
     <v-main class="main">
       <router-view />
     </v-main>
-
-    <v-dialog
-      v-model="showLoginDialog"
-      max-width="290"
-    >
-      <Login
-        @closeLoginDialog="showLoginDialog = false"
-      />
-    </v-dialog>
   </v-app>
 </template>
 
 <script>
-import Login from "@/components/login";
 import { mapState } from "vuex";
+import { mixin } from './utils/mixin';
 import firebase from 'firebase/app';
 import "firebase/auth";
 
 export default {
   name: "App",
-  components: {
-    Login
-  },
-  data() {
-    return {
-      showLoginDialog: false
-    }
-  },
+  mixins: [mixin],
   computed: {
     ...mapState(["isLogin", "user", "movieObj"]),
   },
@@ -81,13 +66,13 @@ export default {
   },
   methods: {
     initUserFromCookies() {
-      const loginMethod = this.$cookies.get('loginMethod');
+      const signInMethod = this.$cookies.get('signInMethod');
       const token = this.$cookies.get('token');
       const name = this.$cookies.get('name');
       const email = this.$cookies.get('email');
       const photoURL = this.$cookies.get('photoURL');
       const user = {
-        loginMethod,
+        signInMethod,
         token,
         name,
         email,
@@ -109,7 +94,7 @@ export default {
     signOut() {
       firebase.auth().signOut();
       let payload = {
-        loginMethod: '',
+        signInMethod: '',
         token: '',
         name: '',
         email: '',
@@ -117,6 +102,7 @@ export default {
       };
       this.$store.commit("setUser", payload);
       this.$store.commit("setLoginStatus", false);
+      this.clearCookies();
     }
   }
 };
