@@ -13,7 +13,7 @@
           icon
           class="mr-1"
           :ripple="false"
-          @click="isCollected = !isCollected"
+          @click="updateCollections"
         >
           <v-icon>mdi-heart{{ isCollected ? '' : '-outline'}}</v-icon>
         </v-btn>
@@ -37,7 +37,7 @@
               icon
               class="mr-1"
               :ripple="false"
-              @click="isCollected = !isCollected"
+              @click="updateCollections"
             >
               <v-icon>mdi-heart{{ isCollected ? '' : '-outline'}}</v-icon>
             </v-btn>
@@ -76,11 +76,12 @@ export default {
     this.$store.dispatch("getQuote");
   },
   computed: {
-    ...mapState(["quoteObj", "movieObj", "isIntroShown"]),
+    ...mapState(["quoteObj", "movieObj", "collections", "isIntroShown"]),
   },
   watch: {
     movieObj: {
       handler: function() {
+        this.isCollected = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
         if (this.movieObj.poster) {
           this.bgImage = this.movieObj.poster;
         } else {
@@ -96,6 +97,23 @@ export default {
     },
     leaveMovieIntro() {
       this.$store.commit("updateIntroShownFlag", false);
+    },
+    updateCollections() {
+      this.isCollected = !this.isCollected;
+      if (this.isCollected) {
+        const movie = Object.assign({
+          quote: this.quoteObj.quote
+        }, this.movieObj);
+        const favMovieObj = {
+          group: 'My List',
+          movieId: this.movieObj.id,
+          movie
+        };
+        this.$store.commit("addMovieIntoList", favMovieObj);
+      } else {
+        const quote = this.quoteObj.quote;
+        this.$store.commit("removeMovieFromList", quote);
+      }
     }
   }
 };

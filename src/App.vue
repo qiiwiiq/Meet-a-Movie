@@ -17,7 +17,12 @@
         <v-icon class="mr-1">mdi-autorenew</v-icon>
         New Quote
       </v-btn>
-      <v-btn text small class="mr-1" href="/my-collections">
+      <v-btn
+        text
+        small
+        class="mr-1"
+        :to="{ name: 'MyCollections' }"
+      >
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
         Collections
       </v-btn>
@@ -26,7 +31,7 @@
         outlined
         small
         class="mx-1"
-        href="/sign-in"
+        :to="{ name: 'SignIn' }"
       >
         Sign in
       </v-btn>

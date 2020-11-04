@@ -18,7 +18,14 @@ export default new Vuex.Store({
     quoteObj: undefined,
     movieObj: {
       poster: '',
-    }, 
+    },
+    collections: [
+      // {
+      //   group: 'My List',
+      //   movieId: "",
+      //   movie: {}
+      // }
+    ],
     isIntroShown: false,
   },
   mutations: {
@@ -41,6 +48,17 @@ export default new Vuex.Store({
     updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
     },
+    addMovieIntoList (state, payload) {
+      let obj = {
+        group: payload.group,
+        movieId: payload.movieId,
+        movie: payload.movie
+      };
+      state.collections.push(obj);
+    },
+    removeMovieFromList (state, payload) {
+      state.collections = state.collections.filter(item => item.movie.quote !== payload);
+    }
   },
   actions: {
     getQuote ({ commit, dispatch, state }) {
@@ -52,11 +70,11 @@ export default new Vuex.Store({
         dispatch("getFilm", state.quoteObj.movie);
       }
     },
-    getFilm ({ commit }, movie) {
-      apiGetFilm(movie).then((res) => {
+    getFilm ({ commit }, movieName) {
+      apiGetFilm(movieName).then((res) => {
         commit("setMovieObj", res.data);
       });
-    },
+    }
   },
   modules: {},
 });
