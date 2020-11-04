@@ -19,7 +19,7 @@
       </v-btn>
       <v-btn text small class="mr-1" href="/my-collections">
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
-        Favorites
+        Collections
       </v-btn>
       <v-btn
         v-if="!isLogin"
@@ -30,17 +30,42 @@
       >
         Sign in
       </v-btn>
-      <v-btn
+      <v-menu
         v-else
-        icon
-        class="mr-1"
-        @click="signOut"
+        bottom
+        offset-y
+        open-on-hover
+        close-delay="500"
+        nudge-bottom="4"
+        content-class="user-menu"
       >
-        <v-avatar v-if="user.photoURL" size="36">
-          <img :src="user.photoURL" />
-        </v-avatar>
-        <v-icon v-else>mdi-account-circle</v-icon>
-      </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            class="mr-1"
+            v-on="on"
+          >
+            <v-avatar v-if="user.photoURL" size="36">
+              <img :src="user.photoURL" />
+            </v-avatar>
+            <v-icon v-else>mdi-account-circle</v-icon>
+          </v-btn>
+        </template>
+        <v-list tile dense dark color="#333" class="pa-0">
+          <v-list-item
+            class="menu-list-item"
+            @click="goToSettings"
+          >
+            <v-list-item-title class="menu-list-item-text">Settings</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            class="menu-list-item"
+            @click="signOut"
+          >
+            <v-list-item-title class="menu-list-item-text">Sign Out</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-main class="main">
@@ -91,6 +116,9 @@ export default {
       }
       this.$store.dispatch("getQuote");
     },
+    goToSettings() {
+      this.$router.push({name: 'Settings'});
+    },
     signOut() {
       firebase.auth().signOut();
       let payload = {
@@ -116,6 +144,23 @@ export default {
 .main {
   background-image: url('./assets/bg.jpg');
   background-size: cover;
+}
+
+.user-menu {
+  border-radius: 0;
+}
+
+.menu-list-item {
+  border-radius: 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px dashed #CCC;
+  }
+  
+  &-text {
+    font-size: 12px;
+    text-transform: uppercase;
+  }
 }
 </style>
 

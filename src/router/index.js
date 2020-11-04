@@ -20,6 +20,11 @@ const routes = [
     name: "MyCollections",
     component: () => import("../views/MyCollections.vue"),
   },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: () => import("../views/Settings.vue"),
+  },
 ];
 
 const router = new VueRouter({
