@@ -30,7 +30,6 @@ export default new Vuex.Store({
       /* data stucture */
       // {
       //   groupid: 'cg0',
-      //   movieId: "",
       //   movie: {}
       // }
     ],
@@ -66,7 +65,6 @@ export default new Vuex.Store({
     addMovieIntoGroup (state, payload) {
       let obj = {
         groupid: payload.groupid,
-        movieId: payload.movieId,
         movie: payload.movie
       };
       state.collections.push(obj);

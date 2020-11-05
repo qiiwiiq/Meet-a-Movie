@@ -106,7 +106,6 @@ export default {
         }, this.movieObj);
         const favMovieObj = {
           groupid: 'cg0',
-          movieId: this.movieObj.id,
           movie
         };
         this.$store.commit("addMovieIntoGroup", favMovieObj);

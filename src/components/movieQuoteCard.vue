@@ -53,12 +53,11 @@ export default {
       if (this.isCollected) {
         const favMovieObj = {
           groupid: 'cg0',
-          movieId: this.movieObj.id,
           movie: this.movieObj
         };
         this.$store.commit("addMovieIntoGroup", favMovieObj);
       } else {
-        const quote = this.quoteObj.quote;
+        const quote = this.movieObj.quote;
         this.$store.commit("removeMovieFromGroup", quote);
       }
     }
