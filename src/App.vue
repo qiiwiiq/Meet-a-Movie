@@ -146,8 +146,9 @@ export default {
     getQuote() {
       if (this.$router.currentRoute.name !== 'Home') {
         this.$router.push({ name: "Home" }).catch(() => {});
+      } else {
+        this.$store.dispatch("getQuote");
       }
-      this.$store.dispatch("getQuote");
     },
     goToSettings() {
       this.$router.push({name: 'Settings'}).catch(() => {});

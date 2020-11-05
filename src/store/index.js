@@ -103,14 +103,13 @@ export default new Vuex.Store({
       };
       commit("updateCollectionGroups", {action: "add", group});
     },
-    getQuote ({ commit, dispatch, state }) {
+    getQuote ({ commit, dispatch }) {
       commit("setQuoteObj", undefined);
       commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
-      commit("setQuoteObj", movieQuote.getSomeRandom(1)[0]);
-      if (state.quoteObj) {
-        dispatch("getFilm", state.quoteObj.movie);
-      }
+      const movieObj = movieQuote.getSomeRandom(1)[0];
+      commit("setQuoteObj", movieObj);
+      dispatch("getFilm", movieObj.movie);
     },
     getFilm ({ commit }, movieName) {
       apiGetFilm(movieName).then((res) => {
