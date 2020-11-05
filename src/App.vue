@@ -141,12 +141,7 @@ export default {
         email,
         photoURL
       };
-      this.$store.commit("setUser", user);
-      if (user.name) {
-        this.$store.commit("setLoginStatus", true);
-      } else {
-        this.$store.commit("setLoginStatus", false);
-      }
+      this.$store.dispatch("init", user);
     },
     getQuote() {
       if (this.$router.currentRoute.name !== 'Home') {
@@ -155,7 +150,7 @@ export default {
       this.$store.dispatch("getQuote");
     },
     goToSettings() {
-      this.$router.push({name: 'Settings'});
+      this.$router.push({name: 'Settings'}).catch(() => {});
     },
     signOut() {
       firebase.auth().signOut();

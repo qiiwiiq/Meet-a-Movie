@@ -56,8 +56,7 @@ export default {
         vm.$cookies.set('name', user.displayName);
         vm.$cookies.set('email', user.email);
         vm.$cookies.set('photoURL', user.photoURL);
-        vm.$store.commit("setUser", payload);
-        vm.$store.commit("setLoginStatus", true);
+        vm.$store.dispatch("init", payload);
         vm.$router.replace({name: 'Home'});
       }).catch(function(error) {
         console.log(error);
@@ -81,8 +80,7 @@ export default {
         vm.$cookies.set('name', user.displayName);
         vm.$cookies.set('email', user.email);
         vm.$cookies.set('photoURL', user.photoURL);
-        vm.$store.commit("setUser", payload);
-        vm.$store.commit("setLoginStatus", true);
+        vm.$store.dispatch("init", payload);
         vm.$router.replace({name: 'Home'});
       }).catch(function(error) {
         console.log(error);

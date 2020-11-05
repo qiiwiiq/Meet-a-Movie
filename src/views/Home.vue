@@ -27,7 +27,7 @@
       </div>
     </div>
     <div v-if="isIntroShown" class="movie-intro">
-      <Movie :movieObj="movieObj">
+      <MovieDetail :movieObj="movieObj">
         <div>
           <div class="mb-8">
             <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
@@ -51,20 +51,20 @@
           </div>
           
         </div>
-      </Movie>
+      </MovieDetail>
     </div>
   </div>
 </template>
 
 <script>
 import Quote from "@/components/quote";
-import Movie from "@/components/movie";
+import MovieDetail from "@/components/movieDetail";
 import { mapState } from "vuex";
 
 export default {
   components: {
     Quote,
-    Movie
+    MovieDetail
   },
   data() {
     return {
@@ -105,14 +105,14 @@ export default {
           quote: this.quoteObj.quote
         }, this.movieObj);
         const favMovieObj = {
-          group: 'My List',
+          groupid: 'cg0',
           movieId: this.movieObj.id,
           movie
         };
-        this.$store.commit("addMovieIntoList", favMovieObj);
+        this.$store.commit("addMovieIntoGroup", favMovieObj);
       } else {
         const quote = this.quoteObj.quote;
-        this.$store.commit("removeMovieFromList", quote);
+        this.$store.commit("removeMovieFromGroup", quote);
       }
     }
   }

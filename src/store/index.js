@@ -19,9 +19,17 @@ export default new Vuex.Store({
     movieObj: {
       poster: '',
     },
-    collections: [
+    collectionGroups: [
+      /* data stucture */
       // {
-      //   group: 'My List',
+      //   id: 'cg0',
+      //   name: 'My Collections'
+      // }
+    ],
+    collections: [
+      /* data stucture */
+      // {
+      //   groupid: 'cg0',
       //   movieId: "",
       //   movie: {}
       // }
@@ -45,22 +53,56 @@ export default new Vuex.Store({
     setMovieObj (state, payload) {
       state.movieObj = payload;
     },
+    updateCollectionGroups (state, {action, group}) {
+      switch (action) {
+        case "add":
+          state.collectionGroups.push(group);
+          return;
+      }
+    },
     updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
     },
-    addMovieIntoList (state, payload) {
+    addMovieIntoGroup (state, payload) {
       let obj = {
-        group: payload.group,
+        groupid: payload.groupid,
         movieId: payload.movieId,
         movie: payload.movie
       };
       state.collections.push(obj);
     },
-    removeMovieFromList (state, payload) {
+    removeMovieFromGroup (state, payload) {
       state.collections = state.collections.filter(item => item.movie.quote !== payload);
     }
   },
   actions: {
+    init ({ commit, dispatch }, user) {
+      commit("setUser", user);
+      if (user.name) {
+        // user is loggined
+        commit("setLoginStatus", true);
+        dispatch("initCollectionGroups");
+      } else {
+        commit("setLoginStatus", false);
+      }
+    },
+    initCollectionGroups ({ commit }) {
+      const group = {
+        id: 'cg0',
+        name: 'My Collections'
+      };
+      commit("updateCollectionGroups", {action: "add", group});
+    },
+    addCollectionGroups ({ commit, state }, groupName) {
+      const lastGroup = state.collectionGroups[state.collectionGroups.length - 1];
+      const index = +lastGroup["id"].split("cg")[1] + 1;
+      const id = 'cg' + index;
+      const group = {
+        id,
+        name: groupName
+      };
+      commit("updateCollectionGroups", {action: "add", group});
+    },
     getQuote ({ commit, dispatch, state }) {
       commit("setQuoteObj", undefined);
       commit("setMovieObj", { poster: '' });
