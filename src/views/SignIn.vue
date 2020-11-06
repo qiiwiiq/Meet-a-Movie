@@ -5,7 +5,7 @@
         dark
         color="#3b5998"
         class="btn-sign-in ma-2 text-none"
-        @click="signInFB"
+        @click="signIn('fb')"
       >
         <v-icon left>mdi-facebook</v-icon> Sign In with FACEBOOK
       </v-btn>
@@ -13,7 +13,7 @@
         dark
         color="#ea4335"
         class="btn-sign-in ma-2 text-none"
-        @click="signInGoogle"
+        @click="signIn('google')"
       >
         <v-icon left>mdi-google</v-icon> Sign In with GOOGLE
       </v-btn>
@@ -38,20 +38,27 @@ export default {
     })
   },
   methods: {
-    signInFB () {
+    signIn(signInMethod) {
       const vm = this;
-      const providerF = new firebase.auth.FacebookAuthProvider();
-      firebase.auth().signInWithPopup(providerF).then(function(result) {
-        console.log(result);
+      let provider;
+      switch(signInMethod) {
+        case 'fb':
+          provider = new firebase.auth.FacebookAuthProvider();
+          break;
+        case 'google':
+          provider = new firebase.auth.GoogleAuthProvider();
+          break;
+      }
+      firebase.auth().signInWithPopup(provider).then(function(result) {
         const user = result.user;
         let payload = {
-          signInMethod: 'fb',
+          signInMethod,
           token: result.credential.accessToken,
           name: user.displayName,
           email: user.email,
           photoURL: user.photoURL
         };
-        vm.$cookies.set('signInMethod', 'fb');
+        vm.$cookies.set('signInMethod', signInMethod);
         vm.$cookies.set('token', result.credential.accessToken);
         vm.$cookies.set('name', user.displayName);
         vm.$cookies.set('email', user.email);
@@ -62,30 +69,6 @@ export default {
         console.log(error);
       });
     },
-    signInGoogle () {
-      const vm = this;
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider).then(function(result) {
-        console.log(result);
-        const user = result.user;
-        let payload = {
-          signInMethod: 'google',
-          token: result.credential.accessToken,
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL
-        };
-        vm.$cookies.set('signInMethod', 'google');
-        vm.$cookies.set('token', result.credential.accessToken);
-        vm.$cookies.set('name', user.displayName);
-        vm.$cookies.set('email', user.email);
-        vm.$cookies.set('photoURL', user.photoURL);
-        vm.$store.dispatch("init", payload);
-        vm.$router.replace({name: 'Home'});
-      }).catch(function(error) {
-        console.log(error);
-      });
-    }
   }
 }
 </script>
