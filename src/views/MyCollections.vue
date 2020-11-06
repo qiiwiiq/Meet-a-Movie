@@ -1,5 +1,5 @@
 <template>
-  <div class="page-collections d-flex justify-space-between">
+  <div class="page-collections d-flex justify-space-between mx-auto">
     <div class="col-left">
       <div class="text-center mb-2">
         <v-btn
@@ -7,32 +7,34 @@
           rounded
           outlined
           color="#333"
-          class="btn-create-group"
+          class="btn-create-group mr-2"
           @click="createNewGroupDialogOpened = true"
         >
           Create New Group
         </v-btn>
+        <v-btn
+          small
+          icon
+          outlined
+          color="#333"
+          class="btn-create-group"
+          @click="isEditing = true"
+        >
+          <v-icon small>mdi-pencil</v-icon>
+        </v-btn>
       </div>
-      <v-list flat rounded dense class="groups px-0">
+      <v-list flat rounded class="groups px-0">
         <v-list-item-group
           v-model="currentGroup"
           mandatory
           color="#006064"
         >
-          <v-list-item
-            v-for="group in collectionGroups"
-            :key="group.id"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ group.name }}
-                <span class="group-item-count ml-1">({{countGroupItems(collections, group.id)}})</span>
-              </v-list-item-title>
-            </v-list-item-content>
-              <v-btn icon small>
-                <v-icon small>mdi-pencil</v-icon>
-              </v-btn>
-          </v-list-item>
+          <template v-for="group in collectionGroups">
+            <CollectionGroup
+              :group="group"
+              :key="group.id"
+            />
+          </template>
         </v-list-item-group>
       </v-list>
     </div>
@@ -56,7 +58,7 @@
         <v-card-text class="dialog-create-group-title pt-5">Create New Group</v-card-text>
         <div class="px-6">
           <v-text-field
-            v-model="groupName"
+            v-model="newGroupName"
             dense
             placeholder="Group Name"
             color="#0097A7"
@@ -87,17 +89,20 @@
 
 <script>
 import { mapState } from "vuex";
+import CollectionGroup from "@/components/collectionGroup";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {
   components: {
+    CollectionGroup,
     MovieQuoteCard
   },
   data() {
     return {
       currentGroup: 0,
       createNewGroupDialogOpened: false,
-      groupName: '',
+      newGroupName: '',
+      isEditing: false
     }
   },
   computed: {
@@ -116,12 +121,8 @@ export default {
     }
   },
   methods: {
-    countGroupItems(collections, groupid) {
-      const groupItems = collections.filter(item => item.groupid === groupid);
-      return groupItems.length;
-    },
     createNewGroup() {
-      this.$store.dispatch("addCollectionGroups", this.groupName);
+      this.$store.dispatch("addCollectionGroups", this.newGroupName);
     }
   }
 }
@@ -129,6 +130,7 @@ export default {
 
 <style lang="scss" scoped>
 .page-collections {
+  max-width: 1200px;
   padding: 16px 20px;
 }
 

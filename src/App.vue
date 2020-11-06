@@ -1,26 +1,31 @@
 <template>
   <v-app>
-    <v-app-bar app dark class="navbar">
+    <v-app-bar app class="navbar">
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+        <router-link to="/">
+          <v-img width="50" height="50" src="./assets/movie-film.png"></v-img>
+        </router-link>
       </div>
 
       <v-spacer></v-spacer>
-      <v-btn text small class="mr-1" @click="getQuote">
-        <v-icon class="mr-1">mdi-autorenew</v-icon>
-        New Quote
-      </v-btn>
       <v-btn
+        dark
         text
         small
-        class="mr-1"
+        class="btn-nav mr-2"
+        active-class="cyan--text"
+        :to="{ name: 'Home' }"
+        exact
+      >
+        <v-icon class="mr-1">mdi-movie-open</v-icon>
+        Movie / Quote
+      </v-btn>
+      <v-btn
+        dark
+        text
+        small
+        class="btn-nav mr-1"
+        active-class="cyan--text"
         :to="{ name: 'MyCollections' }"
       >
         <v-icon class="mr-1">mdi-heart-outline</v-icon>
@@ -132,13 +137,14 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      signOutDialogOpened: false
+      signOutDialogOpened: false,
     }
   },
   computed: {
     ...mapState(["isLogin", "user", "movieObj"]),
   },
   mounted() {
+    this.$store.dispatch("getQuote");
     this.initUserFromCookies();
   },
   methods: {
@@ -159,13 +165,6 @@ export default {
         uid
       };
       this.$store.dispatch("init", user);
-    },
-    getQuote() {
-      if (this.$router.currentRoute.name !== 'Home') {
-        this.$router.push({ name: "Home" }).catch(() => {});
-      } else {
-        this.$store.dispatch("getQuote");
-      }
     },
     goToSettings() {
       this.$router.push({name: 'Settings'}).catch(() => {});
@@ -214,6 +213,10 @@ export default {
     font-size: 12px !important;
     text-transform: uppercase;
   }
+}
+
+.btn-nav,.v-btn:before {
+  background-color: transparent;
 }
 </style>
 

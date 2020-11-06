@@ -4,58 +4,78 @@
       backgroundImage:
         'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)'
     }"
-    class="page-home d-flex justify-center"
+    class="page-home"
   >
-    <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
-      <Quote :quoteObj="quoteObj" />
-      <div>
-        <v-btn
-          v-if="isLogin"
-          icon
-          class="mr-1"
-          :ripple="false"
-          @click="updateCollections"
-        >
-          <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
-          <v-icon v-else>mdi-heart-outline</v-icon>
-        </v-btn>
-        <v-btn
-          text
-          class="btn-direct px-2"
-          @click="enterMovieIntro"
-        >
-          Check it &rarr;
-        </v-btn>
-      </div>
+    <div class="quote-actions d-flex justify-end mx-auto">
     </div>
-    <div v-if="isIntroShown" class="movie-intro">
-      <MovieDetail :movieObj="movieObj">
+    <div class="d-flex justify-center">
+      <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
+        <Quote :quoteObj="quoteObj" />
         <div>
-          <div class="mb-8">
-            <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
-          </div>
-          <div class="d-flex justify-end">
-            <v-btn
-              v-if="isLogin"
-              icon
-              class="mr-1"
-              :ripple="false"
-              @click="updateCollections"
-            >
-              <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
-              <v-icon v-else>mdi-heart-outline</v-icon>
-            </v-btn>
-            <v-btn
-              text
-              class="btn-direct px-2"
-              @click="leaveMovieIntro"
-            >
-              Back &rarr;
-            </v-btn>
-          </div>
-          
+          <v-btn
+            icon
+            class="mr-2"
+            :ripple="false"
+            @click="getQuote"
+          >
+            <v-icon>mdi-autorenew</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="isLogin"
+            icon
+            class="mr-2"
+            :ripple="false"
+            @click="updateCollections"
+          >
+            <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
+            <v-icon v-else>mdi-heart-outline</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            class="btn-direct px-2"
+            @click="enterMovieIntro"
+          >
+            Check it &rarr;
+          </v-btn>
         </div>
-      </MovieDetail>
+      </div>
+      <div v-if="isIntroShown" class="movie-intro">
+        <MovieDetail :movieObj="movieObj">
+          <div>
+            <div class="mb-8">
+              <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
+            </div>
+            <div class="d-flex justify-end">
+              <v-btn
+                icon
+                class="mr-2"
+                :ripple="false"
+                @click="getQuote"
+              >
+                <v-icon>mdi-autorenew</v-icon>
+              </v-btn>
+              <v-btn
+                v-if="isLogin"
+                icon
+                class="mr-2"
+                :ripple="false"
+                @click="updateCollections"
+              >
+                <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
+                <v-icon v-else>mdi-heart-outline</v-icon>
+              </v-btn>
+              <v-btn
+                text
+                class="btn-direct px-2"
+                @click="leaveMovieIntro"
+              >
+                Back &rarr;
+              </v-btn>
+            </div>
+            
+          </div>
+        </MovieDetail>
+      </div>
     </div>
   </div>
 </template>
@@ -72,25 +92,26 @@ export default {
   },
   data() {
     return {
-      bgImage: '',
       isCollected: false
     }
   },
-  mounted() {
-    this.$store.dispatch("getQuote");
-  },
   computed: {
     ...mapState(["isLogin", "quoteObj", "movieObj", "collections", "isIntroShown"]),
+    bgImage() {
+      if (this.movieObj.poster) {
+        return this.movieObj.poster;
+      } else {
+        return '';
+      }
+    }
+  },
+  mounted() {
+    this.isCollected = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
   },
   watch: {
     movieObj: {
       handler: function() {
         this.isCollected = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
-        if (this.movieObj.poster) {
-          this.bgImage = this.movieObj.poster;
-        } else {
-          this.bgImage = '';
-        }
       },
       deep: true
     }
@@ -117,7 +138,10 @@ export default {
         const quote = this.quoteObj.quote;
         this.$store.commit("removeMovieFromGroup", quote);
       }
-    }
+    },
+    getQuote() {
+      this.$store.dispatch("getQuote");
+    },
   }
 };
 </script>
@@ -132,9 +156,9 @@ export default {
 
 .card-quote {
   min-width: 300px;
-  max-width: 80%;
+  max-width: 700px;
   height: fit-content;
-  margin-top: 10vh;
+  margin-top: 8vh;
   padding: 25px 30px;
   border: 2px solid #555;
   outline: 1px solid #888;
@@ -145,6 +169,7 @@ export default {
 
 .movie-intro {
   width: 100%;
+  max-width: 1000px;
   padding: 30px 20px 20px 20px;
 }
 
