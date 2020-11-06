@@ -112,6 +112,20 @@ import { mapState } from "vuex";
 import { mixin } from './utils/mixin';
 import firebase from 'firebase/app';
 import "firebase/auth";
+// import { db } from '@/assets/firebase.js';
+
+// db.collection('users')
+//   .add({
+//     first: 'Dez',
+//     last: 'Chuang',
+//     gender: 'male'
+//   })
+//   .then(function(docRef) {
+//     console.log('Document written with ID: ', docRef.id)
+//   })
+//   .catch(function(error) {
+//     console.error('Error adding document: ', error)
+//   })
 
 export default {
   name: "App",
@@ -134,12 +148,15 @@ export default {
       const name = this.$cookies.get('name');
       const email = this.$cookies.get('email');
       const photoURL = this.$cookies.get('photoURL');
+      const uid = this.$cookies.get('uid');
       const user = {
+        isNewUser: false,
         signInMethod,
         token,
         name,
         email,
-        photoURL
+        photoURL,
+        uid
       };
       this.$store.dispatch("init", user);
     },
@@ -165,6 +182,8 @@ export default {
       this.$store.commit("setUser", payload);
       this.$store.commit("setLoginStatus", false);
       this.clearCookies();
+      this.signOutDialogOpened = false;
+      this.$router.replace({ name: "Home" }).catch(() => {});
     }
   }
 };

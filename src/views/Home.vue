@@ -10,12 +10,14 @@
       <Quote :quoteObj="quoteObj" />
       <div>
         <v-btn
+          v-if="isLogin"
           icon
           class="mr-1"
           :ripple="false"
           @click="updateCollections"
         >
-          <v-icon>mdi-heart{{ isCollected ? '' : '-outline'}}</v-icon>
+          <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
+          <v-icon v-else>mdi-heart-outline</v-icon>
         </v-btn>
         <v-btn
           text
@@ -34,12 +36,14 @@
           </div>
           <div class="d-flex justify-end">
             <v-btn
+              v-if="isLogin"
               icon
               class="mr-1"
               :ripple="false"
               @click="updateCollections"
             >
-              <v-icon>mdi-heart{{ isCollected ? '' : '-outline'}}</v-icon>
+              <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
+              <v-icon v-else>mdi-heart-outline</v-icon>
             </v-btn>
             <v-btn
               text
@@ -76,7 +80,7 @@ export default {
     this.$store.dispatch("getQuote");
   },
   computed: {
-    ...mapState(["quoteObj", "movieObj", "collections", "isIntroShown"]),
+    ...mapState(["isLogin", "quoteObj", "movieObj", "collections", "isIntroShown"]),
   },
   watch: {
     movieObj: {

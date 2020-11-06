@@ -22,7 +22,8 @@
         :ripple="false"
         @click="updateCollections"
       >
-        <v-icon>mdi-heart{{ isCollected ? '' : '-outline'}}</v-icon>
+        <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
+        <v-icon v-else>mdi-heart-outline</v-icon>
       </v-btn>
     </div>
   </v-card>
@@ -38,7 +39,7 @@ export default {
   },
   computed: {
     actors() {
-      if (this.movieObj) {
+      if (this.movieObj.casts) {
         let casts = this.movieObj.cast.slice(0, 3);
         let actors = casts.map(casts => casts.actor);
         return actors.join(", ");
