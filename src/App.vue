@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app class="navbar">
+    <v-app-bar app dark class="navbar">
       <div class="d-flex align-center">
         <router-link to="/">
           <v-img width="50" height="50" src="./assets/movie-film.png"></v-img>

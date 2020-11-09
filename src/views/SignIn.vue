@@ -54,7 +54,6 @@ export default {
           break;
       }
       firebase.auth().signInWithPopup(provider).then(function(result) {
-        console.log(result);
         const user = result.user;
         let payload = {
           isNewUser: result.additionalUserInfo.isNewUser,

@@ -24,7 +24,7 @@ export default new Vuex.Store({
     collectionGroups: [
       /* data stucture */
       // {
-      //   id: 'cg0',
+      //   timestamp: 'xxxxxxx',
       //   name: 'My Collections'
       // }
     ],
@@ -104,59 +104,72 @@ export default new Vuex.Store({
         })
       }
     },
-    initCollectionGroups ({ commit, dispatch }, user) {
-      let groups;
+    initCollectionGroups ({ dispatch }, user) {
       if (user.isNewUser) {
-        groups = [{
-          id: 'cg0',
-          name: 'My Collections'
-        }];
         dispatch("dbWriteCollectionGroups", {
           uid: user.uid,
-          groups
+          groupName: 'My Collections'
         });
-        commit("updateCollectionGroups", {action: "set", groups});
       } else {
         dispatch("dbReadCollectionGroups", user.uid);
       }
     },
-    addCollectionGroups ({ commit, state, dispatch }, groupName) {
-      const lastGroup = state.collectionGroups[state.collectionGroups.length - 1];
-      const index = +lastGroup["id"].split("cg")[1] + 1;
-      const id = 'cg' + index;
-      const group = {
-        id,
-        name: groupName
-      };
-      const groups = [...state.collectionGroups, group];
-      dispatch("dbWriteCollectionGroups", {
-        uid: state.user.uid,
-        groups
-      });
-      commit("updateCollectionGroups", { action: "set", groups });
-    },
-    dbWriteCollectionGroups (context, {uid, groups}) {
-      db.collection('users')
-        .doc(uid)
-        .update({
-          groups
+    dbWriteCollectionGroups ({ dispatch }, {uid, groupName}) {
+      const collectionName = `groups-${uid}`;
+      db.collection(collectionName)
+        .add({
+          name: groupName,
+          timestamp: new Date().getTime()
         })
         .then(function() {
-          console.log('Setup groups')
+          console.log('Setup groups');
+          dispatch("dbReadCollectionGroups", uid);
+        })
+        .catch(function(error) {
+          console.error('Error adding document: ', error)
+        })
+    },
+    dbEditCollectionGroups ({ dispatch }, {uid, groupid, groupName}) {
+      const collectionName = `groups-${uid}`;
+      db.collection(collectionName)
+        .doc(groupid)
+        .update({
+          name: groupName
+        })
+        .then(() => {
+          dispatch("dbReadCollectionGroups", uid);
+        })
+        .catch(function(error) {
+          console.error('Error adding document: ', error)
+        })
+    },
+    dbDeleteCollectionGroups ({ dispatch }, {uid, groupid}) {
+      const collectionName = `groups-${uid}`;
+      db.collection(collectionName)
+        .doc(groupid)
+        .delete()
+        .then(() => {
+          dispatch("dbReadCollectionGroups", uid);
         })
         .catch(function(error) {
           console.error('Error adding document: ', error)
         })
     },
     dbReadCollectionGroups ({ commit }, uid) {
-      db.collection('users')
-        .doc(uid)
+      const collectionName = `groups-${uid}`;
+      db.collection(collectionName)
+        .orderBy("timestamp")
         .get()
-        .then(doc => {
-          const groups = doc.data().groups;
+        .then(querySnapshot => {
+          const groups = querySnapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data()
+            }
+          });
           commit("updateCollectionGroups", { action: "set", groups });
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error));
     },
     getQuote ({ commit, dispatch }) {
       commit("setQuoteObj", undefined);

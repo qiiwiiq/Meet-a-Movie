@@ -12,16 +12,6 @@
         >
           Create New Group
         </v-btn>
-        <v-btn
-          small
-          icon
-          outlined
-          color="#333"
-          class="btn-create-group"
-          @click="isEditing = true"
-        >
-          <v-icon small>mdi-pencil</v-icon>
-        </v-btn>
       </div>
       <v-list flat rounded class="groups px-0">
         <v-list-item-group
@@ -53,9 +43,15 @@
     <v-dialog
       v-model="createNewGroupDialogOpened"
       width="400"
+      persistent
     >
-      <v-card class="dialog-create-group">
-        <v-card-text class="dialog-create-group-title pt-5">Create New Group</v-card-text>
+      <ActionsDialog
+        :actionTitle="'Create New Group'"
+        :actionText1="'Cancel'"
+        :actionText2="'Create'"
+        @action1="createNewGroupDialogOpened = false"
+        @action2="createNewGroup"
+      >
         <div class="px-6">
           <v-text-field
             v-model="newGroupName"
@@ -65,35 +61,20 @@
             class="dialog-create-group-input"
           ></v-text-field>
         </div>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="#0097A7"
-            text
-            @click="createNewGroupDialogOpened = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            color="#0097A7"
-            text
-            @click="createNewGroup"
-          >
-            Create
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      </ActionsDialog>
     </v-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import ActionsDialog from "@/components/actionsDialog";
 import CollectionGroup from "@/components/collectionGroup";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {
   components: {
+    ActionsDialog,
     CollectionGroup,
     MovieQuoteCard
   },
@@ -102,11 +83,10 @@ export default {
       currentGroup: 0,
       createNewGroupDialogOpened: false,
       newGroupName: '',
-      isEditing: false
     }
   },
   computed: {
-    ...mapState(["isLogin", "collectionGroups", "collections"]),
+    ...mapState(["isLogin", "user", "collectionGroups", "collections"]),
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -118,11 +98,18 @@ export default {
   watch: {
     isLogin(val) {
       if (!val) this.$router.replace({name: 'SignIn'});
+    },
+    createNewGroupDialogOpened(val) {
+      if (!val) this.newGroupName = '';
     }
   },
   methods: {
     createNewGroup() {
-      this.$store.dispatch("addCollectionGroups", this.newGroupName);
+      this.$store.dispatch("dbWriteCollectionGroups", {
+        uid: this.user.uid,
+        groupName: this.newGroupName
+      });
+      this.createNewGroupDialogOpened = false;
     }
   }
 }
