@@ -17,25 +17,22 @@
       <div class="quote ml-6 mt-4">{{ movieObj.quote }}</div>
     </div>
     <div>
-      <v-btn
-        icon
-        :ripple="false"
-        @click="updateCollections"
-      >
-        <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
-        <v-icon v-else>mdi-heart-outline</v-icon>
-      </v-btn>
+      <CollectBtn
+        :isCollected="true"
+        :movieObj="movieObj"
+        @updateIsCollected="updateIsCollected"
+      />
     </div>
   </v-card>
 </template>
 
 <script>
+import CollectBtn from "@/components/collectBtn";
+
 export default {
   props: ["movieObj"],
-  data() {
-    return {
-      isCollected: true,
-    }
+  components: {
+    CollectBtn
   },
   computed: {
     actors() {
@@ -49,19 +46,9 @@ export default {
     }
   },
   methods: {
-    updateCollections() {
-      this.isCollected = !this.isCollected;
-      if (this.isCollected) {
-        const favMovieObj = {
-          groupid: 'cg0',
-          movie: this.movieObj
-        };
-        this.$store.commit("addMovieIntoGroup", favMovieObj);
-      } else {
-        const quote = this.movieObj.quote;
-        this.$store.commit("removeMovieFromGroup", quote);
-      }
-    }
+    updateIsCollected(val) {
+      this.isCollected = val;
+    },
   }
 }
 </script>

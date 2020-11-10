@@ -1,6 +1,6 @@
 <template>
-  <div v-if="quoteObj" class="quote d-flex flex-column align-end align-self-center">
-    <div class="quote-text pb-2">{{ quoteObj.quote }}</div>
+  <div v-if="quoteObj" class="quote w-100 d-flex flex-column align-end">
+    <div class="quote-text pb-3 align-self-center">{{ quoteObj.quote }}</div>
     <div class="movie">
       <span class="movie-name pr-2">{{ quoteObj.movie }}</span>
       <span class="movie-year">({{ quoteObj.year }})</span>

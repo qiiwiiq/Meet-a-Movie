@@ -10,16 +10,13 @@
       <v-card v-if="!isIntroShown" class="card-quote d-flex flex-column justify-space-between align-end">
         <Quote :quoteObj="quoteObj" />
         <div>
-          <v-btn
+          <CollectBtn
             v-if="isLogin"
-            icon
-            class="mr-2"
-            :ripple="false"
-            @click="updateCollections"
-          >
-            <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
-            <v-icon v-else>mdi-heart-outline</v-icon>
-          </v-btn>
+            :isCollected="isCollected"
+            :movieObj="movieQuoteObj"
+            @updateIsCollected="updateIsCollected"
+            @updateGroupid="updateGroupid"
+          />
           <v-btn
             text
             class="btn-direct px-2"
@@ -54,16 +51,13 @@
               <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
             </div>
             <div class="d-flex justify-end">
-              <v-btn
+              <CollectBtn
                 v-if="isLogin"
-                icon
-                class="mr-2"
-                :ripple="false"
-                @click="updateCollections"
-              >
-                <v-icon v-if="isCollected" color="#B71C1C">mdi-heart</v-icon>
-                <v-icon v-else>mdi-heart-outline</v-icon>
-              </v-btn>
+                :isCollected="isCollected"
+                :movieObj="movieQuoteObj"
+                @updateIsCollected="updateIsCollected"
+                @updateGroupid="updateGroupid"
+              />
               <v-btn
                 text
                 class="btn-direct px-2"
@@ -100,22 +94,25 @@
 </template>
 
 <script>
-import Quote from "@/components/quote";
+import CollectBtn from "@/components/collectBtn";
 import MovieDetail from "@/components/movieDetail";
+import Quote from "@/components/quote";
 import { mapState } from "vuex";
 
 export default {
   components: {
-    Quote,
-    MovieDetail
+    CollectBtn,
+    MovieDetail,
+    Quote
   },
   data() {
     return {
-      isCollected: false
+      isCollected: false,
+      movieQuoteObj: undefined
     }
   },
   computed: {
-    ...mapState(["isLogin", "quoteObj", "movieObj", "collections", "isIntroShown"]),
+    ...mapState(["isLogin", "user", "quoteObj", "movieObj", "collections", "isIntroShown"]),
     bgImage() {
       if (this.movieObj.poster) {
         return this.movieObj.poster;
@@ -125,38 +122,54 @@ export default {
     }
   },
   mounted() {
-    this.isCollected = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
+    const movieObjInCollections = this.collections.find(item => item.quote === this.quoteObj.quote);
+    if (movieObjInCollections) {
+      this.isCollected = true;
+      this.movieQuoteObj = Object.assign({
+        quote: this.quoteObj.quote,
+        groupid: movieObjInCollections.groupid,
+      }, this.movieObj);
+    } else {
+      this.isCollected = false;
+      this.movieQuoteObj = Object.assign({
+        quote: this.quoteObj.quote,
+        groupid: '',
+      }, this.movieObj);
+    }
   },
   watch: {
     movieObj: {
       handler: function() {
-        this.isCollected = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
+        const movieObjInCollections = this.collections.find(item => item.quote === this.quoteObj.quote);
+        if (movieObjInCollections) {
+          this.isCollected = true;
+          this.movieQuoteObj = Object.assign({
+            quote: this.quoteObj.quote,
+            groupid: movieObjInCollections.groupid,
+          }, this.movieObj);
+        } else {
+          this.isCollected = false;
+          this.movieQuoteObj = Object.assign({
+            quote: this.quoteObj.quote,
+            groupid: '',
+          }, this.movieObj);
+        }
       },
       deep: true
     }
   },
   methods: {
+    updateIsCollected(val) {
+      this.isCollected = val;
+    },
+    updateGroupid(val) {
+      this.movieQuoteObj.groupid = val;
+    },
     enterMovieIntro() {
       this.$store.commit("updateIntroShownFlag", true);
     },
     leaveMovieIntro() {
       this.$store.commit("updateIntroShownFlag", false);
-    },
-    updateCollections() {
-      this.isCollected = !this.isCollected;
-      if (this.isCollected) {
-        const movie = Object.assign({
-          quote: this.quoteObj.quote
-        }, this.movieObj);
-        const favMovieObj = {
-          groupid: 'cg0',
-          movie
-        };
-        this.$store.commit("addMovieIntoGroup", favMovieObj);
-      } else {
-        const quote = this.quoteObj.quote;
-        this.$store.commit("removeMovieFromGroup", quote);
-      }
     },
     getQuote() {
       this.$store.dispatch("getQuote");

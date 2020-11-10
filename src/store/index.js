@@ -24,6 +24,7 @@ export default new Vuex.Store({
     collectionGroups: [
       /* data stucture */
       // {
+      //   id: 'xxxxx',
       //   timestamp: 'xxxxxxx',
       //   name: 'My Collections'
       // }
@@ -61,27 +62,33 @@ export default new Vuex.Store({
           state.collectionGroups = groups;
       }
     },
+    updateCollections (state, payload) {
+      state.collections = payload;
+    },
     updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
-    },
-    addMovieIntoGroup (state, payload) {
-      let obj = {
-        groupid: payload.groupid,
-        movie: payload.movie
-      };
-      state.collections.push(obj);
-    },
-    removeMovieFromGroup (state, payload) {
-      state.collections = state.collections.filter(item => item.movie.quote !== payload);
     }
   },
   actions: {
+    getQuote ({ commit, dispatch }) {
+      commit("setQuoteObj", undefined);
+      commit("setMovieObj", { poster: '' });
+      commit("updateIntroShownFlag", false);
+      const movieObj = movieQuote.getSomeRandom(1)[0];
+      commit("setQuoteObj", movieObj);
+      dispatch("getFilm", movieObj.movie);
+    },
+    getFilm ({ commit }, movieName) {
+      apiGetFilm(movieName).then((res) => {
+        commit("setMovieObj", res.data);
+      });
+    },
     init ({ commit, dispatch }, user) {
       if (user.name) {
         // user is loggined
         commit("setLoginStatus", true);
         dispatch("initUser", user);
-        dispatch("initCollectionGroups", user);
+        dispatch("initCollections", user);
       } else {
         commit("setLoginStatus", false);
       }
@@ -104,7 +111,7 @@ export default new Vuex.Store({
         })
       }
     },
-    initCollectionGroups ({ dispatch }, user) {
+    initCollections ({ dispatch }, user) {
       if (user.isNewUser) {
         dispatch("dbWriteCollectionGroups", {
           uid: user.uid,
@@ -112,6 +119,7 @@ export default new Vuex.Store({
         });
       } else {
         dispatch("dbReadCollectionGroups", user.uid);
+        dispatch("dbReadCollections", user.uid);
       }
     },
     dbWriteCollectionGroups ({ dispatch }, {uid, groupName}) {
@@ -148,12 +156,8 @@ export default new Vuex.Store({
       db.collection(collectionName)
         .doc(groupid)
         .delete()
-        .then(() => {
-          dispatch("dbReadCollectionGroups", uid);
-        })
-        .catch(function(error) {
-          console.error('Error adding document: ', error)
-        })
+        .then(() => dispatch("dbReadCollectionGroups", uid))
+        .catch((error) => console.error('Error deleting document: ', error))
     },
     dbReadCollectionGroups ({ commit }, uid) {
       const collectionName = `groups-${uid}`;
@@ -171,19 +175,36 @@ export default new Vuex.Store({
         })
         .catch(error => console.log(error));
     },
-    getQuote ({ commit, dispatch }) {
-      commit("setQuoteObj", undefined);
-      commit("setMovieObj", { poster: '' });
-      commit("updateIntroShownFlag", false);
-      const movieObj = movieQuote.getSomeRandom(1)[0];
-      commit("setQuoteObj", movieObj);
-      dispatch("getFilm", movieObj.movie);
+    dbUpdateCollections ({ dispatch }, {uid, movieObj}) {
+      const collectionName = `collections-${uid}`;
+      movieObj.timestamp = new Date().getTime();
+      movieObj.cast = JSON.stringify(movieObj.cast);
+      movieObj.technical_specs = JSON.stringify(movieObj.technical_specs);
+      db.collection(collectionName)
+        .doc(movieObj.id)
+        .set(movieObj)
+        .then(() => dispatch("dbReadCollections", uid))
+        .catch(error => console.error('Error writing document: ', error))
     },
-    getFilm ({ commit }, movieName) {
-      apiGetFilm(movieName).then((res) => {
-        commit("setMovieObj", res.data);
-      });
-    }
+    dbDeleteCollections ({ dispatch }, {uid, movieid}) {
+      const collectionName = `collections-${uid}`;
+      db.collection(collectionName)
+        .doc(movieid)
+        .delete()
+        .then(() => dispatch("dbReadCollections", uid))
+        .catch((error) => console.error('Error deleting document: ', error))
+    },
+    dbReadCollections ({ commit }, uid) {
+      const collectionName = `collections-${uid}`;
+      db.collection(collectionName)
+        .orderBy("timestamp")
+        .get()
+        .then(querySnapshot => {
+          const collections = querySnapshot.docs.map(doc => doc.data());
+          commit("updateCollections", collections);
+        })
+        .catch(error => console.log(error));
+    },
   },
   modules: {},
 });

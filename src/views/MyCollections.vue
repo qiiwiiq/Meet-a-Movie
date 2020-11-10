@@ -30,12 +30,12 @@
     </div>
     <div class="col-right">
       <div
-        v-for="(item, id) in collections"
+        v-for="(item, id) in groupCollections"
         :key="id"
         class="fav-movie"
       >
         <MovieQuoteCard
-          :movieObj="item.movie"
+          :movieObj="item"
         />
       </div>
     </div>
@@ -87,6 +87,15 @@ export default {
   },
   computed: {
     ...mapState(["isLogin", "user", "collectionGroups", "collections"]),
+    groupCollections() {
+      if (this.collectionGroups.length > 0) {
+        const groupid = this.collectionGroups[this.currentGroup].id;
+        const fillteredCollections = this.collections.filter(item => item.groupid === groupid);
+        return fillteredCollections;
+      } else {
+        return [];
+      }
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
