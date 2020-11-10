@@ -1,6 +1,6 @@
 <template>
-  <div v-if="movieObj" class="d-flex justify-center">
-    <div class="poster mr-4">
+  <div v-if="movieObj" class="d-flex justify-space-between">
+    <div class="poster mr-6">
       <img :src="movieObj.poster" />
     </div>
     <div class="movie-info">
@@ -22,8 +22,9 @@
       </div>
       <div class="cast my-2 mr-8">{{ actors }}</div>
       <div class="plot mb-4 mr-8">{{ movieObj.plot }}</div>
-      <slot></slot>
+      <slot name="movieInfo"></slot>
     </div>
+    <slot name="colRight"></slot>
   </div>
 </template>
 
@@ -53,11 +54,9 @@ export default {
 <style lang="scss" scoped>
 .poster {
   width: 40%;
-  height: 75vh;
   
   & img {
     width: 100%;
-    height: 100%;
     object-fit: contain;
   }
 }

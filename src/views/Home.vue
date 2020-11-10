@@ -6,20 +6,10 @@
     }"
     class="page-home"
   >
-    <div class="quote-actions d-flex justify-end mx-auto">
-    </div>
-    <div class="d-flex justify-center">
-      <div v-if="!isIntroShown" class="card-quote d-flex flex-column align-end">
+    <div class="d-flex justify-center h-100">
+      <v-card v-if="!isIntroShown" class="card-quote d-flex flex-column justify-space-between align-end">
         <Quote :quoteObj="quoteObj" />
         <div>
-          <v-btn
-            icon
-            class="mr-2"
-            :ripple="false"
-            @click="getQuote"
-          >
-            <v-icon>mdi-autorenew</v-icon>
-          </v-btn>
           <v-btn
             v-if="isLogin"
             icon
@@ -38,22 +28,32 @@
             Check it &rarr;
           </v-btn>
         </div>
-      </div>
-      <div v-if="isIntroShown" class="movie-intro">
+        <div class="card-quote-actions d-flex flex-column">
+          <v-btn
+            fab
+            x-small
+            class="mb-2"
+            :ripple="false"
+          >
+            <v-icon>mdi-tune</v-icon>
+          </v-btn>
+          <v-btn
+            fab
+            x-small
+            :ripple="false"
+            @click="getQuote"
+          >
+            <v-icon>mdi-autorenew</v-icon>
+          </v-btn>
+        </div>
+      </v-card>
+      <v-card v-if="isIntroShown" class="movie-intro">
         <MovieDetail :movieObj="movieObj">
-          <div>
+          <template v-slot:movieInfo>
             <div class="mb-8">
               <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
             </div>
             <div class="d-flex justify-end">
-              <v-btn
-                icon
-                class="mr-2"
-                :ripple="false"
-                @click="getQuote"
-              >
-                <v-icon>mdi-autorenew</v-icon>
-              </v-btn>
               <v-btn
                 v-if="isLogin"
                 icon
@@ -72,10 +72,29 @@
                 Back &rarr;
               </v-btn>
             </div>
-            
-          </div>
+          </template>
+          <template v-slot:colRight>
+            <div class="d-flex flex-column ml-2">
+              <v-btn
+                fab
+                x-small
+                class="mb-3"
+                :ripple="false"
+              >
+                <v-icon>mdi-tune</v-icon>
+              </v-btn>
+              <v-btn
+                fab
+                x-small
+                :ripple="false"
+                @click="getQuote"
+              >
+                <v-icon>mdi-autorenew</v-icon>
+              </v-btn>
+            </div>
+          </template>
         </MovieDetail>
-      </div>
+      </v-card>
     </div>
   </div>
 </template>
@@ -155,22 +174,31 @@ export default {
 }
 
 .card-quote {
+  position: relative;
   min-width: 300px;
   max-width: 700px;
   height: fit-content;
+  min-height: 200px;
   margin-top: 8vh;
   padding: 25px 30px;
-  border: 2px solid #555;
-  outline: 1px solid #888;
+  border: 1px solid #555;
+  outline: 1px dashed #888;
   outline-offset: -10px;
-  box-shadow: 0 3px 10px rgba(#000, 0.4);
   background-color: rgba(255, 255, 255, 0.7);
+
+  &-actions {
+    position: absolute;
+    top: 0;
+    right: -45px;
+  }
 }
 
 .movie-intro {
   width: 100%;
   max-width: 1000px;
-  padding: 30px 20px 20px 20px;
+  padding: 20px;
+  align-self: center;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .btn-direct {

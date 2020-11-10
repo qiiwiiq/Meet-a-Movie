@@ -22,13 +22,11 @@ export default {
     background-clip: text;
     font-size: 20px;
     font-weight: 700;
+    text-align: justify;
   }
 }
 
 .movie {
-  &-name {
-  }
-
   &-year {
     font-weight: 300;
   }
