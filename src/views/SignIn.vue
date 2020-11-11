@@ -21,6 +21,17 @@
       >
         <v-icon left>mdi-google</v-icon> Sign In with GOOGLE
       </v-btn>
+      <p class="divider-text my-2">
+        <span>or</span>
+      </p>
+      <v-btn
+        dark
+        depressed
+        color="#4CAF50"
+        class="btn-sign-in ma-2 text-none"
+      >
+        Create a New Account
+      </v-btn>
     </v-card>
   </div>
 </template>
@@ -96,5 +107,30 @@ export default {
 
 .btn-sign-in {
   width: 220px;
+}
+
+.divider-text {
+  position: relative;
+  text-align: center;
+}
+
+.divider-text span:before,
+.divider-text span:after {
+  border-top: 0.5px solid #555555;
+  content: "";
+  position: absolute;
+  height: 5px;
+  top: 50%;
+  width: 95px;
+}
+
+.divider-text span:before {
+  right: 50%;
+  margin-right: 15px;
+}
+
+.divider-text span:after {
+  left: 50%;
+  margin-left: 15px;
 }
 </style>

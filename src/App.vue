@@ -93,14 +93,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="red"
+            :color="mainColor"
             text
             @click="signOutDialogOpened = false"
           >
             NO
           </v-btn>
           <v-btn
-            color="red"
+            :color="mainColor"
             text
             @click="signOut"
           >

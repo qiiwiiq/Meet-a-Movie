@@ -1,5 +1,5 @@
 <template>
-  <div class="page-collections d-flex justify-space-between mx-auto">
+  <div class="page-collections py-3 d-flex justify-space-between">
     <div class="col-left">
       <div class="text-center mb-2">
         <v-btn
@@ -13,7 +13,7 @@
           Create New Group
         </v-btn>
       </div>
-      <v-list flat rounded class="groups px-0">
+      <v-list dense flat rounded class="groups px-0">
         <v-list-item-group
           v-model="currentGroup"
           mandatory
@@ -28,6 +28,7 @@
         </v-list-item-group>
       </v-list>
     </div>
+    <div class="divider"></div>
     <div class="col-right">
       <div
         v-for="(item, id) in groupCollections"
@@ -38,6 +39,10 @@
           :movieObj="normalizeMovieObj(item)"
         />
       </div>
+      <div
+        v-if="groupCollections.length === 0"
+        class="reminder text-center mt-4"
+      >Go explore some movies !</div>
     </div>
 
     <v-dialog
@@ -135,19 +140,24 @@ export default {
 <style lang="scss" scoped>
 .page-collections {
   max-width: 1200px;
-  padding: 16px 20px;
+  margin: 16px 20px;
+  border-radius: 4px;
+  background-color: rgba(#FFF, .6);
+}
+
+.divider {
+  width: 1px;
+  border-right: 1px dashed #757575;
 }
 
 .col-left, .col-right {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 120px);
   overflow-y: scroll;
-  background-color: rgba(#FFF, .5);
-  border-radius: 4px;
-  padding: 12px;
+  padding: 0 12px;
 }
 
 .col-left {
-  width: 30%;
+  width: 28%;
 
   .groups {
     background-color: transparent;
@@ -180,5 +190,10 @@ export default {
   &-input {
     font-size: 14px;
   }
+}
+
+.reminder {
+  font-weight: 300;
+  color: #212121;
 }
 </style>
