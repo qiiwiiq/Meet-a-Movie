@@ -35,7 +35,7 @@
         class="fav-movie"
       >
         <MovieQuoteCard
-          :movieObj="item"
+          :movieObj="normalizeMovieObj(item)"
         />
       </div>
     </div>
@@ -57,7 +57,7 @@
             v-model="newGroupName"
             dense
             placeholder="Group Name"
-            color="#0097A7"
+            :color="mainColor"
             class="dialog-create-group-input"
           ></v-text-field>
         </div>
@@ -68,11 +68,13 @@
 
 <script>
 import { mapState } from "vuex";
+import { mixin } from '@/utils/mixin';
 import ActionsDialog from "@/components/actionsDialog";
 import CollectionGroup from "@/components/collectionGroup";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {
+  mixins: [mixin],
   components: {
     ActionsDialog,
     CollectionGroup,
@@ -119,6 +121,12 @@ export default {
         groupName: this.newGroupName
       });
       this.createNewGroupDialogOpened = false;
+    },
+    normalizeMovieObj(obj) {
+      let movieObj = { ...obj };
+      movieObj.cast = JSON.parse(movieObj.cast);
+      movieObj.technical_specs = JSON.parse(movieObj.technical_specs);
+      return movieObj;
     }
   }
 }

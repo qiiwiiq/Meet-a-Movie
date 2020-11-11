@@ -1,5 +1,5 @@
 <template>
-  <div v-if="movieObj" class="d-flex justify-space-between">
+  <div v-if="movieObj" class="d-flex justify-center">
     <div class="poster mr-6">
       <img :src="movieObj.poster" />
     </div>

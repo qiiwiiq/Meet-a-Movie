@@ -95,10 +95,8 @@ export default {
     addCollections(groupid) {
       this.$emit("updateIsCollected", true);
       this.$emit("updateGroupid", groupid);
-      const obj = {
-        groupid,
-        ...this.movieObj
-      };
+      const obj = { ...this.movieObj };
+      obj.groupid = groupid;
       this.$store.dispatch("dbUpdateCollections", {
         uid: this.user.uid,
         movieObj: obj

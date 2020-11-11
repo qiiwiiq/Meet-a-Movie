@@ -31,7 +31,7 @@
             v-model="groupName"
             dense
             placeholder="Group Name"
-            color="#0097A7"
+            :color="mainColor"
             class="dialog-create-group-input"
           ></v-text-field>
         </div>
@@ -61,9 +61,11 @@
 
 <script>
 import { mapState } from "vuex";
+import { mixin } from '@/utils/mixin';
 import ActionsDialog from "@/components/actionsDialog";
 
 export default {
+  mixins: [mixin],
   props: ["group"],
   components: {
     ActionsDialog,

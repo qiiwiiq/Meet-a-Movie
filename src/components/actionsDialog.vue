@@ -5,14 +5,14 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        color="#0097A7"
+        :color="mainColor"
         text
         @click="action1"
       >
         {{ actionText1 }}
       </v-btn>
       <v-btn
-        color="#0097A7"
+        :color="mainColor"
         text
         @click="action2"
       >
@@ -23,7 +23,10 @@
 </template>
 
 <script>
+import { mixin } from '@/utils/mixin';
+
 export default {
+  mixins: [mixin],
   props: [
     "actionTitle",
     "actionText1",

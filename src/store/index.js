@@ -197,7 +197,7 @@ export default new Vuex.Store({
     dbReadCollections ({ commit }, uid) {
       const collectionName = `collections-${uid}`;
       db.collection(collectionName)
-        .orderBy("timestamp")
+        .orderBy("timestamp", "desc")
         .get()
         .then(querySnapshot => {
           const collections = querySnapshot.docs.map(doc => doc.data());
