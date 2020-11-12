@@ -178,7 +178,7 @@ export default {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod: 'password',
+            signInMethod: 'email',
             name: '',
             email: user.email,
             photoURL: '',
