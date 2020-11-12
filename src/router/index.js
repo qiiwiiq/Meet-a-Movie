@@ -16,6 +16,11 @@ const routes = [
     component: () => import("../views/SignIn.vue"),
   },
   {
+    path: "/sign-up",
+    name: "SignUp",
+    component: () => import("../views/SignUp.vue"),
+  },
+  {
     path: "/my-collections",
     name: "MyCollections",
     component: () => import("../views/MyCollections.vue"),

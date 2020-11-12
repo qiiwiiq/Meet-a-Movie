@@ -84,7 +84,7 @@ export default new Vuex.Store({
       });
     },
     init ({ commit, dispatch }, user) {
-      if (user.name) {
+      if (user.email) {
         // user is loggined
         commit("setLoginStatus", true);
         dispatch("initUser", user);

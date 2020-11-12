@@ -1,8 +1,15 @@
 <template>
   <div class="page-sign-in d-flex justify-center align-center">
     <v-card class="card-sign-in d-flex flex-column pa-4">
-      <div class="title-sign-in text-center">Sign In</div>
-      <v-divider class="my-2"></v-divider>
+      <div class="title-sign-in text-center mb-4">Sign In</div>
+      <v-btn
+        dark
+        depressed
+        color="#4CAF50"
+        class="btn-sign-in ma-2 text-none"
+      >
+        <v-icon left>mdi-email-outline</v-icon> Sign In with EMAIL
+      </v-btn>
       <v-btn
         dark
         depressed
@@ -27,8 +34,9 @@
       <v-btn
         dark
         depressed
-        color="#4CAF50"
+        color="#F9A825"
         class="btn-sign-in ma-2 text-none"
+        :to="{ name: 'SignUp' }"
       >
         Create a New Account
       </v-btn>
@@ -97,6 +105,7 @@ export default {
 }
 
 .card-sign-in {
+  margin-top: 3vh;
   background-color: rgba(#FFF, .6);
 }
 
