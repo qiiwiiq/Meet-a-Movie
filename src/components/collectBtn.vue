@@ -22,13 +22,13 @@
         class="py-0"
       >
         <v-list-item
-          v-for="group in filteredGroups"
-          :key="group.id"
-          @click="addCollections(group.id)"
+          v-for="list in filteredLists"
+          :key="list.id"
+          @click="addCollections(list.id)"
         >
           <v-list-item-title>
             <v-icon small class="mr-1">mdi-plus</v-icon>
-            {{ group.name }}
+            {{ list.name }}
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -61,13 +61,13 @@
           </v-list-item-title>
         </v-list-item>
         <v-list-item
-          v-for="group in filteredGroups"
-          :key="group.id"
-          @click="addCollections(group.id)"
+          v-for="list in filteredLists"
+          :key="list.id"
+          @click="addCollections(list.id)"
         >
           <v-list-item-title>
             <v-icon small class="mr-1">mdi-plus</v-icon>
-            {{ group.name }}
+            {{ list.name }}
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -81,22 +81,22 @@ import { mapState } from "vuex";
 export default {
   props: ["isCollected", "movieObj"],
   computed: {
-    ...mapState(["user", "collectionGroups"]),
-    filteredGroups() {
+    ...mapState(["user", "collectionLists"]),
+    filteredLists() {
       if (this.isCollected) {
-        const filteredGroups = this.collectionGroups.filter(item => item.id !== this.movieObj.groupid);
-        return filteredGroups;
+        const filteredLists = this.collectionLists.filter(item => item.id !== this.movieObj.listid);
+        return filteredLists;
       } else {
-        return this.collectionGroups;
+        return this.collectionLists;
       }
     }
   },
   methods: {
-    addCollections(groupid) {
+    addCollections(listid) {
       this.$emit("updateIsCollected", true);
-      this.$emit("updateGroupid", groupid);
+      this.$emit("updateListid", listid);
       const obj = { ...this.movieObj };
-      obj.groupid = groupid;
+      obj.listid = listid;
       this.$store.dispatch("dbUpdateCollections", {
         uid: this.user.uid,
         movieObj: obj
@@ -104,7 +104,7 @@ export default {
     },
     removeCollections() {
       this.$emit("updateIsCollected", false);
-      this.$emit("updateGroupid", '');
+      this.$emit("updateListid", '');
       this.$store.dispatch("dbDeleteCollections", {
         uid: this.user.uid,
         movieid: this.movieObj.id

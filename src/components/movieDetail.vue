@@ -12,7 +12,7 @@
             <span class="length pl-2">{{ movieObj.length }}</span>
           </div>
         </div>
-        <div class="d-flex flex-column align-center">
+        <div class="d-flex flex-column align-center align-self-start">
           <div class="rating">
             <div class="rating-bg"></div>
             <div class="rating-text">{{ movieObj.rating }}</div>

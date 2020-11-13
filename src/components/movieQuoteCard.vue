@@ -41,14 +41,32 @@
     <v-dialog
       v-model="isDetailShown"
       max-width="900"
+      persistent
     >
-      <v-card class="pa-4">
+      <v-card class="movie-detail-card pa-4">
+        <v-btn
+          icon
+          small
+          :ripple="false"
+          class="btn-close"
+          @click="isDetailShown = false"
+        >
+          <v-icon>mdi-close-circle-outline</v-icon>
+        </v-btn>
         <MovieDetail :movieObj="movieObj">
           <template v-slot:movieInfo>
             <div>
-              <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
+              <v-btn
+                depressed
+                class="text-none"
+                tag="a"
+                :href="movieObj.trailer.link"
+                target="_blank"
+              >
+                Watch Trailer
+              </v-btn>
             </div>
-            <div class="quote text-center px-4 py-8">{{ movieObj.quote }}</div>
+            <div class="quote text-center px-4 py-6">{{ movieObj.quote }}</div>
             <v-textarea
               outlined
               no-resize
@@ -136,5 +154,15 @@ export default {
   font-size: 16px;
   font-weight: 300;
   line-height: 20px;
+}
+
+.movie-detail-card {
+  position: relative;
+}
+
+.btn-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 </style>

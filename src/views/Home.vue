@@ -15,7 +15,7 @@
             :isCollected="isCollected"
             :movieObj="movieQuoteObj"
             @updateIsCollected="updateIsCollected"
-            @updateGroupid="updateGroupid"
+            @updateListid="updateListid"
           />
           <v-btn
             text
@@ -30,14 +30,12 @@
             fab
             x-small
             class="mb-2"
-            :ripple="false"
           >
             <v-icon>mdi-tune</v-icon>
           </v-btn>
           <v-btn
             fab
             x-small
-            :ripple="false"
             @click="getQuote"
           >
             <v-icon>mdi-autorenew</v-icon>
@@ -48,7 +46,16 @@
         <MovieDetail :movieObj="movieObj">
           <template v-slot:movieInfo>
             <div class="mb-8">
-              <a :href="movieObj.trailer.link" target="_blank">Watch Trailer</a>
+              <v-btn
+                depressed
+                class="text-none"
+                color="#f5de50"
+                tag="a"
+                :href="movieObj.trailer.link"
+                target="_blank"
+              >
+                Watch Trailer
+              </v-btn>
             </div>
             <div class="d-flex justify-end">
               <CollectBtn
@@ -56,7 +63,7 @@
                 :isCollected="isCollected"
                 :movieObj="movieQuoteObj"
                 @updateIsCollected="updateIsCollected"
-                @updateGroupid="updateGroupid"
+                @updateListid="updateListid"
               />
               <v-btn
                 text
@@ -73,14 +80,12 @@
                 fab
                 x-small
                 class="mb-3"
-                :ripple="false"
               >
                 <v-icon>mdi-tune</v-icon>
               </v-btn>
               <v-btn
                 fab
                 x-small
-                :ripple="false"
                 @click="getQuote"
               >
                 <v-icon>mdi-autorenew</v-icon>
@@ -121,22 +126,6 @@ export default {
       }
     }
   },
-  mounted() {
-    const movieObjInCollections = this.collections.find(item => item.quote === this.quoteObj.quote);
-    if (movieObjInCollections) {
-      this.isCollected = true;
-      this.movieQuoteObj = Object.assign({
-        quote: this.quoteObj.quote,
-        groupid: movieObjInCollections.groupid,
-      }, this.movieObj);
-    } else {
-      this.isCollected = false;
-      this.movieQuoteObj = Object.assign({
-        quote: this.quoteObj.quote,
-        groupid: '',
-      }, this.movieObj);
-    }
-  },
   watch: {
     movieObj: {
       handler: function() {
@@ -145,13 +134,15 @@ export default {
           this.isCollected = true;
           this.movieQuoteObj = Object.assign({
             quote: this.quoteObj.quote,
-            groupid: movieObjInCollections.groupid,
+            listid: movieObjInCollections.listid,
+            comments: movieObjInCollections.comments
           }, this.movieObj);
         } else {
           this.isCollected = false;
           this.movieQuoteObj = Object.assign({
             quote: this.quoteObj.quote,
-            groupid: '',
+            listid: '',
+            comments: ''
           }, this.movieObj);
         }
       },
@@ -162,8 +153,8 @@ export default {
     updateIsCollected(val) {
       this.isCollected = val;
     },
-    updateGroupid(val) {
-      this.movieQuoteObj.groupid = val;
+    updateListid(val) {
+      this.movieQuoteObj.listid = val;
     },
     enterMovieIntro() {
       this.$store.commit("updateIntroShownFlag", true);

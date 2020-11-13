@@ -1,5 +1,5 @@
 <template>
-  <div class="page-collections py-3 d-flex justify-space-between">
+  <div class="page-collections py-3 d-flex justify-space-around">
     <div class="col-left">
       <div class="text-center mb-2">
         <v-btn
@@ -7,22 +7,22 @@
           rounded
           outlined
           color="#333"
-          class="btn-create-group mr-2"
-          @click="createNewGroupDialogOpened = true"
+          class="btn-create-list mr-2"
+          @click="createNewListDialogOpened = true"
         >
-          Create New Group
+          Create New List
         </v-btn>
       </div>
-      <v-list dense flat rounded class="groups px-0">
+      <v-list dense flat rounded class="lists px-0">
         <v-list-item-group
-          v-model="currentGroup"
+          v-model="currentList"
           mandatory
           color="#006064"
         >
-          <template v-for="group in collectionGroups">
-            <CollectionGroup
-              :group="group"
-              :key="group.id"
+          <template v-for="list in collectionLists">
+            <CollectionList
+              :list="list"
+              :key="list.id"
             />
           </template>
         </v-list-item-group>
@@ -31,7 +31,7 @@
     <div class="divider"></div>
     <div class="col-right">
       <div
-        v-for="(item, id) in groupCollections"
+        v-for="(item, id) in listCollections"
         :key="id"
         class="fav-movie"
       >
@@ -40,30 +40,30 @@
         />
       </div>
       <div
-        v-if="groupCollections.length === 0"
+        v-if="listCollections.length === 0"
         class="reminder text-center mt-4"
       >Go explore some movies !</div>
     </div>
 
     <v-dialog
-      v-model="createNewGroupDialogOpened"
+      v-model="createNewListDialogOpened"
       width="400"
       persistent
     >
       <ActionsDialog
-        :actionTitle="'Create New Group'"
+        :actionTitle="'Create New List'"
         :actionText1="'Cancel'"
         :actionText2="'Create'"
-        @action1="createNewGroupDialogOpened = false"
-        @action2="createNewGroup"
+        @action1="createNewListDialogOpened = false"
+        @action2="createNewList"
       >
         <div class="px-6">
           <v-text-field
-            v-model="newGroupName"
+            v-model="newListName"
             dense
-            placeholder="Group Name"
+            placeholder="List Name"
             :color="mainColor"
-            class="dialog-create-group-input"
+            class="dialog-create-list-input"
           ></v-text-field>
         </div>
       </ActionsDialog>
@@ -75,29 +75,29 @@
 import { mapState } from "vuex";
 import { mixin } from '@/utils/mixin';
 import ActionsDialog from "@/components/actionsDialog";
-import CollectionGroup from "@/components/collectionGroup";
+import CollectionList from "@/components/collectionList";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {
   mixins: [mixin],
   components: {
     ActionsDialog,
-    CollectionGroup,
+    CollectionList,
     MovieQuoteCard
   },
   data() {
     return {
-      currentGroup: 0,
-      createNewGroupDialogOpened: false,
-      newGroupName: '',
+      currentList: 0,
+      createNewListDialogOpened: false,
+      newListName: '',
     }
   },
   computed: {
-    ...mapState(["isLogin", "user", "collectionGroups", "collections"]),
-    groupCollections() {
-      if (this.collectionGroups.length > 0) {
-        const groupid = this.collectionGroups[this.currentGroup].id;
-        const fillteredCollections = this.collections.filter(item => item.groupid === groupid);
+    ...mapState(["isLogin", "user", "collectionLists", "collections"]),
+    listCollections() {
+      if (this.collectionLists.length > 0) {
+        const listid = this.collectionLists[this.currentList].id;
+        const fillteredCollections = this.collections.filter(item => item.listid === listid);
         return fillteredCollections;
       } else {
         return [];
@@ -115,17 +115,17 @@ export default {
     isLogin(val) {
       if (!val) this.$router.replace({name: 'SignIn'});
     },
-    createNewGroupDialogOpened(val) {
-      if (!val) this.newGroupName = '';
+    createNewListDialogOpened(val) {
+      if (!val) this.newListName = '';
     }
   },
   methods: {
-    createNewGroup() {
-      this.$store.dispatch("dbWriteCollectionGroups", {
+    createNewList() {
+      this.$store.dispatch("dbWriteCollectionList", {
         uid: this.user.uid,
-        groupName: this.newGroupName
+        listName: this.newListName
       });
-      this.createNewGroupDialogOpened = false;
+      this.createNewListDialogOpened = false;
     },
     normalizeMovieObj(obj) {
       let movieObj = { ...obj };
@@ -159,15 +159,15 @@ export default {
 .col-left {
   width: 28%;
 
-  .groups {
+  .lists {
     background-color: transparent;
 
-    .group-item-count {
+    .list-item-count {
       font-weight: 400;
     }
   }
 
-  .btn-create-group {
+  .btn-create-list {
     background-color: rgba(#FFF, .8);
   }
 }
@@ -182,7 +182,7 @@ export default {
   }
 }
 
-.dialog-create-group {
+.dialog-create-list {
   &-title {
     font-weight: 700;
   }

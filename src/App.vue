@@ -46,7 +46,7 @@
         offset-y
         open-on-hover
         close-delay="300"
-        nudge-bottom="4"
+        nudge-bottom="8"
         content-class="user-menu"
       >
         <template v-slot:activator="{ on }">
@@ -86,28 +86,17 @@
       v-model="signOutDialogOpened"
       width="400"
     >
-      <v-card>
-        <v-card-text class="pt-6">
+      <ActionsDialog
+        :actionTitle="'Sign Out'"
+        :actionText1="'No'"
+        :actionText2="'Yes'"
+        @action1="signOutDialogOpened = false"
+        @action2="signOut"
+      >
+        <v-card-text>
           Are you sure to leave?
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            :color="mainColor"
-            text
-            @click="signOutDialogOpened = false"
-          >
-            NO
-          </v-btn>
-          <v-btn
-            :color="mainColor"
-            text
-            @click="signOut"
-          >
-            YES
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      </ActionsDialog>
     </v-dialog>
   </v-app>
 </template>
@@ -115,12 +104,16 @@
 <script>
 import { mapState } from "vuex";
 import { mixin } from '@/utils/mixin';
+import ActionsDialog from "@/components/actionsDialog";
 import firebase from 'firebase/app';
 import "firebase/auth";
 
 export default {
   name: "App",
   mixins: [mixin],
+  components: {
+    ActionsDialog,
+  },
   data() {
     return {
       signOutDialogOpened: false,

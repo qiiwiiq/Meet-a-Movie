@@ -21,7 +21,7 @@ export default new Vuex.Store({
     movieObj: {
       poster: '',
     },
-    collectionGroups: [
+    collectionLists: [
       /* data stucture */
       // {
       //   id: 'xxxxx',
@@ -32,7 +32,7 @@ export default new Vuex.Store({
     collections: [
       /* data stucture */
       // {
-      //   groupid: 'cg0',
+      //   listid: 'cg0',
       //   movie: {}
       // }
     ],
@@ -56,10 +56,10 @@ export default new Vuex.Store({
     setMovieObj (state, payload) {
       state.movieObj = payload;
     },
-    updateCollectionGroups (state, {action, groups}) {
+    updateCollectionLists (state, {action, lists}) {
       switch (action) {
         case "set":
-          state.collectionGroups = groups;
+          state.collectionLists = lists;
       }
     },
     updateCollections (state, payload) {
@@ -113,65 +113,65 @@ export default new Vuex.Store({
     },
     initCollections ({ dispatch }, user) {
       if (user.isNewUser) {
-        dispatch("dbWriteCollectionGroups", {
+        dispatch("dbWriteCollectionList", {
           uid: user.uid,
-          groupName: 'My Collections'
+          listName: 'My Collections'
         });
       } else {
-        dispatch("dbReadCollectionGroups", user.uid);
+        dispatch("dbReadCollectionLists", user.uid);
         dispatch("dbReadCollections", user.uid);
       }
     },
-    dbWriteCollectionGroups ({ dispatch }, {uid, groupName}) {
-      const collectionName = `groups-${uid}`;
+    dbWriteCollectionList ({ dispatch }, {uid, listName}) {
+      const collectionName = `lists-${uid}`;
       db.collection(collectionName)
         .add({
-          name: groupName,
+          name: listName,
           timestamp: new Date().getTime()
         })
         .then(function() {
-          console.log('Setup groups');
-          dispatch("dbReadCollectionGroups", uid);
+          console.log('Setup lists');
+          dispatch("dbReadCollectionLists", uid);
         })
         .catch(function(error) {
           console.error('Error adding document: ', error)
         })
     },
-    dbEditCollectionGroups ({ dispatch }, {uid, groupid, groupName}) {
-      const collectionName = `groups-${uid}`;
+    dbEditCollectionList ({ dispatch }, {uid, listid, listName}) {
+      const collectionName = `lists-${uid}`;
       db.collection(collectionName)
-        .doc(groupid)
+        .doc(listid)
         .update({
-          name: groupName
+          name: listName
         })
         .then(() => {
-          dispatch("dbReadCollectionGroups", uid);
+          dispatch("dbReadCollectionLists", uid);
         })
         .catch(function(error) {
           console.error('Error adding document: ', error)
         })
     },
-    dbDeleteCollectionGroups ({ dispatch }, {uid, groupid}) {
-      const collectionName = `groups-${uid}`;
+    dbDeleteCollectionList ({ dispatch }, {uid, listid}) {
+      const collectionName = `lists-${uid}`;
       db.collection(collectionName)
-        .doc(groupid)
+        .doc(listid)
         .delete()
-        .then(() => dispatch("dbReadCollectionGroups", uid))
+        .then(() => dispatch("dbReadCollectionLists", uid))
         .catch((error) => console.error('Error deleting document: ', error))
     },
-    dbReadCollectionGroups ({ commit }, uid) {
-      const collectionName = `groups-${uid}`;
+    dbReadCollectionLists ({ commit }, uid) {
+      const collectionName = `lists-${uid}`;
       db.collection(collectionName)
         .orderBy("timestamp")
         .get()
         .then(querySnapshot => {
-          const groups = querySnapshot.docs.map(doc => {
+          const lists = querySnapshot.docs.map(doc => {
             return {
               id: doc.id,
               ...doc.data()
             }
           });
-          commit("updateCollectionGroups", { action: "set", groups });
+          commit("updateCollectionLists", { action: "set", lists });
         })
         .catch(error => console.log(error));
     },
