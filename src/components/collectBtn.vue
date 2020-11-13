@@ -79,7 +79,7 @@
 import { mapState } from "vuex";
 
 export default {
-  props: ["isCollected", "movieObj"],
+  props: ["isCollected", "movieObj", "collectionId"],
   computed: {
     ...mapState(["user", "collectionLists"]),
     filteredLists() {
@@ -97,17 +97,25 @@ export default {
       this.$emit("updateListid", listid);
       const obj = { ...this.movieObj };
       obj.listid = listid;
-      this.$store.dispatch("dbUpdateCollections", {
-        uid: this.user.uid,
-        movieObj: obj
-      });
+      if (this.collectionId) {
+        this.$store.dispatch("dbUpdateCollections", {
+          uid: this.user.uid,
+          collectionId: this.collectionId,
+          movieObj: obj
+        });
+      } else {
+        this.$store.dispatch("dbAddCollections", {
+          uid: this.user.uid,
+          movieObj: obj
+        });
+      }
     },
     removeCollections() {
       this.$emit("updateIsCollected", false);
       this.$emit("updateListid", '');
       this.$store.dispatch("dbDeleteCollections", {
         uid: this.user.uid,
-        movieid: this.movieObj.id
+        collectionId: this.collectionId
       });
     }
   }

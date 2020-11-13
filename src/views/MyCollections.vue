@@ -36,7 +36,8 @@
         class="fav-movie"
       >
         <MovieQuoteCard
-          :movieObj="normalizeMovieObj(item)"
+          :movieObj="normalizeMovieObj(item.movie)"
+          :collectionId="item.collectionId"
         />
       </div>
       <div
@@ -97,7 +98,7 @@ export default {
     listCollections() {
       if (this.collectionLists.length > 0) {
         const listid = this.collectionLists[this.currentList].id;
-        const fillteredCollections = this.collections.filter(item => item.listid === listid);
+        const fillteredCollections = this.collections.filter(item => item.movie.listid === listid);
         return fillteredCollections;
       } else {
         return [];

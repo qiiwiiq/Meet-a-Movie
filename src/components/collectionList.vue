@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     countListItems(collections, listid) {
-      const listItems = collections.filter(item => item.listid === listid);
+      const listItems = collections.filter(item => item.movie.listid === listid);
       return listItems.length;
     },
     editList() {

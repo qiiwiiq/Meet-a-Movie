@@ -14,6 +14,7 @@
             v-if="isLogin"
             :isCollected="isCollected"
             :movieObj="movieQuoteObj"
+            :collectionId="collectionId"
             @updateIsCollected="updateIsCollected"
             @updateListid="updateListid"
           />
@@ -62,6 +63,7 @@
                 v-if="isLogin"
                 :isCollected="isCollected"
                 :movieObj="movieQuoteObj"
+                :collectionId="collectionId"
                 @updateIsCollected="updateIsCollected"
                 @updateListid="updateListid"
               />
@@ -103,8 +105,10 @@ import CollectBtn from "@/components/collectBtn";
 import MovieDetail from "@/components/movieDetail";
 import Quote from "@/components/quote";
 import { mapState } from "vuex";
+import { mixin } from '@/utils/mixin';
 
 export default {
+  mixins: [mixin],
   components: {
     CollectBtn,
     MovieDetail,
@@ -113,7 +117,8 @@ export default {
   data() {
     return {
       isCollected: false,
-      movieQuoteObj: undefined
+      movieQuoteObj: undefined,
+      collectionId: '',
     }
   },
   computed: {
@@ -126,30 +131,40 @@ export default {
       }
     }
   },
+  async mounted() {
+    await this.wait(500);
+    this.initMovieQuoteData();
+  },
   watch: {
     movieObj: {
       handler: function() {
-        const movieObjInCollections = this.collections.find(item => item.quote === this.quoteObj.quote);
-        if (movieObjInCollections) {
-          this.isCollected = true;
-          this.movieQuoteObj = Object.assign({
-            quote: this.quoteObj.quote,
-            listid: movieObjInCollections.listid,
-            comments: movieObjInCollections.comments
-          }, this.movieObj);
-        } else {
-          this.isCollected = false;
-          this.movieQuoteObj = Object.assign({
-            quote: this.quoteObj.quote,
-            listid: '',
-            comments: ''
-          }, this.movieObj);
-        }
+        this.initMovieQuoteData();
       },
       deep: true
     }
   },
   methods: {
+    initMovieQuoteData() {
+      const movieObjInCollections = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
+      console.log(movieObjInCollections);
+      if (movieObjInCollections) {
+        this.isCollected = true;
+        this.movieQuoteObj = Object.assign({
+          quote: this.quoteObj.quote,
+          listid: movieObjInCollections.movie.listid,
+          comments: movieObjInCollections.movie.comments
+        }, this.movieObj);
+        this.collectionId = movieObjInCollections.collectionId;
+      } else {
+        this.isCollected = false;
+        this.movieQuoteObj = Object.assign({
+          quote: this.quoteObj.quote,
+          listid: '',
+          comments: ''
+        }, this.movieObj);
+        this.collectionId = '';
+      }
+    },
     updateIsCollected(val) {
       this.isCollected = val;
     },

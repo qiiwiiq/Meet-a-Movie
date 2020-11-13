@@ -22,6 +22,7 @@
           <CollectBtn
             :isCollected="true"
             :movieObj="movieObj"
+            :collectionId="collectionId"
             @updateIsCollected="updateIsCollected"
           />
         </div>
@@ -89,7 +90,7 @@ import MovieDetail from "@/components/movieDetail";
 
 export default {
   mixins: [mixin],
-  props: ["movieObj"],
+  props: ["movieObj", "collectionId"],
   components: {
     CollectBtn,
     MovieDetail
