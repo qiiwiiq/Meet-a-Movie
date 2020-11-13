@@ -1,6 +1,12 @@
 <template>
   <div class="page-sign-in d-flex justify-center align-center">
-    <v-card class="card-sign-in pa-4">
+    <v-card class="card-sign-in px-8 py-4">
+      <Loading
+        :active="loading"
+        :is-full-page="false"
+        :color="mainColor"
+        loader="dots"
+      />
       <div class="title-sign-in text-center mb-4">Sign In</div>
       <div
         v-if="!isEmailSignin"
@@ -8,7 +14,7 @@
       >
         <v-btn
           dark
-          depressed
+          outlined
           color="#4CAF50"
           class="btn-sign-in ma-2 text-none"
           @click="isEmailSignin = true"
@@ -17,7 +23,7 @@
         </v-btn>
         <v-btn
           dark
-          depressed
+          outlined
           color="#3b5998"
           class="btn-sign-in ma-2 text-none"
           @click="signIn('fb')"
@@ -26,7 +32,7 @@
         </v-btn>
         <v-btn
           dark
-          depressed
+          outlined
           color="#ea4335"
           class="btn-sign-in ma-2 text-none"
           @click="signIn('google')"
@@ -38,7 +44,7 @@
         </p>
         <v-btn
           dark
-          depressed
+          outlined
           color="#F9A825"
           class="btn-sign-in ma-2 text-none"
           :to="{ name: 'SignUp' }"
@@ -55,7 +61,7 @@
           class="user-input input-email"
           type="text"
           placeholder="Email"
-          @keyup.enter="signup"
+          @keyup.enter="signInEmail"
         />
         <div class="section">
           <input
@@ -63,7 +69,7 @@
             class="user-input input-pw"
             :type="showPW ? 'text' : 'password'"
             placeholder="Password"
-            @keyup.enter="signup"
+            @keyup.enter="signInEmail"
           />
           <v-btn
             icon
@@ -77,7 +83,7 @@
         <v-btn
           dark
           depressed
-          color="#4CAF50"
+          :color="mainColor"
           class="btn-email-sign-in ma-2 text-none"
           @click="signInEmail"
         >
@@ -94,27 +100,66 @@
         </div>
       </div>
     </v-card>
+    <v-snackbar
+      v-model="snackbar"
+      color="blue-grey"
+      rounded="pill"
+      :timeout="-1"
+    >
+      <div class="text-center">{{ snackbarText }}</div>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import firebase from 'firebase/app';
 import "firebase/auth";
+import { mixin } from '@/utils/mixin';
+import { mailRegex } from '@/utils/regex';
+import { eliminateSuffixSpace } from '@/utils/utils';
 import { mapState } from "vuex";
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
+  components: {
+    Loading
+  },
+  mixins: [mixin],
   data() {
     return {
-      isEmailSignin: true,
+      loading: false,
+      isEmailSignin: false,
       user: {
         email: '',
         password: ''
       },
       showPW: false,
+      snackbar: false,
+      snackbarText: ''
     }
   },
   computed: {
     ...mapState(["isLogin"]),
+    safeUserEmail() {
+      // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
+      return eliminateSuffixSpace(this.user.email);
+    },
+    validEmail() {
+      return this.safeUserEmail.match(mailRegex) ? true : false;
+    },
+    isFormFilled() {
+      return this.validEmail && this.user.password ? true : false;
+    },
+  },
+  watch: {
+    user: {
+      handler: function() {
+        this.snackbarText = '';
+        this.snackbar = false;
+      },
+      deep: true
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -161,29 +206,38 @@ export default {
         });
     },
     signInEmail() {
-      firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
+      const vm = this;
+      if (!this.isFormFilled) {
+        this.snackbarText = 'Please fill in the form';
+        this.snackbar = true;
+        return;
+      }
+
+      this.loading = true;
+      firebase.auth().signInWithEmailAndPassword(this.safeUserEmail, this.user.password)
         .then(function(result) {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod,
-            token: result.credential.accessToken,
-            name: user.displayName,
+            signInMethod: 'email',
+            name: '',
             email: user.email,
-            photoURL: user.photoURL,
+            photoURL: '',
             uid: user.uid
           };
-          vm.$cookies.set('signInMethod', signInMethod);
-          vm.$cookies.set('token', result.credential.accessToken);
-          vm.$cookies.set('name', user.displayName);
+          vm.$cookies.set('signInMethod', 'email');
+          vm.$cookies.set('name', '');
           vm.$cookies.set('email', user.email);
-          vm.$cookies.set('photoURL', user.photoURL);
+          vm.$cookies.set('photoURL', '');
           vm.$cookies.set('uid', user.uid);
           vm.$store.dispatch("init", payload);
+          vm.loading = false;
           vm.$router.replace({name: 'Home'});
         })
         .catch(function(error) {
-          console.log(error);
+          vm.loading = false;
+          vm.snackbarText = error.message;
+          vm.snackbar = true;
         });
     }
   }
@@ -196,6 +250,7 @@ export default {
 }
 
 .card-sign-in {
+  position: relative;
   margin-top: 3vh;
   background-color: rgba(#FFF, .6);
 }
@@ -207,6 +262,7 @@ export default {
 
 .btn-sign-in {
   width: 220px;
+  background-color: rgba(#FFF, .9);
 }
 
 .divider-text {

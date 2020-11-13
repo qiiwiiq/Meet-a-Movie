@@ -4,7 +4,7 @@
       <Loading
         :active="loading"
         :is-full-page="false"
-        color="#00A7C6"
+        :color="mainColor"
         loader="dots"
       />
       <div class="title-sign-up text-center mb-6">Create New Account</div>
@@ -120,12 +120,12 @@ export default {
     }
   },
   computed: {
-    safeUserName() {
+    safeUserEmail() {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);
     },
     validEmail() {
-      return this.safeUserName.match(mailRegex) ? true : false;
+      return this.safeUserEmail.match(mailRegex) ? true : false;
     },
     isFormFilled() {
       return this.validEmail && this.user.password ? true : false;
@@ -144,7 +144,7 @@ export default {
       }
     },
     // disableAction() {
-    //   if (this.safeUserName && !this.validEmail) return true;
+    //   if (this.safeUserEmail && !this.validEmail) return true;
     //   if (this.user.password && !this.validPassword) return true;
     //   if (this.user.passwordConfirm && !this.validPasswordConfirm) return true;
     //   if (this.user.password && this.user.passwordConfirm && !this.samePasswords) return true;
@@ -173,7 +173,7 @@ export default {
       if (!this.validEmail || !this.samePasswords) return;
 
       this.loading = true;
-      firebase.auth().createUserWithEmailAndPassword(this.user.email, this.user.password)
+      firebase.auth().createUserWithEmailAndPassword(this.safeUserEmail, this.user.password)
         .then(result => {
           const user = result.user;
           let payload = {
@@ -184,7 +184,7 @@ export default {
             photoURL: '',
             uid: user.uid
           };
-          vm.$cookies.set('signInMethod', 'password');
+          vm.$cookies.set('signInMethod', 'email');
           vm.$cookies.set('name', '');
           vm.$cookies.set('email', user.email);
           vm.$cookies.set('photoURL', '');
