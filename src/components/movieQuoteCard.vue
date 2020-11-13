@@ -50,7 +50,7 @@
           small
           :ripple="false"
           class="btn-close"
-          @click="isDetailShown = false"
+          @click="closeDetail"
         >
           <v-icon>mdi-close-circle-outline</v-icon>
         </v-btn>
@@ -67,13 +67,14 @@
                 Watch Trailer
               </v-btn>
             </div>
-            <div class="quote text-center px-4 py-6">{{ movieObj.quote }}</div>
+            <div class="quote text-center px-4 py-6 flex-grow-1 d-flex justify-center align-center">{{ movieObj.quote }}</div>
             <v-textarea
+              v-model="comments"
               outlined
               no-resize
               hide-details
               placeholder="comments ..."
-              rows="2"
+              rows="3"
               :color="mainColor"
             ></v-textarea>
           </template>
@@ -84,6 +85,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { mixin } from '@/utils/mixin';
 import CollectBtn from "@/components/collectBtn";
 import MovieDetail from "@/components/movieDetail";
@@ -97,10 +99,13 @@ export default {
   },
   data() {
     return {
-      isDetailShown: false
+      isDetailShown: false,
+      comments: '',
+      orignComments: ''
     }
   },
   computed: {
+    ...mapState(["user"]),
     actors() {
       if (this.movieObj.casts) {
         let casts = this.movieObj.cast.slice(0, 3);
@@ -111,10 +116,26 @@ export default {
       }
     }
   },
+  mounted() {
+    this.comments = this.movieObj.comments;
+    this.orignComments = this.comments;
+  },
   methods: {
     updateIsCollected(val) {
       this.isCollected = val;
     },
+    closeDetail() {
+      if (this.comments !== this.orignComments) {
+        this.$store.dispatch("dbUpdateCollectionDetail", {
+          uid: this.user.uid,
+          collectionId: this.collectionId,
+          obj: {
+            comments: this.comments
+          }
+        });
+      }
+      this.isDetailShown = false;
+    }
   }
 }
 </script>

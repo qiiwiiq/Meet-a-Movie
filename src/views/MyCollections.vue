@@ -31,8 +31,8 @@
     <div class="divider"></div>
     <div class="col-right">
       <div
-        v-for="(item, id) in listCollections"
-        :key="id"
+        v-for="item in listCollections"
+        :key="item.collectionId"
         class="fav-movie"
       >
         <MovieQuoteCard

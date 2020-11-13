@@ -185,6 +185,14 @@ export default new Vuex.Store({
         .then(() => dispatch("dbReadCollections", uid))
         .catch(error => console.error('Error writing document: ', error))
     },
+    dbUpdateCollectionDetail ({ dispatch }, {uid, collectionId, obj}) {
+      const collectionName = `collections-${uid}`;
+      db.collection(collectionName)
+        .doc(collectionId)
+        .update(obj)
+        .then(() => dispatch("dbReadCollections", uid))
+        .catch(error => console.error('Error writing document: ', error))
+    },
     dbUpdateCollections ({ dispatch }, {uid, collectionId, movieObj}) {
       const collectionName = `collections-${uid}`;
       movieObj.timestamp = new Date().getTime();

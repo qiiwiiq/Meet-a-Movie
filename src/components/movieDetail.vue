@@ -3,7 +3,7 @@
     <div class="poster mr-6">
       <img :src="movieObj.poster" />
     </div>
-    <div class="movie-info">
+    <div class="movie-info d-flex flex-column">
       <div class="d-flex justify-space-between align-center mr-8">
         <div>
           <div class="movie-title mb-2">{{ movieObj.title }}</div>
