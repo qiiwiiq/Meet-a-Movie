@@ -2,12 +2,17 @@
   <div
     :style="{
       backgroundImage:
-        'url(' + bgImage + '), linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)'
+        'url(' +
+        bgImage +
+        '), linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)',
     }"
     class="page-home"
   >
     <div class="d-flex justify-center h-100">
-      <v-card v-if="!isIntroShown" class="card-quote d-flex flex-column justify-space-between align-end">
+      <v-card
+        v-if="!isIntroShown"
+        class="card-quote d-flex flex-column justify-space-between align-end"
+      >
         <Quote :quoteObj="quoteObj" />
         <div>
           <CollectBtn
@@ -18,27 +23,15 @@
             @updateIsCollected="updateIsCollected"
             @updateListid="updateListid"
           />
-          <v-btn
-            text
-            class="btn-direct px-2"
-            @click="enterMovieIntro"
-          >
+          <v-btn text class="btn-direct px-2" @click="enterMovieIntro">
             Check it &rarr;
           </v-btn>
         </div>
         <div class="card-quote-actions d-flex flex-column">
-          <v-btn
-            fab
-            x-small
-            class="mb-2"
-          >
+          <v-btn fab x-small class="mb-2">
             <v-icon>mdi-tune</v-icon>
           </v-btn>
-          <v-btn
-            fab
-            x-small
-            @click="getQuote"
-          >
+          <v-btn fab x-small @click="getQuote">
             <v-icon>mdi-autorenew</v-icon>
           </v-btn>
         </div>
@@ -67,29 +60,17 @@
                 @updateIsCollected="updateIsCollected"
                 @updateListid="updateListid"
               />
-              <v-btn
-                text
-                class="btn-direct px-2"
-                @click="leaveMovieIntro"
-              >
+              <v-btn text class="btn-direct px-2" @click="leaveMovieIntro">
                 Back &rarr;
               </v-btn>
             </div>
           </template>
           <template v-slot:colRight>
             <div class="d-flex flex-column ml-2">
-              <v-btn
-                fab
-                x-small
-                class="mb-3"
-              >
+              <v-btn fab x-small class="mb-3">
                 <v-icon>mdi-tune</v-icon>
               </v-btn>
-              <v-btn
-                fab
-                x-small
-                @click="getQuote"
-              >
+              <v-btn fab x-small @click="getQuote">
                 <v-icon>mdi-autorenew</v-icon>
               </v-btn>
             </div>
@@ -105,31 +86,38 @@ import CollectBtn from "@/components/collectBtn";
 import MovieDetail from "@/components/movieDetail";
 import Quote from "@/components/quote";
 import { mapState } from "vuex";
-import { mixin } from '@/utils/mixin';
+import { mixin } from "@/utils/mixin";
 
 export default {
   mixins: [mixin],
   components: {
     CollectBtn,
     MovieDetail,
-    Quote
+    Quote,
   },
   data() {
     return {
       isCollected: false,
       movieQuoteObj: undefined,
-      collectionId: '',
-    }
+      collectionId: "",
+    };
   },
   computed: {
-    ...mapState(["isLogin", "user", "quoteObj", "movieObj", "collections", "isIntroShown"]),
+    ...mapState([
+      "isLogin",
+      "user",
+      "quoteObj",
+      "movieObj",
+      "collections",
+      "isIntroShown",
+    ]),
     bgImage() {
       if (this.movieObj.poster) {
         return this.movieObj.poster;
       } else {
-        return '';
+        return "";
       }
-    }
+    },
   },
   async mounted() {
     await this.wait(500);
@@ -140,29 +128,36 @@ export default {
       handler: function() {
         this.initMovieQuoteData();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     initMovieQuoteData() {
-      const movieObjInCollections = this.collections.find(item => item.movie.quote === this.quoteObj.quote);
-      console.log(movieObjInCollections);
+      const movieObjInCollections = this.collections.find(
+        (item) => item.movie.quote === this.quoteObj.quote
+      );
       if (movieObjInCollections) {
         this.isCollected = true;
-        this.movieQuoteObj = Object.assign({
-          quote: this.quoteObj.quote,
-          listid: movieObjInCollections.movie.listid,
-          comments: movieObjInCollections.movie.comments
-        }, this.movieObj);
+        this.movieQuoteObj = Object.assign(
+          {
+            quote: this.quoteObj.quote,
+            listid: movieObjInCollections.movie.listid,
+            comments: movieObjInCollections.movie.comments,
+          },
+          this.movieObj
+        );
         this.collectionId = movieObjInCollections.collectionId;
       } else {
         this.isCollected = false;
-        this.movieQuoteObj = Object.assign({
-          quote: this.quoteObj.quote,
-          listid: '',
-          comments: ''
-        }, this.movieObj);
-        this.collectionId = '';
+        this.movieQuoteObj = Object.assign(
+          {
+            quote: this.quoteObj.quote,
+            listid: "",
+            comments: "",
+          },
+          this.movieObj
+        );
+        this.collectionId = "";
       }
     },
     updateIsCollected(val) {
@@ -180,7 +175,7 @@ export default {
     getQuote() {
       this.$store.dispatch("getQuote");
     },
-  }
+  },
 };
 </script>
 

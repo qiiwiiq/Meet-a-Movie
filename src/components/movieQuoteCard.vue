@@ -39,11 +39,7 @@
       </div>
     </div>
 
-    <v-dialog
-      v-model="isDetailShown"
-      max-width="900"
-      persistent
-    >
+    <v-dialog v-model="isDetailShown" max-width="900" persistent>
       <v-card class="movie-detail-card pa-4">
         <v-btn
           icon
@@ -67,7 +63,11 @@
                 Watch Trailer
               </v-btn>
             </div>
-            <div class="quote text-center px-4 py-6 flex-grow-1 d-flex justify-center align-center">{{ movieObj.quote }}</div>
+            <div
+              class="quote text-center px-4 py-6 flex-grow-1 d-flex justify-center align-center"
+            >
+              {{ movieObj.quote }}
+            </div>
             <v-textarea
               v-model="comments"
               outlined
@@ -86,7 +86,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { mixin } from '@/utils/mixin';
+import { mixin } from "@/utils/mixin";
 import CollectBtn from "@/components/collectBtn";
 import MovieDetail from "@/components/movieDetail";
 
@@ -95,26 +95,26 @@ export default {
   props: ["movieObj", "collectionId"],
   components: {
     CollectBtn,
-    MovieDetail
+    MovieDetail,
   },
   data() {
     return {
       isDetailShown: false,
-      comments: '',
-      orignComments: ''
-    }
+      comments: "",
+      orignComments: "",
+    };
   },
   computed: {
     ...mapState(["user"]),
     actors() {
       if (this.movieObj.casts) {
         let casts = this.movieObj.cast.slice(0, 3);
-        let actors = casts.map(casts => casts.actor);
+        let actors = casts.map((casts) => casts.actor);
         return actors.join(", ");
       } else {
         return "";
       }
-    }
+    },
   },
   mounted() {
     this.comments = this.movieObj.comments;
@@ -130,14 +130,14 @@ export default {
           uid: this.user.uid,
           collectionId: this.collectionId,
           obj: {
-            comments: this.comments
-          }
+            comments: this.comments,
+          },
         });
       }
       this.isDetailShown = false;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -161,13 +161,15 @@ export default {
   text-transform: uppercase;
 }
 
-.year-and-length, .cast {
+.year-and-length,
+.cast {
   font-size: 12px;
   font-weight: 300;
   line-height: 16px;
 }
 
-.year, .length {
+.year,
+.length {
   border-right: 1px solid #999;
 }
 

@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props: ["quoteObj"]
+  props: ["quoteObj"],
 };
 </script>
 

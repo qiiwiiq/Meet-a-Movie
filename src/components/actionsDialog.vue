@@ -4,18 +4,10 @@
     <slot></slot>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn
-        :color="mainColor"
-        text
-        @click="action1"
-      >
+      <v-btn :color="mainColor" text @click="action1">
         {{ actionText1 }}
       </v-btn>
-      <v-btn
-        :color="mainColor"
-        text
-        @click="action2"
-      >
+      <v-btn :color="mainColor" text @click="action2">
         {{ actionText2 }}
       </v-btn>
     </v-card-actions>
@@ -23,24 +15,20 @@
 </template>
 
 <script>
-import { mixin } from '@/utils/mixin';
+import { mixin } from "@/utils/mixin";
 
 export default {
   mixins: [mixin],
-  props: [
-    "actionTitle",
-    "actionText1",
-    "actionText2"
-  ],
+  props: ["actionTitle", "actionText1", "actionText2"],
   methods: {
     action1() {
       this.$emit("action1");
     },
     action2() {
       this.$emit("action2");
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

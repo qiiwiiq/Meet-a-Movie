@@ -50,11 +50,7 @@
         content-class="user-menu"
       >
         <template v-slot:activator="{ on }">
-          <v-btn
-            icon
-            class="mr-1"
-            v-on="on"
-          >
+          <v-btn icon class="mr-1" v-on="on">
             <v-avatar v-if="user.photoURL" size="36">
               <img :src="user.photoURL" />
             </v-avatar>
@@ -62,17 +58,18 @@
           </v-btn>
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
-          <v-list-item
-            class="menu-list-item"
-            @click="goToSettings"
-          >
-            <v-list-item-title class="menu-list-item-text">Settings</v-list-item-title>
+          <v-list-item class="menu-list-item" @click="goToSettings">
+            <v-list-item-title class="menu-list-item-text"
+              >Settings</v-list-item-title
+            >
           </v-list-item>
           <v-list-item
             class="menu-list-item"
             @click="signOutDialogOpened = true"
           >
-            <v-list-item-title class="menu-list-item-text">Sign Out</v-list-item-title>
+            <v-list-item-title class="menu-list-item-text"
+              >Sign Out</v-list-item-title
+            >
           </v-list-item>
         </v-list>
       </v-menu>
@@ -82,10 +79,7 @@
       <router-view />
     </v-main>
 
-    <v-dialog
-      v-model="signOutDialogOpened"
-      width="400"
-    >
+    <v-dialog v-model="signOutDialogOpened" width="400">
       <ActionsDialog
         :actionTitle="'Sign Out'"
         :actionText1="'No'"
@@ -103,9 +97,9 @@
 
 <script>
 import { mapState } from "vuex";
-import { mixin } from '@/utils/mixin';
+import { mixin } from "@/utils/mixin";
 import ActionsDialog from "@/components/actionsDialog";
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/auth";
 
 export default {
@@ -117,7 +111,7 @@ export default {
   data() {
     return {
       signOutDialogOpened: false,
-    }
+    };
   },
   computed: {
     ...mapState(["isLogin", "user", "movieObj"]),
@@ -128,12 +122,12 @@ export default {
   },
   methods: {
     initUserFromCookies() {
-      const signInMethod = this.$cookies.get('signInMethod');
-      const token = this.$cookies.get('token');
-      const name = this.$cookies.get('name');
-      const email = this.$cookies.get('email');
-      const photoURL = this.$cookies.get('photoURL');
-      const uid = this.$cookies.get('uid');
+      const signInMethod = this.$cookies.get("signInMethod");
+      const token = this.$cookies.get("token");
+      const name = this.$cookies.get("name");
+      const email = this.$cookies.get("email");
+      const photoURL = this.$cookies.get("photoURL");
+      const uid = this.$cookies.get("uid");
       const user = {
         isNewUser: false,
         signInMethod,
@@ -141,39 +135,45 @@ export default {
         name,
         email,
         photoURL,
-        uid
+        uid,
       };
       this.$store.dispatch("init", user);
     },
     goToSettings() {
-      this.$router.push({name: 'Settings'}).catch(() => {});
+      this.$router.push({ name: "Settings" }).catch(() => {});
     },
     signOut() {
       firebase.auth().signOut();
       let payload = {
-        signInMethod: '',
-        token: '',
-        name: '',
-        email: '',
-        photoURL: ''
+        signInMethod: "",
+        token: "",
+        name: "",
+        email: "",
+        photoURL: "",
       };
       this.$store.commit("setUser", payload);
       this.$store.commit("setLoginStatus", false);
       this.clearCookies();
       this.signOutDialogOpened = false;
       this.$router.replace({ name: "Home" }).catch(() => {});
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .navbar {
-  background-image: linear-gradient(#111 0%, #333 70%, #444 80%, #555 90%, #444 100%);
+  background-image: linear-gradient(
+    #111 0%,
+    #333 70%,
+    #444 80%,
+    #555 90%,
+    #444 100%
+  );
 }
 
 .main {
-  background-image: url('./assets/bg.jpg');
+  background-image: url("./assets/bg.jpg");
   background-size: cover;
 }
 
@@ -185,20 +185,21 @@ export default {
   border-radius: 0;
 
   &:not(:last-child) {
-    border-bottom: 1px dashed #CCC;
+    border-bottom: 1px dashed #ccc;
   }
-  
+
   &-text {
     font-size: 12px !important;
     text-transform: uppercase;
   }
 }
 
-.btn-nav,.v-btn:before {
+.btn-nav,
+.v-btn:before {
   background-color: transparent;
 }
 </style>
 
 <style lang="scss">
-@import './scss/global.scss';
+@import "./scss/global.scss";
 </style>

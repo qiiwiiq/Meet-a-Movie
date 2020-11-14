@@ -1,26 +1,12 @@
 <template>
   <span>
-    <v-menu
-      v-if="!isCollected"
-      offset-x
-      offset-y
-      left
-      nudge-left="-18"
-    >
+    <v-menu v-if="!isCollected" offset-x offset-y left nudge-left="-18">
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          class="mr-2"
-          :ripple="false"
-          v-on="on"
-        >
+        <v-btn icon class="mr-2" :ripple="false" v-on="on">
           <v-icon>mdi-heart-outline</v-icon>
         </v-btn>
       </template>
-      <v-list
-        dense
-        class="py-0"
-      >
+      <v-list dense class="py-0">
         <v-list-item
           v-for="list in filteredLists"
           :key="list.id"
@@ -33,27 +19,13 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-menu
-      v-if="isCollected"
-      offset-x
-      offset-y
-      left
-      nudge-left="-18"
-    >
+    <v-menu v-if="isCollected" offset-x offset-y left nudge-left="-18">
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          class="mr-2"
-          :ripple="false"
-          v-on="on"
-        >
+        <v-btn icon class="mr-2" :ripple="false" v-on="on">
           <v-icon color="#B71C1C">mdi-heart</v-icon>
         </v-btn>
       </template>
-      <v-list
-        dense
-        class="py-0"
-      >
+      <v-list dense class="py-0">
         <v-list-item @click="removeCollections()">
           <v-list-item-title>
             <v-icon small class="mr-1">mdi-minus</v-icon>
@@ -84,12 +56,14 @@ export default {
     ...mapState(["user", "collectionLists"]),
     filteredLists() {
       if (this.isCollected) {
-        const filteredLists = this.collectionLists.filter(item => item.id !== this.movieObj.listid);
+        const filteredLists = this.collectionLists.filter(
+          (item) => item.id !== this.movieObj.listid
+        );
         return filteredLists;
       } else {
         return this.collectionLists;
       }
-    }
+    },
   },
   methods: {
     addCollections(listid) {
@@ -101,23 +75,23 @@ export default {
         this.$store.dispatch("dbUpdateCollections", {
           uid: this.user.uid,
           collectionId: this.collectionId,
-          movieObj: obj
+          movieObj: obj,
         });
       } else {
         this.$store.dispatch("dbAddCollections", {
           uid: this.user.uid,
-          movieObj: obj
+          movieObj: obj,
         });
       }
     },
     removeCollections() {
       this.$emit("updateIsCollected", false);
-      this.$emit("updateListid", '');
+      this.$emit("updateListid", "");
       this.$store.dispatch("dbDeleteCollections", {
         uid: this.user.uid,
-        collectionId: this.collectionId
+        collectionId: this.collectionId,
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -36,7 +36,7 @@
           class="reveal-pw"
           @click="showPW1 = !showPW1"
         >
-          <v-icon>mdi-{{ showPW1 ? 'eye-off' : 'eye' }}</v-icon>
+          <v-icon>mdi-{{ showPW1 ? "eye-off" : "eye" }}</v-icon>
         </v-btn>
       </div>
       <div class="section">
@@ -53,14 +53,21 @@
           class="reveal-pw"
           @click="showPW2 = !showPW2"
         >
-          <v-icon>mdi-{{ showPW2 ? 'eye-off' : 'eye' }}</v-icon>
+          <v-icon>mdi-{{ showPW2 ? "eye-off" : "eye" }}</v-icon>
         </v-btn>
       </div>
       <div class="input-invalid pl-2 mb-1">
-        <div v-if="(user.password && !validPassword) || (user.passwordConfirm && !validPasswordConfirm)">
+        <div
+          v-if="
+            (user.password && !validPassword) ||
+              (user.passwordConfirm && !validPasswordConfirm)
+          "
+        >
           At least 6 characters
         </div>
-        <div v-else-if="user.password && user.passwordConfirm && !samePasswords">
+        <div
+          v-else-if="user.password && user.passwordConfirm && !samePasswords"
+        >
           Password not match
         </div>
       </div>
@@ -92,32 +99,32 @@
 </template>
 
 <script>
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/auth";
-import { mixin } from '@/utils/mixin';
-import { mailRegex } from '@/utils/regex';
-import { eliminateSuffixSpace } from '@/utils/utils';
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
+import { mixin } from "@/utils/mixin";
+import { mailRegex } from "@/utils/regex";
+import { eliminateSuffixSpace } from "@/utils/utils";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   components: {
-    Loading
+    Loading,
   },
   mixins: [mixin],
   data() {
     return {
       loading: false,
       user: {
-        email: '',
-        password: '',
-        passwordConfirm: ''
+        email: "",
+        password: "",
+        passwordConfirm: "",
       },
       showPW1: false,
       showPW2: false,
       snackbar: false,
-      snackbarText: ''
-    }
+      snackbarText: "",
+    };
   },
   computed: {
     safeUserEmail() {
@@ -131,10 +138,14 @@ export default {
       return this.validEmail && this.user.password ? true : false;
     },
     validPassword() {
-      return this.user.password && this.user.password.length >= 6 ? true : false;
+      return this.user.password && this.user.password.length >= 6
+        ? true
+        : false;
     },
     validPasswordConfirm() {
-      return this.user.passwordConfirm && this.user.passwordConfirm.length >= 6 ? true : false;
+      return this.user.passwordConfirm && this.user.passwordConfirm.length >= 6
+        ? true
+        : false;
     },
     samePasswords() {
       if (this.user.password && this.user.passwordConfirm) {
@@ -155,17 +166,17 @@ export default {
   watch: {
     user: {
       handler: function() {
-        this.snackbarText = '';
+        this.snackbarText = "";
         this.snackbar = false;
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     signup() {
       const vm = this;
       if (!this.isFormFilled) {
-        this.snackbarText = 'Please fill in the form';
+        this.snackbarText = "Please fill in the form";
         this.snackbar = true;
         return;
       }
@@ -173,34 +184,36 @@ export default {
       if (!this.validEmail || !this.samePasswords) return;
 
       this.loading = true;
-      firebase.auth().createUserWithEmailAndPassword(this.safeUserEmail, this.user.password)
-        .then(result => {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.safeUserEmail, this.user.password)
+        .then((result) => {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod: 'email',
-            name: '',
+            signInMethod: "email",
+            name: "",
             email: user.email,
-            photoURL: '',
-            uid: user.uid
+            photoURL: "",
+            uid: user.uid,
           };
-          vm.$cookies.set('signInMethod', 'email');
-          vm.$cookies.set('name', '');
-          vm.$cookies.set('email', user.email);
-          vm.$cookies.set('photoURL', '');
-          vm.$cookies.set('uid', user.uid);
+          vm.$cookies.set("signInMethod", "email");
+          vm.$cookies.set("name", "");
+          vm.$cookies.set("email", user.email);
+          vm.$cookies.set("photoURL", "");
+          vm.$cookies.set("uid", user.uid);
           vm.$store.dispatch("init", payload);
           vm.loading = false;
-          vm.$router.replace({name: 'Home'});
+          vm.$router.replace({ name: "Home" });
         })
         .catch((error) => {
           vm.loading = false;
           vm.snackbarText = error.message;
           vm.snackbar = true;
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -212,7 +225,7 @@ export default {
 .card-sign-up {
   position: relative;
   margin-top: 3vh;
-  background-color: rgba(#FFF, .6);
+  background-color: rgba(#fff, 0.6);
 }
 
 .title-sign-up {
@@ -247,7 +260,7 @@ export default {
   line-height: 25px;
   word-spacing: 1px;
   font-size: 14px;
-  color: #C62828;
+  color: #c62828;
 }
 
 .reveal-pw {

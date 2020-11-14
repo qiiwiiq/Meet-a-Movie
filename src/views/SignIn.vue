@@ -8,10 +8,7 @@
         loader="dots"
       />
       <div class="title-sign-in text-center mb-4">Sign In</div>
-      <div
-        v-if="!isEmailSignin"
-        class="d-flex flex-column"
-      >
+      <div v-if="!isEmailSignin" class="d-flex flex-column">
         <v-btn
           dark
           outlined
@@ -52,10 +49,7 @@
           Create a New Account
         </v-btn>
       </div>
-      <div
-        v-if="isEmailSignin"
-        class="d-flex flex-column align-center"
-      >
+      <div v-if="isEmailSignin" class="d-flex flex-column align-center">
         <input
           v-model="user.email"
           class="user-input input-email"
@@ -77,7 +71,7 @@
             class="reveal-pw"
             @click="showPW = !showPW"
           >
-            <v-icon>mdi-{{ showPW ? 'eye-off' : 'eye' }}</v-icon>
+            <v-icon>mdi-{{ showPW ? "eye-off" : "eye" }}</v-icon>
           </v-btn>
         </div>
         <v-btn
@@ -91,10 +85,7 @@
         </v-btn>
         <div class="signin my-2">
           <span>Sign in with other methods </span>
-          <button
-            class="link-signin"
-            @click="isEmailSignin = false"
-          >
+          <button class="link-signin" @click="isEmailSignin = false">
             Click here
           </button>
         </div>
@@ -112,18 +103,18 @@
 </template>
 
 <script>
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/auth";
-import { mixin } from '@/utils/mixin';
-import { mailRegex } from '@/utils/regex';
-import { eliminateSuffixSpace } from '@/utils/utils';
+import { mixin } from "@/utils/mixin";
+import { mailRegex } from "@/utils/regex";
+import { eliminateSuffixSpace } from "@/utils/utils";
 import { mapState } from "vuex";
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   components: {
-    Loading
+    Loading,
   },
   mixins: [mixin],
   data() {
@@ -131,13 +122,13 @@ export default {
       loading: false,
       isEmailSignin: false,
       user: {
-        email: '',
-        password: ''
+        email: "",
+        password: "",
       },
       showPW: false,
       snackbar: false,
-      snackbarText: ''
-    }
+      snackbarText: "",
+    };
   },
   computed: {
     ...mapState(["isLogin"]),
@@ -155,32 +146,34 @@ export default {
   watch: {
     user: {
       handler: function() {
-        this.snackbarText = '';
+        this.snackbarText = "";
         this.snackbar = false;
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLogin) {
-        vm.$router.replace({name: 'Home'});
+        vm.$router.replace({ name: "Home" });
       }
-    })
+    });
   },
   methods: {
     signIn(signInMethod) {
       const vm = this;
       let provider;
-      switch(signInMethod) {
-        case 'fb':
+      switch (signInMethod) {
+        case "fb":
           provider = new firebase.auth.FacebookAuthProvider();
           break;
-        case 'google':
+        case "google":
           provider = new firebase.auth.GoogleAuthProvider();
           break;
       }
-      firebase.auth().signInWithPopup(provider)
+      firebase
+        .auth()
+        .signInWithPopup(provider)
         .then(function(result) {
           const user = result.user;
           let payload = {
@@ -190,16 +183,16 @@ export default {
             name: user.displayName,
             email: user.email,
             photoURL: user.photoURL,
-            uid: user.uid
+            uid: user.uid,
           };
-          vm.$cookies.set('signInMethod', signInMethod);
-          vm.$cookies.set('token', result.credential.accessToken);
-          vm.$cookies.set('name', user.displayName);
-          vm.$cookies.set('email', user.email);
-          vm.$cookies.set('photoURL', user.photoURL);
-          vm.$cookies.set('uid', user.uid);
+          vm.$cookies.set("signInMethod", signInMethod);
+          vm.$cookies.set("token", result.credential.accessToken);
+          vm.$cookies.set("name", user.displayName);
+          vm.$cookies.set("email", user.email);
+          vm.$cookies.set("photoURL", user.photoURL);
+          vm.$cookies.set("uid", user.uid);
           vm.$store.dispatch("init", payload);
-          vm.$router.replace({name: 'Home'});
+          vm.$router.replace({ name: "Home" });
         })
         .catch(function(error) {
           console.log(error);
@@ -208,40 +201,42 @@ export default {
     signInEmail() {
       const vm = this;
       if (!this.isFormFilled) {
-        this.snackbarText = 'Please fill in the form';
+        this.snackbarText = "Please fill in the form";
         this.snackbar = true;
         return;
       }
 
       this.loading = true;
-      firebase.auth().signInWithEmailAndPassword(this.safeUserEmail, this.user.password)
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.safeUserEmail, this.user.password)
         .then(function(result) {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod: 'email',
-            name: '',
+            signInMethod: "email",
+            name: "",
             email: user.email,
-            photoURL: '',
-            uid: user.uid
+            photoURL: "",
+            uid: user.uid,
           };
-          vm.$cookies.set('signInMethod', 'email');
-          vm.$cookies.set('name', '');
-          vm.$cookies.set('email', user.email);
-          vm.$cookies.set('photoURL', '');
-          vm.$cookies.set('uid', user.uid);
+          vm.$cookies.set("signInMethod", "email");
+          vm.$cookies.set("name", "");
+          vm.$cookies.set("email", user.email);
+          vm.$cookies.set("photoURL", "");
+          vm.$cookies.set("uid", user.uid);
           vm.$store.dispatch("init", payload);
           vm.loading = false;
-          vm.$router.replace({name: 'Home'});
+          vm.$router.replace({ name: "Home" });
         })
         .catch(function(error) {
           vm.loading = false;
           vm.snackbarText = error.message;
           vm.snackbar = true;
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -252,7 +247,7 @@ export default {
 .card-sign-in {
   position: relative;
   margin-top: 3vh;
-  background-color: rgba(#FFF, .6);
+  background-color: rgba(#fff, 0.6);
 }
 
 .title-sign-in {
@@ -262,7 +257,7 @@ export default {
 
 .btn-sign-in {
   width: 220px;
-  background-color: rgba(#FFF, .9);
+  background-color: rgba(#fff, 0.9);
 }
 
 .divider-text {

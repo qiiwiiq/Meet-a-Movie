@@ -17,7 +17,9 @@
             <div class="rating-bg"></div>
             <div class="rating-text">{{ movieObj.rating }}</div>
           </div>
-          <div class="rating_votes text-center">{{ formatThousands(movieObj.rating_votes) }} votes</div>
+          <div class="rating_votes text-center">
+            {{ formatThousands(movieObj.rating_votes) }} votes
+          </div>
         </div>
       </div>
       <div class="cast my-2 mr-8">{{ actors }}</div>
@@ -35,26 +37,26 @@ export default {
     actors() {
       if (this.movieObj) {
         let casts = this.movieObj.cast.slice(0, 3);
-        let actors = casts.map(casts => casts.actor);
+        let actors = casts.map((casts) => casts.actor);
         return actors.join(", ");
       } else {
         return "";
       }
-    }
+    },
   },
   methods: {
     formatThousands(str) {
       if (!str) return;
-      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-  }
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .poster {
   width: 40%;
-  
+
   & img {
     width: 100%;
     object-fit: contain;
@@ -86,8 +88,30 @@ export default {
       background-color: yellow;
       width: 50px;
       height: 50px;
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      -webkit-clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+      );
+      -webkit-clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+      );
     }
 
     &-text {

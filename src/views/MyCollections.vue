@@ -14,16 +14,9 @@
         </v-btn>
       </div>
       <v-list dense flat rounded class="lists px-0">
-        <v-list-item-group
-          v-model="currentList"
-          mandatory
-          color="#006064"
-        >
+        <v-list-item-group v-model="currentList" mandatory color="#006064">
           <template v-for="list in collectionLists">
-            <CollectionList
-              :list="list"
-              :key="list.id"
-            />
+            <CollectionList :list="list" :key="list.id" />
           </template>
         </v-list-item-group>
       </v-list>
@@ -43,14 +36,12 @@
       <div
         v-if="listCollections.length === 0"
         class="reminder text-center mt-4"
-      >Go explore some movies !</div>
+      >
+        Go explore some movies !
+      </div>
     </div>
 
-    <v-dialog
-      v-model="createNewListDialogOpened"
-      width="400"
-      persistent
-    >
+    <v-dialog v-model="createNewListDialogOpened" width="400" persistent>
       <ActionsDialog
         :actionTitle="'Create New List'"
         :actionText1="'Cancel'"
@@ -74,7 +65,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { mixin } from '@/utils/mixin';
+import { mixin } from "@/utils/mixin";
 import ActionsDialog from "@/components/actionsDialog";
 import CollectionList from "@/components/collectionList";
 import MovieQuoteCard from "@/components/movieQuoteCard";
@@ -84,47 +75,49 @@ export default {
   components: {
     ActionsDialog,
     CollectionList,
-    MovieQuoteCard
+    MovieQuoteCard,
   },
   data() {
     return {
       currentList: 0,
       createNewListDialogOpened: false,
-      newListName: '',
-    }
+      newListName: "",
+    };
   },
   computed: {
     ...mapState(["isLogin", "user", "collectionLists", "collections"]),
     listCollections() {
       if (this.collectionLists.length > 0) {
         const listid = this.collectionLists[this.currentList].id;
-        const fillteredCollections = this.collections.filter(item => item.movie.listid === listid);
+        const fillteredCollections = this.collections.filter(
+          (item) => item.movie.listid === listid
+        );
         return fillteredCollections;
       } else {
         return [];
       }
-    }
+    },
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (!vm.isLogin) {
-        vm.$router.replace({name: 'SignIn'});
+        vm.$router.replace({ name: "SignIn" });
       }
-    })
+    });
   },
   watch: {
     isLogin(val) {
-      if (!val) this.$router.replace({name: 'SignIn'});
+      if (!val) this.$router.replace({ name: "SignIn" });
     },
     createNewListDialogOpened(val) {
-      if (!val) this.newListName = '';
-    }
+      if (!val) this.newListName = "";
+    },
   },
   methods: {
     createNewList() {
       this.$store.dispatch("dbWriteCollectionList", {
         uid: this.user.uid,
-        listName: this.newListName
+        listName: this.newListName,
       });
       this.createNewListDialogOpened = false;
     },
@@ -133,9 +126,9 @@ export default {
       movieObj.cast = JSON.parse(movieObj.cast);
       movieObj.technical_specs = JSON.parse(movieObj.technical_specs);
       return movieObj;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -143,7 +136,7 @@ export default {
   max-width: 1200px;
   margin: 16px 20px;
   border-radius: 4px;
-  background-color: rgba(#FFF, .6);
+  background-color: rgba(#fff, 0.6);
 }
 
 .divider {
@@ -151,7 +144,8 @@ export default {
   border-right: 1px dashed #757575;
 }
 
-.col-left, .col-right {
+.col-left,
+.col-right {
   height: calc(100vh - 120px);
   overflow-y: scroll;
   padding: 0 12px;
@@ -169,7 +163,7 @@ export default {
   }
 
   .btn-create-list {
-    background-color: rgba(#FFF, .8);
+    background-color: rgba(#fff, 0.8);
   }
 }
 
