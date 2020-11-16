@@ -50,7 +50,7 @@
         >
           <v-icon>mdi-close-circle-outline</v-icon>
         </v-btn>
-        <MovieDetail :movieObj="movieObj">
+        <MovieDetail :movieObj="movieObj" class="mr-2">
           <template v-slot:movieInfo>
             <div>
               <v-btn

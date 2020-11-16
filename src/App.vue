@@ -44,7 +44,6 @@
         v-else
         bottom
         offset-y
-        open-on-hover
         close-delay="300"
         nudge-bottom="8"
         content-class="user-menu"
@@ -58,18 +57,27 @@
           </v-btn>
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
+          <v-list-item class="menu-list-item">
+            <v-list-item-title class="menu-list-item-account">{{ user.email }}</v-list-item-title>
+          </v-list-item>
           <v-list-item class="menu-list-item" @click="goToSettings">
-            <v-list-item-title class="menu-list-item-text"
-              >Settings</v-list-item-title
-            >
+            <v-list-item-title class="menu-list-item-text d-flex justify-end">
+              <div class="menu-action d-flex justify-space-between">
+                <v-icon small>mdi-cog</v-icon>
+                Settings
+              </div>
+            </v-list-item-title>
           </v-list-item>
           <v-list-item
             class="menu-list-item"
             @click="signOutDialogOpened = true"
           >
-            <v-list-item-title class="menu-list-item-text"
-              >Sign Out</v-list-item-title
-            >
+            <v-list-item-title class="menu-list-item-text d-flex justify-end">
+              <div class="menu-action d-flex justify-space-between">
+                <v-icon small>mdi-logout-variant</v-icon>
+                Sign Out
+              </div>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -188,9 +196,18 @@ export default {
     border-bottom: 1px dashed #ccc;
   }
 
+  &-account {
+    font-size: 12px !important;
+    color:#B2EBF2;
+  }
+
   &-text {
     font-size: 12px !important;
     text-transform: uppercase;
+  }
+
+  .menu-action {
+    width: 80px;
   }
 }
 

@@ -1,65 +1,67 @@
 <template>
-  <div class="page-collections py-3 d-flex justify-space-around">
-    <div class="col-left">
-      <div class="text-center mb-2">
-        <v-btn
-          small
-          rounded
-          outlined
-          color="#333"
-          class="btn-create-list mr-2"
-          @click="createNewListDialogOpened = true"
-        >
-          Create New List
-        </v-btn>
-      </div>
-      <v-list dense flat rounded class="lists px-0">
-        <v-list-item-group v-model="currentList" mandatory color="#006064">
-          <template v-for="list in collectionLists">
-            <CollectionList :list="list" :key="list.id" />
-          </template>
-        </v-list-item-group>
-      </v-list>
-    </div>
-    <div class="divider"></div>
-    <div class="col-right">
-      <div
-        v-for="item in listCollections"
-        :key="item.collectionId"
-        class="fav-movie"
-      >
-        <MovieQuoteCard
-          :movieObj="normalizeMovieObj(item.movie)"
-          :collectionId="item.collectionId"
-        />
-      </div>
-      <div
-        v-if="listCollections.length === 0"
-        class="reminder text-center mt-4"
-      >
-        Go explore some movies !
-      </div>
-    </div>
-
-    <v-dialog v-model="createNewListDialogOpened" width="400" persistent>
-      <ActionsDialog
-        :actionTitle="'Create New List'"
-        :actionText1="'Cancel'"
-        :actionText2="'Create'"
-        @action1="createNewListDialogOpened = false"
-        @action2="createNewList"
-      >
-        <div class="px-6">
-          <v-text-field
-            v-model="newListName"
-            dense
-            placeholder="List Name"
-            :color="mainColor"
-            class="dialog-create-list-input"
-          ></v-text-field>
+  <div class="d-flex justify-center">
+    <div class="page-collections py-3 d-flex justify-space-around">
+      <div class="col-left">
+        <div class="text-center mb-2">
+          <v-btn
+            small
+            rounded
+            outlined
+            color="#333"
+            class="btn-create-list mr-2"
+            @click="createNewListDialogOpened = true"
+          >
+            Create New List
+          </v-btn>
         </div>
-      </ActionsDialog>
-    </v-dialog>
+        <v-list dense flat rounded class="lists px-0">
+          <v-list-item-group v-model="currentList" mandatory color="#006064">
+            <template v-for="list in collectionLists">
+              <CollectionList :list="list" :key="list.id" />
+            </template>
+          </v-list-item-group>
+        </v-list>
+      </div>
+      <div class="divider"></div>
+      <div class="col-right">
+        <div
+          v-for="item in listCollections"
+          :key="item.collectionId"
+          class="fav-movie"
+        >
+          <MovieQuoteCard
+            :movieObj="normalizeMovieObj(item.movie)"
+            :collectionId="item.collectionId"
+          />
+        </div>
+        <div
+          v-if="listCollections.length === 0"
+          class="reminder text-center mt-4"
+        >
+          Go explore some movies !
+        </div>
+      </div>
+
+      <v-dialog v-model="createNewListDialogOpened" width="400" persistent>
+        <ActionsDialog
+          :actionTitle="'Create New List'"
+          :actionText1="'Cancel'"
+          :actionText2="'Create'"
+          @action1="createNewListDialogOpened = false"
+          @action2="createNewList"
+        >
+          <div class="px-6">
+            <v-text-field
+              v-model="newListName"
+              dense
+              placeholder="List Name"
+              :color="mainColor"
+              class="dialog-create-list-input"
+            ></v-text-field>
+          </div>
+        </ActionsDialog>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
