@@ -44,6 +44,7 @@
         v-else
         bottom
         offset-y
+        open-on-hover
         close-delay="300"
         nudge-bottom="8"
         content-class="user-menu"
@@ -130,19 +131,9 @@ export default {
   },
   methods: {
     initUserFromCookies() {
-      const signInMethod = this.$cookies.get("signInMethod");
-      const token = this.$cookies.get("token");
-      const name = this.$cookies.get("name");
-      const email = this.$cookies.get("email");
-      const photoURL = this.$cookies.get("photoURL");
       const uid = this.$cookies.get("uid");
       const user = {
         isNewUser: false,
-        signInMethod,
-        token,
-        name,
-        email,
-        photoURL,
         uid,
       };
       this.$store.dispatch("init", user);

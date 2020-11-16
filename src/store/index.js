@@ -15,7 +15,8 @@ export default new Vuex.Store({
       name: '',
       email: '',
       photoURL: '',
-      uid: ''
+      uid: '',
+      created: null
     },
     quoteObj: undefined,
     movieObj: {
@@ -49,6 +50,7 @@ export default new Vuex.Store({
       user.email = payload.email;
       user.photoURL = payload.photoURL;
       user.uid = payload.uid;
+      user.created = payload.created;
     },
     setQuoteObj (state, payload) {
       state.quoteObj = payload;
@@ -92,7 +94,7 @@ export default new Vuex.Store({
         });
     },
     init ({ commit, dispatch }, user) {
-      if (user.email) {
+      if (user.uid) {
         // user is loggined
         commit("setLoginStatus", true);
         dispatch("initUser", user);
@@ -101,23 +103,43 @@ export default new Vuex.Store({
         commit("setLoginStatus", false);
       }
     },
-    initUser ({ commit }, user) {
-      commit("setUser", user);
+    initUser ({ dispatch }, user) {
       if (user.isNewUser) {
         db.collection('users')
         .doc(user.uid)
         .set({
           signInMethod: user.signInMethod,
+          token: user.token,
+          name: user.name,
           email: user.email,
-          uid: user.uid
+          photoURL: user.photoURL,
+          uid: user.uid,
+          created: new Date().getTime()
         })
         .then(function() {
-          console.log('Setup a new user')
+          dispatch("dbReadUser", user.uid);
         })
         .catch(function(error) {
           console.error('Error adding document: ', error)
         })
+      } else {
+        dispatch("dbReadUser", user.uid);
       }
+    },
+    dbUpdateUser ({ dispatch }, {uid, obj}) {
+      db.collection("users")
+        .doc(uid)
+        .update(obj)
+        .then(() => dispatch("dbReadUser", uid))
+        .catch(error => console.error('Error writing document: ', error))
+    },
+    dbReadUser ({ commit }, uid) {
+      db.collection("users")
+        .doc(uid)
+        .get()
+        .then(doc => {
+          commit("setUser", doc.data());
+        })
     },
     initCollections ({ dispatch }, user) {
       if (user.isNewUser) {

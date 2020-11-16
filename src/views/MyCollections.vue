@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-center">
-    <div class="page-collections py-3 d-flex justify-space-around">
+    <div class="page-collections py-3 d-flex justify-space-around w-100">
       <div class="col-left">
         <div class="text-center mb-2">
           <v-btn
