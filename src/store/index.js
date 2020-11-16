@@ -75,13 +75,21 @@ export default new Vuex.Store({
       commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
       const movieObj = movieQuote.getSomeRandom(1)[0];
-      commit("setQuoteObj", movieObj);
-      dispatch("getFilm", movieObj.movie);
+      dispatch("getFilm", movieObj);
     },
-    getFilm ({ commit }, movieName) {
-      apiGetFilm(movieName).then((res) => {
-        commit("setMovieObj", res.data);
-      });
+    getFilm ({ commit, dispatch }, movieObj) {
+      apiGetFilm(movieObj.movie).then(
+        (res) => {
+          if (res.data.title && res.data.poster) {
+            commit("setQuoteObj", movieObj);
+            commit("setMovieObj", res.data);
+          } else {
+            dispatch("getQuote");
+          }
+        },
+        () => {
+          dispatch("getQuote");
+        });
     },
     init ({ commit, dispatch }, user) {
       if (user.email) {

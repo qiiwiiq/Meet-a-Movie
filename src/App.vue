@@ -198,7 +198,7 @@ export default {
 
   &-account {
     font-size: 12px !important;
-    color:#B2EBF2;
+    color: #26C6DA;
   }
 
   &-text {
