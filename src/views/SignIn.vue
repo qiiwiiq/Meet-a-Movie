@@ -1,6 +1,6 @@
 <template>
   <div class="page-sign-in d-flex justify-center align-center">
-    <v-card class="card-sign-in px-8 py-4">
+    <v-card class="card-sign-in">
       <Loading
         :active="loading"
         :is-full-page="false"
@@ -232,6 +232,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .page-sign-in {
   padding: 30px 10px;
 }
@@ -240,6 +242,11 @@ export default {
   position: relative;
   margin-top: 3vh;
   background-color: rgba(#fff, 0.6);
+  padding: 16px 32px;
+
+  @include respond(small-mobile) {
+    padding: 16px;
+  }
 }
 
 .title-sign-in {
@@ -293,6 +300,10 @@ export default {
   outline: none;
   background-color: #f2f2f2;
   border-radius: 4px;
+
+  @include respond(small-mobile) {
+    width: 250px;
+  }
 }
 
 .reveal-pw {
@@ -303,6 +314,10 @@ export default {
 
 .btn-email-sign-in {
   width: 280px;
+
+  @include respond(small-mobile) {
+    width: 250px;
+  }
 }
 
 .signin {

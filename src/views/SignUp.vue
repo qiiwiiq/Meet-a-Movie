@@ -214,6 +214,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .page-sign-up {
   height: 100%;
   padding: 30px 10px;
@@ -245,6 +247,10 @@ export default {
   outline: none;
   background-color: #f2f2f2;
   border-radius: 4px;
+
+  @include respond(small-mobile) {
+    width: 250px;
+  }
 }
 
 .input-pw {
@@ -258,6 +264,10 @@ export default {
   word-spacing: 1px;
   font-size: 14px;
   color: #c62828;
+
+  @include respond(small-mobile) {
+    width: 250px;
+  }
 }
 
 .reveal-pw {
@@ -268,6 +278,10 @@ export default {
 
 .btn-sign-up {
   width: 280px;
+
+  @include respond(small-mobile) {
+    width: 250px;
+  }
 }
 
 .signin {

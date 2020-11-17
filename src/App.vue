@@ -10,26 +10,28 @@
       <v-spacer></v-spacer>
       <v-btn
         dark
-        text
-        small
-        class="btn-nav mr-2"
+        :text="windowWidth > 560"
+        :icon="windowWidth <= 560"
+        :small="windowWidth > 560"
+        class="btn-nav"
         active-class="cyan--text"
         :to="{ name: 'Home' }"
         exact
       >
-        <v-icon class="mr-1">mdi-movie-open</v-icon>
-        Movie / Quote
+        <v-icon class="btn-nav--icon">mdi-movie-open</v-icon>
+        <span class="btn-nav--text">Movie / Quote</span>
       </v-btn>
       <v-btn
         dark
-        text
-        small
-        class="btn-nav mr-1"
+        :text="windowWidth > 560"
+        :icon="windowWidth <= 560"
+        :small="windowWidth > 560"
+        class="btn-nav"
         active-class="cyan--text"
         :to="{ name: 'MyCollections' }"
       >
-        <v-icon class="mr-1">mdi-heart-outline</v-icon>
-        Collections
+        <v-icon class="btn-nav--icon">mdi-heart-outline</v-icon>
+        <span class="btn-nav--text">Collections</span>
       </v-btn>
       <v-btn
         v-if="!isLogin"
@@ -161,6 +163,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .navbar {
   background-image: linear-gradient(
     #111 0%,
@@ -205,6 +209,28 @@ export default {
 .btn-nav,
 .v-btn:before {
   background-color: transparent;
+}
+
+.btn-nav {
+  margin-right: 4px;
+
+  @include respond(large-mobile) {
+    margin-right: 8px;
+  }
+
+  &--icon {
+    margin-right: 4px;
+
+    @include respond(large-mobile) {
+      margin-right: 0;
+    }
+  }
+
+  &--text {
+    @include respond(large-mobile) {
+      display: none;
+    }
+  }
 }
 </style>
 

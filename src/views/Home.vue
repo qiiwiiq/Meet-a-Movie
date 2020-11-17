@@ -7,7 +7,7 @@
     }"
     class="page-home"
   >
-    <div class="d-flex justify-center h-100">
+    <div class="d-flex justify-center h-100 px-4">
       <template v-if="quoteObj">
         <v-card
           v-if="!isIntroShown"
@@ -27,8 +27,8 @@
               Check it &rarr;
             </v-btn>
           </div>
-          <div class="card-quote-actions d-flex flex-column">
-            <v-btn fab x-small class="mb-2">
+          <div class="card-quote-actions d-flex">
+            <v-btn fab x-small class="btn-tune">
               <v-icon>mdi-tune</v-icon>
             </v-btn>
             <v-btn fab x-small @click="getQuote">
@@ -44,6 +44,7 @@
                   depressed
                   class="text-none"
                   color="#f5de50"
+                  :small="windowWidth <= 560"
                   tag="a"
                   :href="movieObj.trailer.link"
                   target="_blank"
@@ -65,8 +66,18 @@
                 </v-btn>
               </div>
             </template>
+            <template v-slot:topColRight>
+              <div class="quote-actions--mobile flex-column">
+                <v-btn icon small outlined class="mb-3">
+                  <v-icon small>mdi-tune</v-icon>
+                </v-btn>
+                <v-btn icon small outlined @click="getQuote">
+                  <v-icon small>mdi-autorenew</v-icon>
+                </v-btn>
+              </div>
+            </template>
             <template v-slot:colRight>
-              <div class="d-flex flex-column ml-2">
+              <div class="quote-actions flex-column">
                 <v-btn fab x-small class="mb-3">
                   <v-icon>mdi-tune</v-icon>
                 </v-btn>
@@ -80,8 +91,6 @@
       </template>
       <template v-else>
         <v-skeleton-loader
-          min-width="500"
-          max-width="700"
           type="image"
           class="card-quote-loading"
         ></v-skeleton-loader>
@@ -129,10 +138,12 @@ export default {
     },
   },
   async mounted() {
-    await this.wait(500);
-    if (this.quoteObj) {
-      this.initMovieQuoteData();
-    }
+    let vm = this;
+    vm.$nextTick(() => {
+      if (vm.quoteObj) {
+        vm.initMovieQuoteData();
+      }
+    })
   },
   watch: {
     movieObj: {
@@ -193,6 +204,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .page-home {
   height: 100%;
   background-size: cover;
@@ -205,7 +218,6 @@ export default {
   min-width: 300px;
   max-width: 700px;
   height: fit-content;
-  min-height: 200px;
   margin-top: 8vh;
   padding: 25px 30px;
   border: 1px solid #555;
@@ -213,26 +225,104 @@ export default {
   outline-offset: -10px;
   background-color: rgba(255, 255, 255, 0.7);
 
+  @include respond(tab-land) {
+    max-width: 600px;
+    margin-top: 10vh;
+  }
+
+  @include respond(tab-port) {
+    margin-top: 60px;
+  }
+
+  @include respond(large-mobile) {
+    padding: 24px 20px;
+    min-width: 250px;
+  }
+
   &-actions {
+    flex-direction: column;
     position: absolute;
     top: 0;
     right: -45px;
+
+    @include respond(tab-port) {
+      flex-direction: row;
+      top: -43px;
+      right: 8px;
+    }
+
+    .btn-tune {
+      margin-bottom: 8px;
+
+      @include respond(tab-port) {
+        margin-bottom: 0;
+        margin-right: 8px;
+      }
+    }
   }
 }
 
 .card-quote-loading {
   margin-top: 8vh;
+  width: 50vw;
+
+   @include respond(tab-land) {
+    margin-top: 10vh;
+    width: 60vw;
+  }
+
+  @include respond(tab-port) {
+    margin-top: 60px;
+  }
+
+  @include respond(large-mobile) {
+    width: 80vw;
+  }
 }
 
 .movie-intro {
   width: 100%;
   max-width: 1000px;
+  min-width: 280px;
   padding: 20px;
   align-self: center;
   background-color: rgba(255, 255, 255, 0.7);
+
+  @include respond(tab-port) {
+    padding: 16px;
+  }
+
+  @include respond(mobile) {
+    padding: 8px;
+  }
+
+  .quote-actions {
+    display: flex;
+    margin-left: 8px;
+
+    @include respond(tab-port) {
+      margin-left: 0;
+    }
+
+    @include respond(mobile) {
+      display: none;
+    }
+  }
+
+  .quote-actions--mobile {
+    display: none;
+
+    @include respond(mobile) {
+      display: flex;
+    }
+  }
 }
 
 .btn-direct {
   text-decoration: underline;
+
+  @include respond(large-mobile) {
+    font-size: 13px;
+  }
 }
 </style>
