@@ -17,6 +17,7 @@
             dense
             placeholder="List Name"
             :color="mainColor"
+            class="user-input"
           ></v-text-field>
         </div>
       </ActionsDialog>
@@ -70,3 +71,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
+.user-input {
+  font-size: 14px;
+}
+</style>

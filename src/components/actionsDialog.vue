@@ -4,10 +4,20 @@
     <slot></slot>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn :color="mainColor" text @click="action1">
+      <v-btn
+        text
+        :small="windowWidth <= 450"
+        :color="mainColor"
+        @click="action1"
+      >
         {{ actionText1 }}
       </v-btn>
-      <v-btn :color="mainColor" text @click="action2">
+      <v-btn
+        text
+        :small="windowWidth <= 450"
+        :color="mainColor"
+        @click="action2"
+      >
         {{ actionText2 }}
       </v-btn>
     </v-card-actions>
@@ -32,14 +42,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .dialog {
   &-title {
     font-weight: 700;
     font-size: 20px;
-  }
 
-  &-input {
-    font-size: 14px;
+    @include respond(mobile) {
+      font-size: 18px;
+    }
   }
 }
 </style>
