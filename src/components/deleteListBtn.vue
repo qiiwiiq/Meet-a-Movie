@@ -13,7 +13,7 @@
       >
         <div class="px-6 pb-4">
           <div class="body-2">
-            Are you share to delete this list ({{ list.name }}) ?
+            Are you sure to delete this list ({{ list.name }}) ?
           </div>
           <div class="caption pt-2 red--text text--lighten-2">
             Note: The collections will be deleted together.

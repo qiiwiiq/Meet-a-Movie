@@ -286,11 +286,17 @@ export default {
   width: 100%;
   max-width: 1000px;
   min-width: 280px;
+  height: fit-content;
   padding: 20px;
-  align-self: center;
+  margin-top: 8vh;
   background-color: rgba(255, 255, 255, 0.7);
 
+  @include respond(tab-land) {
+    margin-top: 10vh;
+  }
+
   @include respond(tab-port) {
+    margin-top: 60px;
     padding: 16px;
   }
 
