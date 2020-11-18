@@ -151,6 +151,7 @@ export default {
       if (!val) this.newListName = "";
     },
     collectionLists() {
+      this.currentList = 0;
       if (this.collectionLists.length > 0) {
         this.currentListId = this.collectionLists[this.currentList].id;
       }
