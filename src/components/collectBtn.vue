@@ -2,7 +2,7 @@
   <span>
     <v-menu v-if="!isCollected" offset-x offset-y left nudge-left="-18">
       <template v-slot:activator="{ on }">
-        <v-btn icon class="mr-2" :ripple="false" v-on="on">
+        <v-btn icon :ripple="false" v-on="on">
           <v-icon>mdi-heart-outline</v-icon>
         </v-btn>
       </template>
@@ -21,7 +21,7 @@
     </v-menu>
     <v-menu v-if="isCollected" offset-x offset-y left nudge-left="-18">
       <template v-slot:activator="{ on }">
-        <v-btn icon class="mr-2" :ripple="false" v-on="on">
+        <v-btn icon :ripple="false" v-on="on">
           <v-icon color="#B71C1C">mdi-heart</v-icon>
         </v-btn>
       </template>

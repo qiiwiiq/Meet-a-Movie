@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app dark class="navbar">
+    <v-app-bar app dark height="56" class="navbar">
       <div class="d-flex align-center">
         <router-link to="/">
           <v-img width="50" height="50" src="./assets/movie-film.png"></v-img>
@@ -48,7 +48,7 @@
         offset-y
         open-on-hover
         close-delay="300"
-        nudge-bottom="8"
+        nudge-bottom="4"
         content-class="user-menu"
       >
         <template v-slot:activator="{ on }">

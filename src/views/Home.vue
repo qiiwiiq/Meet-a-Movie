@@ -17,6 +17,7 @@
           <div>
             <CollectBtn
               v-if="isLogin"
+              class="mr-1"
               :isCollected="isCollected"
               :movieObj="movieQuoteObj"
               :collectionId="collectionId"
@@ -55,6 +56,7 @@
               <div class="d-flex justify-end">
                 <CollectBtn
                   v-if="isLogin"
+                  class="mr-1"
                   :isCollected="isCollected"
                   :movieObj="movieQuoteObj"
                   :collectionId="collectionId"

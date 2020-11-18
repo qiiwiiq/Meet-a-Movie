@@ -6,7 +6,7 @@
     <div class="d-flex flex-column justify-space-between flex-grow-1">
       <div class="d-flex">
         <div class="flex-grow-1">
-          <div class="movie-title mt-1">{{ movieObj.title }}</div>
+          <div class="movie-title my-1">{{ movieObj.title }}</div>
           <div class="year-and-length mb-1">
             <span class="year pr-2">{{ movieObj.year }}</span>
             <span class="length px-2">{{ movieObj.length }}</span>
@@ -16,9 +16,9 @@
             </span>
           </div>
           <div class="cast mb-1">{{ actors }}</div>
-          <div class="quote ml-6 mt-4">{{ movieObj.quote }}</div>
+          <div class="quote ml-3 ml-sm-6 mt-3 mt-sm-4">{{ movieObj.quote }}</div>
         </div>
-        <div>
+        <div class="btn-collect">
           <CollectBtn
             :isCollected="true"
             :movieObj="movieObj"
@@ -57,6 +57,7 @@
                 depressed
                 class="text-none"
                 tag="a"
+                :small="windowWidth <= 560"
                 :href="movieObj.trailer.link"
                 target="_blank"
               >
@@ -64,7 +65,7 @@
               </v-btn>
             </div>
             <div
-              class="quote text-center px-4 py-6 flex-grow-1 d-flex justify-center align-center"
+              class="quote text-center px-4 py-5 py-sm-6 flex-grow-1 d-flex justify-center align-center"
             >
               {{ movieObj.quote }}
             </div>
@@ -76,6 +77,7 @@
               placeholder="comments ..."
               rows="3"
               :color="mainColor"
+              class="comments"
             ></v-textarea>
           </template>
         </MovieDetail>
@@ -141,6 +143,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/scss/mixins.scss';
+
 .poster {
   width: 100px;
   min-width: 100px;
@@ -148,6 +152,15 @@ export default {
   height: 150px;
   min-height: 150px;
   max-height: 150px;
+
+  @include respond(large-mobile) {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
+  }
 
   img {
     width: 100%;
@@ -159,6 +172,7 @@ export default {
 .movie-title {
   font-weight: 700;
   text-transform: uppercase;
+  line-height: 18px;
 }
 
 .year-and-length,
@@ -178,6 +192,26 @@ export default {
   font-size: 16px;
   font-weight: 300;
   line-height: 20px;
+
+  @include respond(tab-port) {
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.btn-collect {
+  margin-right: 8px;
+
+  @include respond(large-mobile) {
+    margin-right: 0;
+  }
+}
+
+.comments {
+  @include respond(tab-port) {
+    font-size: 14px;
+    line-height: 16px;
+  }
 }
 
 .movie-detail-card {
