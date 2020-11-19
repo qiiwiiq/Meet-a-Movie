@@ -51,9 +51,14 @@
 import { mapState } from "vuex";
 
 export default {
-  props: ["isCollected", "movieObj", "collectionId"],
+  props: ["movieObj"],
+  data() {
+    return {
+      isCollected: false
+    }
+  },
   computed: {
-    ...mapState(["user", "collectionLists"]),
+    ...mapState(["user", "collections", "collectionLists"]),
     filteredLists() {
       if (this.isCollected) {
         const filteredLists = this.collectionLists.filter(
@@ -65,16 +70,36 @@ export default {
       }
     },
   },
+  mounted() {
+    let vm = this;
+    vm.$nextTick(() => {
+      if (vm.collections.length > 0 && vm.movieObj) {
+        vm.isCollected = vm.checkIfMovieCollected(vm.movieObj, vm.collections);
+      }
+    })
+  },
+  watch: {
+    movieObj() {
+      if (this.movieObj) {
+        this.isCollected = this.checkIfMovieCollected(this.movieObj, this.collections);
+      }
+    },
+    collections() {
+      this.isCollected = this.checkIfMovieCollected(this.movieObj, this.collections);
+    }
+  },
   methods: {
+    checkIfMovieCollected(movieObj, collections) {
+      const value = collections.some(item => item.quote === movieObj.quote);
+      return value;
+    },
     addCollections(listid) {
-      this.$emit("updateIsCollected", true);
-      this.$emit("updateListid", listid);
       const obj = { ...this.movieObj };
       obj.listid = listid;
-      if (this.collectionId) {
+      if (this.isCollected) {
         this.$store.dispatch("dbUpdateCollections", {
           uid: this.user.uid,
-          collectionId: this.collectionId,
+          collectionId: obj.collectionId,
           movieObj: obj,
         });
       } else {
@@ -85,11 +110,9 @@ export default {
       }
     },
     removeCollections() {
-      this.$emit("updateIsCollected", false);
-      this.$emit("updateListid", "");
       this.$store.dispatch("dbDeleteCollections", {
         uid: this.user.uid,
-        collectionId: this.collectionId,
+        collectionId: this.movieObj.collectionId,
       });
     },
   },

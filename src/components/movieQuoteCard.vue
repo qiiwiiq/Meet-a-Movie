@@ -20,10 +20,7 @@
         </div>
         <div class="btn-collect">
           <CollectBtn
-            :isCollected="true"
             :movieObj="movieObj"
-            :collectionId="collectionId"
-            @updateIsCollected="updateIsCollected"
           />
         </div>
       </div>
@@ -123,9 +120,6 @@ export default {
     this.orignComments = this.comments;
   },
   methods: {
-    updateIsCollected(val) {
-      this.isCollected = val;
-    },
     closeDetail() {
       if (this.comments !== this.orignComments) {
         this.$store.dispatch("dbUpdateCollectionDetail", {

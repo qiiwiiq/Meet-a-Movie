@@ -34,7 +34,7 @@ export default {
   methods: {
     countListItems(collections, listid) {
       const listItems = collections.filter(
-        (item) => item.movie.listid === listid
+        (item) => item.listid === listid
       );
       return listItems.length;
     },

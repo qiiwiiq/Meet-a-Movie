@@ -53,7 +53,7 @@
           class="fav-movie"
         >
           <MovieQuoteCard
-            :movieObj="normalizeMovieObj(item.movie)"
+            :movieObj="normalizeMovieObj(item)"
             :collectionId="item.collectionId"
           />
         </div>
@@ -120,7 +120,7 @@ export default {
       if (this.collectionLists.length > 0) {
         const listid = this.collectionLists[this.currentList].id;
         const fillteredCollections = this.collections.filter(
-          (item) => item.movie.listid === listid
+          (item) => item.listid === listid
         );
         return fillteredCollections;
       } else {
@@ -157,10 +157,18 @@ export default {
       }
     },
     currentList(index) {
-      this.currentListId = this.collectionLists[index].id;
+      if (this.collectionLists.length > 0) {
+        this.currentListId = this.collectionLists[index].id;
+      } else {
+        this.currentListId = "";  
+      }
     },
     currentListId(id) {
-      this.currentList = this.collectionLists.findIndex(item => item.id === id);
+      if (this.collectionLists.length > 0) {
+        this.currentList = this.collectionLists.findIndex(item => item.id === id);
+      } else {
+        this.currentList = 0;  
+      }
     },
   },
   methods: {

@@ -18,11 +18,7 @@
             <CollectBtn
               v-if="isLogin"
               class="mr-1"
-              :isCollected="isCollected"
               :movieObj="movieQuoteObj"
-              :collectionId="collectionId"
-              @updateIsCollected="updateIsCollected"
-              @updateListid="updateListid"
             />
             <v-btn text class="btn-direct px-2" @click="enterMovieIntro">
               Check it &rarr;
@@ -57,11 +53,7 @@
                 <CollectBtn
                   v-if="isLogin"
                   class="mr-1"
-                  :isCollected="isCollected"
                   :movieObj="movieQuoteObj"
-                  :collectionId="collectionId"
-                  @updateIsCollected="updateIsCollected"
-                  @updateListid="updateListid"
                 />
                 <v-btn text class="btn-direct px-2" @click="leaveMovieIntro">
                   Back &rarr;
@@ -117,9 +109,7 @@ export default {
   },
   data() {
     return {
-      isCollected: false,
       movieQuoteObj: undefined,
-      collectionId: "",
     };
   },
   computed: {
@@ -139,7 +129,7 @@ export default {
       }
     },
   },
-  async mounted() {
+  mounted() {
     let vm = this;
     vm.$nextTick(() => {
       if (vm.quoteObj) {
@@ -156,41 +146,38 @@ export default {
       },
       deep: true,
     },
+    collections() {
+      if (this.collections.length > 0 && this.quoteObj) {
+        this.initMovieQuoteData();
+      }
+    }
   },
   methods: {
     initMovieQuoteData() {
       const movieObjInCollections = this.collections.find(
-        (item) => item.movie.quote === this.quoteObj.quote
+        (item) => item.quote === this.quoteObj.quote
       );
       if (movieObjInCollections) {
-        this.isCollected = true;
         this.movieQuoteObj = Object.assign(
           {
+            collectionId: movieObjInCollections.collectionId,
             quote: this.quoteObj.quote,
-            listid: movieObjInCollections.movie.listid,
-            comments: movieObjInCollections.movie.comments,
+            listid: movieObjInCollections.listid,
+            comments: movieObjInCollections.comments,
           },
           this.movieObj
         );
-        this.collectionId = movieObjInCollections.collectionId;
       } else {
-        this.isCollected = false;
         this.movieQuoteObj = Object.assign(
           {
+            collectionId: "",
             quote: this.quoteObj.quote,
             listid: "",
             comments: "",
           },
           this.movieObj
         );
-        this.collectionId = "";
       }
-    },
-    updateIsCollected(val) {
-      this.isCollected = val;
-    },
-    updateListid(val) {
-      this.movieQuoteObj.listid = val;
     },
     enterMovieIntro() {
       this.$store.commit("updateIntroShownFlag", true);

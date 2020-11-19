@@ -33,8 +33,9 @@ export default new Vuex.Store({
     collections: [
       /* data stucture */
       // {
+      //   cast: []
       //   collectionId: 'xxxxx',
-      //   movie: {}
+      //   ...
       // }
     ],
     isIntroShown: false,
@@ -209,17 +210,11 @@ export default new Vuex.Store({
       const collectionName = `collections-${uid}`;
       movieObj.timestamp = new Date().getTime();
       movieObj.cast = JSON.stringify(movieObj.cast);
-      movieObj.technical_specs = JSON.stringify(movieObj.technical_specs);
-      db.collection(collectionName)
-        .add(movieObj)
-        .then(() => dispatch("dbReadCollections", uid))
-        .catch(error => console.error('Error writing document: ', error))
-    },
-    dbUpdateCollectionDetail ({ dispatch }, {uid, collectionId, obj}) {
-      const collectionName = `collections-${uid}`;
-      db.collection(collectionName)
-        .doc(collectionId)
-        .update(obj)
+      movieObj.technical_specs = JSON.stringify(movieObj.technical_specs); 
+      let newCollectionRef = db.collection(collectionName).doc();
+      movieObj.collectionId = newCollectionRef.id;
+      newCollectionRef
+        .set(movieObj)
         .then(() => dispatch("dbReadCollections", uid))
         .catch(error => console.error('Error writing document: ', error))
     },
@@ -231,6 +226,14 @@ export default new Vuex.Store({
       db.collection(collectionName)
         .doc(collectionId)
         .set(movieObj)
+        .then(() => dispatch("dbReadCollections", uid))
+        .catch(error => console.error('Error writing document: ', error))
+    },
+    dbUpdateCollectionDetail ({ dispatch }, {uid, collectionId, obj}) {
+      const collectionName = `collections-${uid}`;
+      db.collection(collectionName)
+        .doc(collectionId)
+        .update(obj)
         .then(() => dispatch("dbReadCollections", uid))
         .catch(error => console.error('Error writing document: ', error))
     },
@@ -248,12 +251,7 @@ export default new Vuex.Store({
         .orderBy("timestamp", "desc")
         .get()
         .then(querySnapshot => {
-          const collections = querySnapshot.docs.map(doc => {
-            return {
-              collectionId: doc.id,
-              movie: doc.data()
-            }
-          });
+          const collections = querySnapshot.docs.map(doc => doc.data());
           commit("updateCollections", collections);
         })
         .catch(error => console.log(error));
