@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export const mixin = {
   data () {
@@ -29,5 +31,19 @@ export const mixin = {
         setTimeout(resolve, time);
       });
     },
+    logout() {
+      firebase.auth().signOut();
+      let payload = {
+        signInMethod: "",
+        token: "",
+        name: "",
+        email: "",
+        photoURL: "",
+      };
+      this.$store.commit("setUser", payload);
+      this.$store.commit("setLoginStatus", false);
+      this.clearCookies();
+      this.$router.replace({ name: "Home" }).catch(() => {});
+    }
   }
 }

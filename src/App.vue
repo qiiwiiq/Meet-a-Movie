@@ -110,8 +110,6 @@
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 import ActionsDialog from "@/components/actionsDialog";
-import firebase from "firebase/app";
-import "firebase/auth";
 
 export default {
   name: "App",
@@ -144,19 +142,8 @@ export default {
       this.$router.push({ name: "Settings" }).catch(() => {});
     },
     signOut() {
-      firebase.auth().signOut();
-      let payload = {
-        signInMethod: "",
-        token: "",
-        name: "",
-        email: "",
-        photoURL: "",
-      };
-      this.$store.commit("setUser", payload);
-      this.$store.commit("setLoginStatus", false);
-      this.clearCookies();
+      this.logout();
       this.signOutDialogOpened = false;
-      this.$router.replace({ name: "Home" }).catch(() => {});
     },
   },
 };

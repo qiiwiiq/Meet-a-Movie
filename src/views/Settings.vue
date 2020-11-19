@@ -63,7 +63,7 @@
       </div>
       <div class="divider"></div>
       <div class="col-right settings">
-        <div class="mb-4">
+        <div class="mb-4" v-if="user.signInMethod === 'email'">
           <div class="item-title">Change Password</div>
           <v-divider></v-divider>
           <div class="item-desc mx-2 my-2">
@@ -112,23 +112,47 @@
             depressed
             color="#CF0000"
             class="text-none ml-2"
+            @click="delAccountDialogOpened = true"
           >
             Delete Account
           </v-btn>
         </div>
       </div>
     </div>
+    <v-dialog v-model="delAccountDialogOpened" width="400" persistent>
+      <ActionsDialog
+        :actionTitle="'Delete Account'"
+        :actionText1="'No'"
+        :actionText2="'YES'"
+        @action1="delAccountDialogOpened = false"
+        @action2="delAccount"
+      >
+        <div class="px-6 pb-4">
+          <div class="body-2">
+            Are you sure to delete this account? <br />
+            [ {{ user.email }} ]
+          </div>
+          <div class="caption pt-2 red--text text--lighten-2">
+            Note: Once you delete your account, there is no going back. Please be certain.
+          </div>
+        </div>
+      </ActionsDialog>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import firebase from "firebase/app";
+import "firebase/auth";
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
+import ActionsDialog from "@/components/actionsDialog";
 import PasswordInput from "@/components/passwordInput";
 
 export default {
   mixins: [mixin],
   components: {
+    ActionsDialog,
     PasswordInput,
   },
   data() {
@@ -140,7 +164,8 @@ export default {
         old: "",
         new: "",
         confirm: ""
-      }
+      },
+      delAccountDialogOpened: false
     }
   },
   mounted() {
@@ -182,6 +207,17 @@ export default {
         });
       }
       this.isEditName = false;
+    },
+    delAccount() {
+      this.$store.dispatch("dbDeleteUser", this.user.uid);
+      // TODO: delete user's collection lists
+      // TODO: delete user's collections
+      const user = firebase.auth().currentUser;
+      user.delete().then(() => {
+        this.logout();
+      }).catch(() => {
+        console.log("something wrong");
+      });
     }
   }
 }
