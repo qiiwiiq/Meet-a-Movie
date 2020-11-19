@@ -33,9 +33,25 @@ export default new Vuex.Store({
     collections: [
       /* data stucture */
       // {
-      //   cast: []
-      //   collectionId: 'xxxxx',
-      //   ...
+      //   cast: "[]",
+      //   collectionId: string,
+      //   comment: string,
+      //   id: string,
+      //   length: string,
+      //   listid: string,
+      //   plot: string,
+      //   poster: string,
+      //   quote: string,
+      //   rating: string,
+      //   rating_votes: string,
+      //   technical_specs: "[]",
+      //   timestamp: number,
+      //   title: string,
+      //   trailer: {
+      //    id: string,
+      //    link: string
+      //   },
+      //   year: string,
       // }
     ],
     isIntroShown: false,
@@ -155,13 +171,14 @@ export default new Vuex.Store({
     },
     dbWriteCollectionList ({ dispatch }, {uid, listName}) {
       const collectionName = `lists-${uid}`;
-      db.collection(collectionName)
-        .add({
+      let newCollectionListRef = db.collection(collectionName).doc();
+      newCollectionListRef
+        .set({
+          id: newCollectionListRef.id,
           name: listName,
           timestamp: new Date().getTime()
         })
         .then(function() {
-          console.log('Setup lists');
           dispatch("dbReadCollectionLists", uid);
         })
         .catch(function(error) {
@@ -196,12 +213,7 @@ export default new Vuex.Store({
         .orderBy("timestamp")
         .get()
         .then(querySnapshot => {
-          const lists = querySnapshot.docs.map(doc => {
-            return {
-              id: doc.id,
-              ...doc.data()
-            }
-          });
+          const lists = querySnapshot.docs.map(doc => doc.data());
           commit("updateCollectionLists", { action: "set", lists });
         })
         .catch(error => console.log(error));
