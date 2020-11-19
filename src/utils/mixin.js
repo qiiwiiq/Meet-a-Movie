@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const mixin = {
   data () {
     return {
@@ -16,6 +18,11 @@ export const mixin = {
     },
     clearCookies() {
       this.$cookies.keys().forEach(cookie => this.$cookies.remove(cookie));
+    },
+    formatTime: function (time) {
+      if (time) {
+        return dayjs(time).format('YYYY/MM/DD');
+      }
     },
     wait(time) {
       return new Promise((resolve) => {

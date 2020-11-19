@@ -57,23 +57,12 @@
           placeholder="Email"
           @keyup.enter="signInEmail"
         />
-        <div class="section">
-          <input
-            v-model="user.password"
-            class="user-input input-pw"
-            :type="showPW ? 'text' : 'password'"
-            placeholder="Password"
-            @keyup.enter="signInEmail"
-          />
-          <v-btn
-            icon
-            v-if="user.password"
-            class="reveal-pw"
-            @click="showPW = !showPW"
-          >
-            <v-icon>mdi-{{ showPW ? "eye-off" : "eye" }}</v-icon>
-          </v-btn>
-        </div>
+        <PasswordInput
+          :placeholder="'Password'"
+          @value="user.password = $event"
+          @onEnter="signInEmail"
+          class="input-pw"
+        />
         <v-btn
           dark
           depressed
@@ -110,11 +99,13 @@ import { mailRegex } from "@/utils/regex";
 import { eliminateSuffixSpace } from "@/utils/utils";
 import { mapState } from "vuex";
 import Loading from "vue-loading-overlay";
+import PasswordInput from "@/components/passwordInput";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   components: {
     Loading,
+    PasswordInput
   },
   mixins: [mixin],
   data() {
@@ -125,7 +116,6 @@ export default {
         email: "",
         password: "",
       },
-      showPW: false,
       snackbar: false,
       snackbarText: "",
     };
@@ -284,10 +274,6 @@ export default {
   margin-left: 15px;
 }
 
-.section {
-  position: relative;
-}
-
 .user-input {
   display: block;
   width: 280px;
@@ -306,10 +292,8 @@ export default {
   }
 }
 
-.reveal-pw {
-  position: absolute;
-  top: 7px;
-  right: 10px;
+.input-pw {
+  margin-bottom: 10px;
 }
 
 .btn-email-sign-in {

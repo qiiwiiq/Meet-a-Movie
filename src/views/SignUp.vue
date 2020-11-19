@@ -22,40 +22,17 @@
           Invalid email
         </div>
       </div>
-      <div class="section">
-        <input
-          v-model="user.password"
-          class="user-input input-pw"
-          :type="showPW1 ? 'text' : 'password'"
-          placeholder="Password (at least 6 characters)"
-          @keyup.enter="signup"
-        />
-        <v-btn
-          icon
-          v-if="user.password"
-          class="reveal-pw"
-          @click="showPW1 = !showPW1"
-        >
-          <v-icon>mdi-{{ showPW1 ? "eye-off" : "eye" }}</v-icon>
-        </v-btn>
-      </div>
-      <div class="section">
-        <input
-          v-model="user.passwordConfirm"
-          class="user-input input-pw-confirm"
-          :type="showPW2 ? 'text' : 'password'"
-          placeholder="Confirm Password"
-          @keyup.enter="signup"
-        />
-        <v-btn
-          icon
-          v-if="user.passwordConfirm"
-          class="reveal-pw"
-          @click="showPW2 = !showPW2"
-        >
-          <v-icon>mdi-{{ showPW2 ? "eye-off" : "eye" }}</v-icon>
-        </v-btn>
-      </div>
+      <PasswordInput
+        :placeholder="'Password (at least 6 characters)'"
+        @value="user.password = $event"
+        @onEnter="signup"
+        class="input-pw"
+      />
+      <PasswordInput
+        :placeholder="'Confirm Password'"
+        @value="user.passwordConfirm = $event"
+        @onEnter="signup"
+      />
       <div class="input-invalid pl-2 mb-1">
         <div
           v-if="
@@ -105,11 +82,13 @@ import { mixin } from "@/utils/mixin";
 import { mailRegex } from "@/utils/regex";
 import { eliminateSuffixSpace } from "@/utils/utils";
 import Loading from "vue-loading-overlay";
+import PasswordInput from "@/components/passwordInput";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   components: {
     Loading,
+    PasswordInput
   },
   mixins: [mixin],
   data() {
@@ -120,8 +99,6 @@ export default {
         password: "",
         passwordConfirm: "",
       },
-      showPW1: false,
-      showPW2: false,
       snackbar: false,
       snackbarText: "",
     };

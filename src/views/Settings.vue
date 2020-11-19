@@ -1,72 +1,121 @@
 <template>
   <div class="d-flex justify-center">
-    <div class="page-settings py-3 d-flex justify-space-around w-100">
-      <div class="col-left profile d-flex flex-column align-center">
-        <v-hover v-slot:default="{ hover }">
-          <div class="profile-image mt-2 mb-4">
-            <v-img
-              v-if="user.photoURL"
-              :src="user.photoURL"
-            />
-            <v-img
-              v-else
-              src="../assets/user-default.jpg"
-            />
+    <div class="page-settings py-3 d-flex justify-space-around">
+      <div class="col-left profile d-flex flex-column justify-space-between align-center">
+        <div class="d-flex flex-column align-center">
+          <v-hover v-slot:default="{ hover }">
+            <div class="profile-image mt-2 mb-4">
+              <v-img
+                v-if="user.photoURL"
+                :src="user.photoURL"
+              />
+              <v-img
+                v-else
+                src="../assets/user-default.jpg"
+              />
+              <v-btn
+                small
+                depressed
+                color="transparent"
+                class="btn-change-photo text-none"
+                :class="{ 'show-btns': hover }"
+              >
+                Edit
+              </v-btn>
+            </div>
+          </v-hover>
+          <div v-if="user.name && !isEditName" class="profile-name d-flex justify-center mb-2">
+            <span class="ml-4 mr-2">{{ username }}</span>
             <v-btn
+              icon
               small
-              depressed
-              color="transparent"
-              class="btn-change-photo text-none"
-              :class="{ 'show-btns': hover }"
+              @click="isEditName = true"
             >
-              Edit
+              <v-icon small>mdi-pencil</v-icon>
             </v-btn>
           </div>
-        </v-hover>
-        <div v-if="user.name && !isEditName" class="profile-name d-flex justify-center mb-2">
-          <span class="ml-4 mr-2">{{ username }}</span>
-          <v-btn
-            icon
-            small
-            @click="isEditName = true"
-          >
-            <v-icon small>mdi-pencil</v-icon>
-          </v-btn>
+          <div v-else class="profile-name--edit d-flex align-center mb-2">
+            <input
+              v-model="username"
+              class="user-input"
+              type="text"
+              placeholder="Your Name"
+              autofocus
+            />
+            <v-btn
+              x-small
+              dark
+              depressed
+              :color="mainColor"
+              class="btn-update-name text-none"
+              @click="updateUser"
+            >
+              Update
+            </v-btn>
+          </div>
+          <div class="profile-email mb-1">{{ user.email }}</div>
+          <div v-if="user.signInMethod !== 'email'" class="profile-signin">
+            (sign in with 
+            <span class="profile-signin-method">{{ signInMethod }}</span>)
+          </div>
         </div>
-        <div v-else class="profile-name--edit d-flex align-center mb-2">
-          <input
-            v-model="username"
-            class="user-input"
-            type="text"
-            placeholder="Your Name"
-            autofocus
-          />
+        <div class="profile-created">Joined at {{ formatTime(user.created) }}</div>
+      </div>
+      <div class="divider"></div>
+      <div class="col-right settings">
+        <div class="mb-4">
+          <div class="item-title">Change Password</div>
+          <v-divider></v-divider>
+          <div class="item-desc mx-2 my-2">
+            Setting new password
+          </div>
+          <div class="mx-2">
+            <PasswordInput
+              :placeholder="'Current Password'"
+              :height="40"
+              @value="password.old = $event"
+              class="mb-2"
+            />
+            <PasswordInput
+              :placeholder="'New Password (at least 6 characters)'"
+              :height="40"
+              @value="password.new = $event"
+              class="mb-2"
+            />
+            <PasswordInput
+              :placeholder="'Confrim Password'"
+              :height="40"
+              @value="password.confirm = $event"
+              class="mb-2"
+            />
+          </div>
           <v-btn
-            x-small
+            small
             dark
             depressed
             :color="mainColor"
-            class="btn-update-name text-none"
-            @click="updateUser"
+            class="text-none ml-2"
           >
-            Update
+            Change Password
           </v-btn>
         </div>
-        <div class="profile-email mb-1">{{ user.email }}</div>
-        <div v-if="user.signInMethod !== 'email'" class="profile-signin">
-          (sign in with 
-          <span class="profile-signin-method">{{ signInMethod }}</span>)
+        <div>
+          <div class="item-title">Delete Account</div>
+          <v-divider></v-divider>
+          <div class="item-desc mx-2 my-2">
+            Once you delete your account, all your data will be removed from database.
+            There is no going back. Please be certain.
+          </div>
+          <v-btn
+            small
+            dark
+            depressed
+            color="#CF0000"
+            class="text-none ml-2"
+          >
+            Delete Account
+          </v-btn>
         </div>
-      </div>
-      <div class="divider"></div>
-      <div class="col-right">
-        <v-btn
-          small
-          depressed
-          class="text-none mb-2"
-        >
-          Delete Account
-        </v-btn>
       </div>
     </div>
   </div>
@@ -75,14 +124,23 @@
 <script>
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
+import PasswordInput from "@/components/passwordInput";
 
 export default {
   mixins: [mixin],
+  components: {
+    PasswordInput,
+  },
   data() {
     return {
       isEditName: false,
       username: "",
-      originUsername: ""
+      originUsername: "",
+      password: {
+        old: "",
+        new: "",
+        confirm: ""
+      }
     }
   },
   mounted() {
@@ -146,15 +204,16 @@ export default {
 .col-right {
   height: calc(100vh - 120px);
   overflow-y: scroll;
-  padding: 0 12px;
 }
 
 .col-left {
-  width: 36%;
+  width: 30vw;
+  padding: 0 12px;
 }
 
 .col-right {
-  width: 60%;
+  width: 50vw;
+  padding: 0 16px;
 }
 
 .profile {
@@ -198,6 +257,21 @@ export default {
     &-method {
       font-weight: 500;
     }
+  }
+
+  &-created {
+    font-size: 12px;
+  }
+}
+
+.settings {
+  .item-title {
+    font-weight: 500;
+  }
+
+  .item-desc {
+    font-size: 14px;
+    color: #555;
   }
 }
 
