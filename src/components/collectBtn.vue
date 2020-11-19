@@ -17,6 +17,15 @@
             {{ list.name }}
           </v-list-item-title>
         </v-list-item>
+        <v-list-item
+          v-if="collectionLists.length === 0"
+          @click="createNewListDialogOpened = true"
+        >
+          <v-list-item-title>
+            <v-icon small class="mr-1">mdi-sparkles</v-icon>
+            Create New List
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
     <v-menu v-if="isCollected" offset-x offset-y left nudge-left="-18">
@@ -26,12 +35,6 @@
         </v-btn>
       </template>
       <v-list dense class="py-0">
-        <v-list-item @click="removeCollections()">
-          <v-list-item-title>
-            <v-icon small class="mr-1">mdi-minus</v-icon>
-            Remove
-          </v-list-item-title>
-        </v-list-item>
         <v-list-item
           v-for="list in filteredLists"
           :key="list.id"
@@ -42,19 +45,52 @@
             {{ list.name }}
           </v-list-item-title>
         </v-list-item>
+        <v-list-item @click="removeCollections()">
+          <v-list-item-title>
+            <v-icon small class="mr-1">mdi-minus</v-icon>
+            Remove
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
+    <v-dialog v-model="createNewListDialogOpened" width="400" persistent>
+      <ActionsDialog
+        :actionTitle="'Create New List'"
+        :actionText1="'Cancel'"
+        :actionText2="'Create'"
+        @action1="createNewListDialogOpened = false"
+        @action2="createNewList"
+      >
+        <div class="px-6">
+          <v-text-field
+            v-model="newListName"
+            dense
+            placeholder="List Name"
+            :color="mainColor"
+            class="dialog-create-list-input"
+          ></v-text-field>
+        </div>
+      </ActionsDialog>
+    </v-dialog>
   </span>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { mixin } from "@/utils/mixin";
+import ActionsDialog from "@/components/actionsDialog";
 
 export default {
+  mixins: [mixin],
   props: ["movieObj"],
+  components: {
+    ActionsDialog
+  },
   data() {
     return {
-      isCollected: false
+      isCollected: false,
+      createNewListDialogOpened: false,
+      newListName: ""
     }
   },
   computed: {
@@ -86,12 +122,22 @@ export default {
     },
     collections() {
       this.isCollected = this.checkIfMovieCollected(this.movieObj, this.collections);
+    },
+    createNewListDialogOpened(val) {
+      if (!val) this.newListName = "";
     }
   },
   methods: {
     checkIfMovieCollected(movieObj, collections) {
       const value = collections.some(item => item.quote === movieObj.quote);
       return value;
+    },
+    createNewList() {
+      this.$store.dispatch("dbWriteCollectionList", {
+        uid: this.user.uid,
+        listName: this.newListName,
+      });
+      this.createNewListDialogOpened = false;
     },
     addCollections(listid) {
       const obj = { ...this.movieObj };
@@ -118,3 +164,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.dialog-create-list {
+  &-input {
+    font-size: 14px;
+  }
+}
+</style>

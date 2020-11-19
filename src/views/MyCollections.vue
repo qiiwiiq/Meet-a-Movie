@@ -308,10 +308,6 @@ export default {
 }
 
 .dialog-create-list {
-  &-title {
-    font-weight: 700;
-  }
-
   &-input {
     font-size: 14px;
   }
