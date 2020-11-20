@@ -48,21 +48,23 @@
         offset-y
         open-on-hover
         close-delay="300"
-        nudge-bottom="10"
+        nudge-bottom="4"
         content-class="user-menu"
       >
         <template v-slot:activator="{ on }">
-          <v-btn text class="mr-1 px-0" v-on="on">
-            <v-avatar v-if="user.photoURL" size="36" class="mr-1">
+          <v-btn icon class="mr-1" v-on="on">
+            <v-avatar v-if="user.photoURL" size="36">
               <img :src="user.photoURL" />
             </v-avatar>
-            <v-icon v-else class="mr-1">mdi-account-circle</v-icon>
-            <span v-if="user.name" class="user-name">{{ user.name }}</span>
+            <v-icon v-else>mdi-account-circle</v-icon>
           </v-btn>
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
-          <v-list-item v-if="user.email" class="menu-list-item">
-            <v-list-item-title class="menu-list-item-account">{{ user.email }}</v-list-item-title>
+          <v-list-item  v-if="user.name || user.email" class="menu-list-item" two-line>
+            <v-list-item-content class="py-0">
+              <v-list-item-title class="menu-list-item-account text-right">{{ user.name }}</v-list-item-title>
+              <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
+            </v-list-item-content>
           </v-list-item>
           <v-list-item class="menu-list-item" @click="goToSettings">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
@@ -168,25 +170,16 @@ export default {
   background-size: cover;
 }
 
-.user-name {
-  max-width: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  @include respond(tab-port) {
-    max-width: 55px;
-  }
-}
-
 .user-menu {
   border-radius: 0;
 }
 
 .menu-list-item {
   border-radius: 0;
+  min-height: 40px !important;
 
-  &:not(:last-child) {
-    border-bottom: 1px dashed #ccc;
+  &:not(:first-child) {
+    border-top: 1px dashed #ccc;
   }
 
   &-account {

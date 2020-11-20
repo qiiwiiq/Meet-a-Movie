@@ -84,7 +84,7 @@
       v-model="snackbar"
       color="blue-grey"
       rounded="pill"
-      :timeout="-1"
+      :timeout="6000"
     >
       <div class="text-center">{{ snackbarText }}</div>
     </v-snackbar>
@@ -141,6 +141,12 @@ export default {
       },
       deep: true,
     },
+    isEmailSignin(val) {
+      if (!val) {
+        this.user.email = "";
+        this.user.password = "";
+      }
+    }
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {

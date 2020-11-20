@@ -31,6 +31,10 @@ export default {
     height: {
       type: Number,
       default: 50
+    },
+    clearFlag: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -39,10 +43,20 @@ export default {
       showPW: false
     }
   },
+  watch: {
+    clearFlag(val) {
+      if (val) {
+        this.password = "";
+      }
+    }
+  },
   methods: {
     onInput(e) {
       this.password = e.target.value;
       this.$emit("value", this.password);
+      if (this.password === "") {
+        this.$emit("updateClearFlag", false);
+      }
     },
     onEnter() {
       this.$emit("onEnter")

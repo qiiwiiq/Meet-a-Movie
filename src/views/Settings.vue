@@ -54,7 +54,9 @@
                 <PasswordInput
                   :placeholder="'Current Password'"
                   :height="40"
+                  :clearFlag="clearFlag"
                   @value="oldPassword = $event"
+                  @updateClearFlag="clearFlag = $event"
                 />
                 <v-progress-linear
                   v-if="isChecking"
@@ -99,14 +101,18 @@
             <PasswordInput
               :placeholder="'New Password (at least 6 characters)'"
               :height="40"
+              :clearFlag="clearFlag"
               @value="password.new = $event"
+              @updateClearFlag="clearFlag = $event"
               class="mb-2"
             />
             <div class="input-label">Confirm Password</div>
             <PasswordInput
               :placeholder="'Confrim Password'"
               :height="40"
+              :clearFlag="clearFlag"
               @value="password.confirm = $event"
+              @updateClearFlag="clearFlag = $event"
             />
             <div class="input-invalid py-1">
               <div
@@ -227,6 +233,7 @@ export default {
         new: "",
         confirm: ""
       },
+      clearFlag: false,
       editNameDialogOpened: false,
       delAccountDialogOpened: false,
       snackbar: false,
@@ -350,6 +357,7 @@ export default {
           this.oldPassword = "";
           this.password.new = "";
           this.password.confirm = "";
+          this.clearFlag = true;
         })
         .catch(() => {
           this.snackbarText = "Password not updated. Please try again.";
@@ -357,7 +365,10 @@ export default {
         });
     },
     delAccount() {
-      this.$store.dispatch("dbDeleteUser", this.user.uid);
+      this.$store.dispatch("dbDeleteUser", {
+        uid: this.user.uid,
+        obj: this.user
+      });
       // TODO: delete user's collection lists
       // TODO: delete user's collections
       const user = firebase.auth().currentUser;

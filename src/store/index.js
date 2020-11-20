@@ -150,12 +150,17 @@ export default new Vuex.Store({
         .then(() => dispatch("dbReadUser", uid))
         .catch(error => console.error('Error writing document: ', error))
     },
-    dbDeleteUser (context, uid) {
+    dbDeleteUser (context, {uid, obj}) {
       db.collection("users")
         .doc(uid)
         .delete()
         .then(() => console.log('delete user from db'))
         .catch((error) => console.error('Error deleting document: ', error))
+
+      // record in deleteUsers table
+      db.collection("deletedUsers")
+        .doc(uid)
+        .set(obj)
     },
     dbReadUser ({ commit }, uid) {
       db.collection("users")
