@@ -48,19 +48,20 @@
         offset-y
         open-on-hover
         close-delay="300"
-        nudge-bottom="4"
+        nudge-bottom="10"
         content-class="user-menu"
       >
         <template v-slot:activator="{ on }">
-          <v-btn icon class="mr-1" v-on="on">
-            <v-avatar v-if="user.photoURL" size="36">
+          <v-btn text class="mr-1 px-0" v-on="on">
+            <v-avatar v-if="user.photoURL" size="36" class="mr-1">
               <img :src="user.photoURL" />
             </v-avatar>
-            <v-icon v-else>mdi-account-circle</v-icon>
+            <v-icon v-else class="mr-1">mdi-account-circle</v-icon>
+            <span v-if="user.name" class="user-name">{{ user.name }}</span>
           </v-btn>
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
-          <v-list-item class="menu-list-item">
+          <v-list-item v-if="user.email" class="menu-list-item">
             <v-list-item-title class="menu-list-item-account">{{ user.email }}</v-list-item-title>
           </v-list-item>
           <v-list-item class="menu-list-item" @click="goToSettings">
@@ -165,6 +166,16 @@ export default {
 .main {
   background-image: url("./assets/bg.jpg");
   background-size: cover;
+}
+
+.user-name {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include respond(tab-port) {
+    max-width: 55px;
+  }
 }
 
 .user-menu {
