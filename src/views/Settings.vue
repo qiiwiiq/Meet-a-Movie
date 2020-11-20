@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-center">
-    <div class="page-settings py-3 d-flex justify-space-around">
+    <div class="page-settings justify-space-around">
       <div class="col-left profile d-flex flex-column justify-space-between align-center">
         <div class="d-flex flex-column align-center">
           <v-hover v-slot:default="{ hover }">
@@ -24,7 +24,7 @@
               </v-btn>
             </div>
           </v-hover>
-          <div class="profile-name d-flex justify-center mb-2">
+          <div class="profile-name d-flex justify-center align-center mb-2">
             <span class="ml-4 mr-2">{{ user.name || "Your Name" }}</span>
             <v-btn
               icon
@@ -347,12 +347,14 @@ export default {
         .then(() => {
           this.snackbarText = "Password updated";
           this.snackbar = true;
+          this.oldPassword = "";
+          this.password.new = "";
+          this.password.confirm = "";
         })
         .catch(() => {
           this.snackbarText = "Password not updated. Please try again.";
           this.snackbar = true;
         });
-      
     },
     delAccount() {
       this.$store.dispatch("dbDeleteUser", this.user.uid);
@@ -375,10 +377,25 @@ export default {
 @import '@/scss/mixins.scss';
 
 .page-settings {
+  display: flex;
   max-width: 900px;
   margin: 16px 20px;
+  padding: 12px 0;
   border-radius: 4px;
   background-color: rgba(#fff, 0.6);
+
+  @include respond(tab-port) {
+    display: block;
+    width: 80%;
+    height: calc(var(--vh, 1vh) * 100 - 90px);
+    padding: 12px 0 24px 0;
+    overflow-y: scroll;
+  }
+
+  @include respond(mobile) {
+    width: 100%;
+    margin: 16px 12px;
+  }
 }
 
 .divider {
@@ -388,8 +405,12 @@ export default {
 
 .col-left,
 .col-right {
-  height: calc(100vh - 120px);
+  height: calc(var(--vh, 1vh) * 100 - 120px);
   overflow-y: scroll;
+
+  @include respond(tab-port) {
+    height: unset;
+  }
 }
 
 .col-left {
@@ -400,15 +421,32 @@ export default {
 .col-right {
   width: 50vw;
   padding: 0 16px;
+
+  @include respond(tab-port) {
+    width: unset;
+  }
+
+  @include respond(mobile) {
+    padding: 0 12px;
+  }
 }
 
 .profile {
+  @include respond(tab-port) {
+    margin-bottom: 16px;
+  }
+
   &-image {
     position: relative;
     width: 150px;
     height: 150px;
     border-radius: 50%;
     overflow: hidden;
+
+    @include respond(tab-port) {
+      width: 100px;
+      height: 100px;
+    }
 
     img {
       width: 100%;
@@ -427,6 +465,11 @@ export default {
     max-width: 100%;
     font-size: 20px;
     font-weight: 700;
+
+    @include respond(tab-port) {
+      font-size: 16px;
+      line-height: 24px;
+    }
   }
 
   &-signin {
