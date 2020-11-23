@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 import movieQuote from "popular-movie-quotes"; // https://github.com/NikhilNamal17/popular-movie-quotes
 import { apiGetFilm } from "@/api/api.js";
-import { db } from '@/assets/firebase.js';
+import { db, storage } from '@/assets/firebase.js';
 
 Vue.use(Vuex);
 
@@ -14,7 +15,9 @@ export default new Vuex.Store({
       token: '',
       name: '',
       email: '',
+      photo: '',
       photoURL: '',
+      photoRef: '',
       uid: '',
       created: null
     },
@@ -66,8 +69,12 @@ export default new Vuex.Store({
       user.name = payload.name;
       user.email = payload.email;
       user.photoURL = payload.photoURL;
+      user.photoRef = payload.photoRef;
       user.uid = payload.uid;
       user.created = payload.created;
+    },
+    setUserPhoto ({ user }, payload) {
+      user.photo = payload;
     },
     setQuoteObj (state, payload) {
       state.quoteObj = payload;
@@ -162,13 +169,34 @@ export default new Vuex.Store({
         .doc(uid)
         .set(obj)
     },
-    dbReadUser ({ commit }, uid) {
+    dbReadUser ({ commit, dispatch }, uid) {
       db.collection("users")
         .doc(uid)
         .get()
         .then(doc => {
+          if (doc.data().photoRef) {
+            console.log(doc.data().photoRef);
+            dispatch("downloadPhoto", doc.data().photoRef);
+          } else {
+            commit("setUserPhoto", doc.data().photoURL);
+          }
           commit("setUser", doc.data());
         })
+    },
+    downloadPhoto ({ commit }, photoRef) {
+      storage.ref().child(photoRef).getDownloadURL().then(async (url) => {
+        const result = await axios.get(url, { responseType: 'blob' });
+        if (result) {
+          let blob = new Blob([result.data]);
+          const fileReader = new FileReader();
+          fileReader.addEventListener('load', () => {
+            commit("setUserPhoto", fileReader.result);
+          });
+          fileReader.readAsDataURL(blob);
+        }
+      }).catch(() => {
+
+      });
     },
     initCollections ({ dispatch }, user) {
       if (user.isNewUser) {

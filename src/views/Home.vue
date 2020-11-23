@@ -196,10 +196,11 @@ export default {
 @import '@/scss/mixins.scss';
 
 .page-home {
-  height: 100%;
+  height: calc(var(--vh, 1vh) * 100 - 56px);
   background-size: cover;
   background-position: 50% 80%;
   background-blend-mode: soft-light;
+  overflow: scroll;
 }
 
 .card-quote {
@@ -207,7 +208,7 @@ export default {
   min-width: 300px;
   max-width: 700px;
   height: fit-content;
-  margin-top: 8vh;
+  margin: 8vh 0 30px 0;
   padding: 25px 30px;
   border: 1px solid #555;
   outline: 1px dashed #888;
@@ -216,11 +217,11 @@ export default {
 
   @include respond(tab-land) {
     max-width: 600px;
-    margin-top: 10vh;
+    margin: 10vh 0 30px 0;
   }
 
   @include respond(tab-port) {
-    margin-top: 60px;
+    margin: 60px 0 30px 0;
   }
 
   @include respond(large-mobile) {
@@ -252,16 +253,16 @@ export default {
 }
 
 .card-quote-loading {
-  margin-top: 8vh;
+  margin: 8vh 0 30px 0;
   width: 50vw;
 
    @include respond(tab-land) {
-    margin-top: 10vh;
+    margin: 10vh 0 30px 0;
     width: 60vw;
   }
 
   @include respond(tab-port) {
-    margin-top: 60px;
+    margin: 60px 0 30px 0;
   }
 
   @include respond(large-mobile) {
@@ -275,15 +276,10 @@ export default {
   min-width: 280px;
   height: fit-content;
   padding: 20px;
-  margin-top: 8vh;
+  margin: 30px 0;
   background-color: rgba(255, 255, 255, 0.7);
 
-  @include respond(tab-land) {
-    margin-top: 10vh;
-  }
-
   @include respond(tab-port) {
-    margin-top: 60px;
     padding: 16px;
   }
 

@@ -10,3 +10,10 @@ body {
 .h-100 {
   height: 100%;
 }
+
+.img-preview {
+  /* https://stackoverflow.com/questions/34713763/force-an-image-to-fit-and-keep-aspect-ratio */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

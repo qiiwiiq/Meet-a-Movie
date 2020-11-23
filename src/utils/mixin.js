@@ -39,6 +39,9 @@ export const mixin = {
         name: "",
         email: "",
         photoURL: "",
+        photoRef: "",
+        uid: "",
+        created: null
       };
       this.$store.commit("setUser", payload);
       this.$store.commit("setLoginStatus", false);

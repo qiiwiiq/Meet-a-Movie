@@ -6,8 +6,8 @@
           <v-hover v-slot:default="{ hover }">
             <div class="profile-image mt-2 mb-4">
               <v-img
-                v-if="user.photoURL"
-                :src="user.photoURL"
+                v-if="user.photo"
+                :src="user.photo"
               />
               <v-img
                 v-else
@@ -19,6 +19,7 @@
                 color="transparent"
                 class="btn-change-photo text-none"
                 :class="{ 'show-btns': hover }"
+                @click="editPhotoDialogOpened = true"
               >
                 Edit
               </v-btn>
@@ -161,6 +162,39 @@
         </div>
       </div>
     </div>
+    <v-dialog v-model="editPhotoDialogOpened" width="350" persistent>
+      <ActionsDialog
+        :actionTitle="'Edit Your Photo'"
+        :actionText1="'Cancel'"
+        :actionText2="'OK'"
+        :disabledAcion2="photo && photo.size > 3000000"
+        @action1="editPhotoDialogOpened = false"
+        @action2="updatePhoto"
+      >
+        <div class="px-6">
+            <div class="body-2 mb-4">
+              Select image from your device<br />
+              The image size should be smaller than 3 MB
+            </div>
+            <div class="d-flex">
+              <div class="photo-uploader">
+                <ImageUploader
+                  :defaultLogo="user.photo"
+                  @setImage="setImage"
+                  @resetImage="resetImage"
+                />
+              </div>
+              <div
+                v-if="photo && photo.size > 3000000"
+                class="caption pt-2 red--text text--lighten-2"
+              >
+                The image size is larger than 5 MB 
+              </div>
+            </div>
+        </div>
+      </ActionsDialog>
+    </v-dialog>
+
     <v-dialog v-model="editNameDialogOpened" width="350" persistent>
       <ActionsDialog
         :actionTitle="'Edit Your Name'"
@@ -210,19 +244,23 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/storage";
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 import ActionsDialog from "@/components/actionsDialog";
+import ImageUploader from "@/components/imageUploader";
 import PasswordInput from "@/components/passwordInput";
 
 export default {
   mixins: [mixin],
   components: {
     ActionsDialog,
+    ImageUploader,
     PasswordInput,
   },
   data() {
     return {
+      photo: "",
       username: "",
       originUsername: "",
       oldPassword: "",
@@ -234,6 +272,7 @@ export default {
         confirm: ""
       },
       clearFlag: false,
+      editPhotoDialogOpened: false,
       editNameDialogOpened: false,
       delAccountDialogOpened: false,
       snackbar: false,
@@ -293,6 +332,44 @@ export default {
     }
   },
   methods: {
+    setImage(file) {
+      this.photo = file;
+      console.log(this.photo);
+    },
+    resetImage() {
+      this.photo = '';
+    },
+    updatePhoto() {
+      let storageRef = firebase.storage().ref(`photo/${this.user.uid}`);
+      if (this.photo) {
+        storageRef.put(this.photo)
+          .then(snapshot => {
+            this.$store.dispatch("dbUpdateUser", {
+              uid: this.user.uid,
+              obj: {
+                photoRef: snapshot.ref.location.path_,
+              },
+            });
+            this.editPhotoDialogOpened = false;
+          })
+          .catch(() => {
+            this.editPhotoDialogOpened = false;
+            this.snackbarText = "Something wrong";
+            this.snackbar = true;
+          })
+      } else {
+        storageRef.delete()
+          .then(() => {
+            this.$store.dispatch("dbUpdateUser", {
+              uid: this.user.uid,
+              obj: {
+                photoRef: "",
+              },
+            });
+          });
+        this.editPhotoDialogOpened = false;
+      }
+    },
     updateUser() {
       if (this.username.length > 20) return;
       if (this.username !== this.originUsername) {
@@ -534,8 +611,27 @@ export default {
 }
 
 .show-btns {
-  color:  #0097A7 !important;
+  background-color: #272727 !important;
+  color:  #FFF !important;
 }
+
+.photo-uploader {
+  width: 144px;
+  min-width: 144px;
+  height: 144px;
+  border-radius: 12px;
+  border: 1px solid #979797;
+  background-color: #fff;
+  margin-right: 1.8vw;
+
+  @include respond(tab-port) {
+    width: 96px;
+    min-width: 96px;
+    height: 96px;
+    margin: 0 auto;
+  }
+}
+  
 
 .user-input {
   font-size: 14px;

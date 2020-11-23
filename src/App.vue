@@ -53,8 +53,8 @@
       >
         <template v-slot:activator="{ on }">
           <v-btn icon class="mr-1" v-on="on">
-            <v-avatar v-if="user.photoURL" size="36">
-              <img :src="user.photoURL" />
+            <v-avatar v-if="user.photo" size="36">
+              <img :src="user.photo" />
             </v-avatar>
             <v-icon v-else>mdi-account-circle</v-icon>
           </v-btn>
@@ -176,6 +176,7 @@ export default {
 
 .menu-list-item {
   border-radius: 0;
+  max-width: 150px;
   min-height: 40px !important;
 
   &:not(:first-child) {

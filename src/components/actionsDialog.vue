@@ -16,6 +16,7 @@
         text
         :small="windowWidth <= 450"
         :color="mainColor"
+        :disabled="disabledAcion2"
         @click="action2"
       >
         {{ actionText2 }}
@@ -29,7 +30,7 @@ import { mixin } from "@/utils/mixin";
 
 export default {
   mixins: [mixin],
-  props: ["actionTitle", "actionText1", "actionText2"],
+  props: ["actionTitle", "actionText1", "actionText2", "disabledAcion2"],
   methods: {
     action1() {
       this.$emit("action1");

@@ -173,6 +173,7 @@ export default {
             name: "",
             email: user.email,
             photoURL: "",
+            photoRef: "",
             uid: user.uid,
           };
           vm.$cookies.set("uid", user.uid);
