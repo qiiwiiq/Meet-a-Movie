@@ -146,7 +146,7 @@
           <div class="item-title">Delete Account</div>
           <v-divider></v-divider>
           <div class="item-desc mx-2 my-2">
-            Once you delete your account, all your data will be removed from database.
+            Once you delete your account, all the data will be removed from database.
             There is no going back. Please be certain.
           </div>
           <v-btn
@@ -252,6 +252,9 @@ import ImageUploader from "@/components/imageUploader";
 import PasswordInput from "@/components/passwordInput";
 
 export default {
+  metaInfo: {
+    title: 'Settings | Meet a Movie'
+  },
   mixins: [mixin],
   components: {
     ActionsDialog,

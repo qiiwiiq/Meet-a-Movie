@@ -6,6 +6,7 @@ import vuetify from "./plugins/vuetify";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
+import MetaInfo from 'vue-meta-info';
 import VueCookies from "vue-cookies";
 
 import "./assets/firebase.js";
@@ -49,6 +50,7 @@ function onElementHeightChange(elm, callback) {
 Vue.config.productionTip = false;
 
 Vue.use(VueAxios, axios);
+Vue.use(MetaInfo);
 Vue.use(VueCookies);
 
 new Vue({

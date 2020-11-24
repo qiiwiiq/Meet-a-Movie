@@ -30,6 +30,11 @@ const routes = [
     name: "Settings",
     component: () => import("../views/Settings.vue"),
   },
+  {
+    path: "/links",
+    name: "Links",
+    component: () => import("../views/Links.vue"),
+  },
 ];
 
 const router = new VueRouter({

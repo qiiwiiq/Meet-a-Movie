@@ -86,6 +86,9 @@ import PasswordInput from "@/components/passwordInput";
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
+  metaInfo: {
+    title: 'Sign Up | Meet a Movie'
+  },
   components: {
     Loading,
     PasswordInput

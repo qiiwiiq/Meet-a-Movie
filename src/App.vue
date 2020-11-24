@@ -60,8 +60,19 @@
           </v-btn>
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
-          <v-list-item  v-if="user.email" class="menu-list-item">
-            <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
+          <v-list-item  v-if="user.name || user.email" class="menu-list-item" two-line>
+            <v-list-item-content class="py-0">
+              <v-list-item-title class="menu-list-item-account text-right">{{ user.name }}</v-list-item-title>
+              <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="menu-list-item" @click="goToLinks">
+            <v-list-item-title class="menu-list-item-text d-flex justify-end">
+              <div class="menu-action d-flex justify-space-between">
+                <v-icon small>mdi-web</v-icon>
+                Links
+              </div>
+            </v-list-item-title>
           </v-list-item>
           <v-list-item class="menu-list-item" @click="goToSettings">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
@@ -137,6 +148,9 @@ export default {
         uid,
       };
       this.$store.dispatch("init", user);
+    },
+    goToLinks() {
+      this.$router.push({ name: "Links" }).catch(() => {});
     },
     goToSettings() {
       this.$router.push({ name: "Settings" }).catch(() => {});

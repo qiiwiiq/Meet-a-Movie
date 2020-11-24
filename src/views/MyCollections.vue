@@ -98,6 +98,9 @@ import EditListBtn from "@/components/editListBtn";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {
+  metaInfo: {
+    title: 'Collections | Meet a Movie'
+  },
   mixins: [mixin],
   components: {
     ActionsDialog,

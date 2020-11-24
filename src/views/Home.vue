@@ -101,6 +101,9 @@ import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 
 export default {
+  metaInfo: {
+    title: 'Meet a Movie'
+  },
   mixins: [mixin],
   components: {
     CollectBtn,
