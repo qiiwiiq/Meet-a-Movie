@@ -46,7 +46,7 @@
         v-else
         bottom
         offset-y
-        open-on-hover
+        
         close-delay="300"
         nudge-bottom="4"
         content-class="user-menu"
@@ -65,6 +65,14 @@
               <v-list-item-title class="menu-list-item-account text-right">{{ user.name }}</v-list-item-title>
               <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
             </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="menu-list-item" @click="goToNewQuote">
+            <v-list-item-title class="menu-list-item-text d-flex justify-end">
+              <div class="menu-action d-flex justify-space-between">
+                <v-icon small>mdi-plus-circle-outline</v-icon>
+                New Quote
+              </div>
+            </v-list-item-title>
           </v-list-item>
           <v-list-item class="menu-list-item" @click="goToLinks">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
@@ -149,6 +157,9 @@ export default {
       };
       this.$store.dispatch("init", user);
     },
+    goToNewQuote() {
+      this.$router.push({ name: "NewQuote" }).catch(() => {});
+    },
     goToLinks() {
       this.$router.push({ name: "Links" }).catch(() => {});
     },
@@ -205,7 +216,7 @@ export default {
   }
 
   .menu-action {
-    width: 80px;
+    width: 90px;
   }
 }
 

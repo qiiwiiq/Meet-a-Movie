@@ -21,7 +21,7 @@ const routes = [
     component: () => import("../views/SignUp.vue"),
   },
   {
-    path: "/my-collections",
+    path: "/collections",
     name: "MyCollections",
     component: () => import("../views/MyCollections.vue"),
   },
@@ -34,6 +34,11 @@ const routes = [
     path: "/links",
     name: "Links",
     component: () => import("../views/Links.vue"),
+  },
+  {
+    path: "/new-quote",
+    name: "NewQuote",
+    component: () => import("../views/NewQuote.vue"),
   },
 ];
 
