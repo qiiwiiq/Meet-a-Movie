@@ -37,13 +37,14 @@
         <div class="d-flex align-start mb-3">
           <label class="form-item-label">Genre</label>
           <div class="d-flex flex-wrap">
-            <div v-for="(genre, index) in genreOptions" :key="index">
+            <div v-for="(genre, index) in genreOptions" :key="index" class="genre">
               <v-checkbox
                 dense
                 v-model="movie.genre"
                 :label="genre"
                 :value="genre"
                 :color="mainColor"
+                :ripple="false"
                 hide-details
                 class="mt-0 pt-0 mr-6"
               ></v-checkbox>
@@ -110,20 +111,25 @@ export default {
       genreOptions: [
         "Action",
         "Adventure",
-        "Crime",
+        "Animation",
+        "Biography",
         "Comedy",
+        "Crime",
         "Drama",
-        "Fantasy",
         "Family",
+        "Fantasy",
         "Film-Noir",
         "History",
         "Horror",
         "Music",
+        "Musical",
         "Mystery",
         "Romance",
         "Sci-Fi",
+        "Sport",
         "Thriller",
-        "War"
+        "War",
+        "Western"
       ],
       snackbar: false,
       snackbarText: "",
@@ -132,7 +138,7 @@ export default {
   computed: {
     ...mapState(["user"]),
     validForm() {
-      return this.movie.name && this.movie.imdbId && this.movie.year && this.movie.quote ? true : false;
+      return this.movie.name && this.movie.imdbId && this.movie.year && this.movie.genre.length > 0 && this.movie.quote ? true : false;
     }
   },
   methods: {
@@ -183,7 +189,7 @@ export default {
 }
 
 .card-new-quote {
-  width: 450px;
+  width: 500px;
   background-color: rgba(#fff, 0.8);
   max-height: calc(var(--vh, 1vh) * 100 - 110px);
   overflow-y: scroll;
@@ -191,5 +197,9 @@ export default {
 
 .form-item-label {
   margin-right: 10px;
+}
+
+.genre {
+  width: 130px;
 }
 </style>
