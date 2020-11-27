@@ -66,14 +66,14 @@
               <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item class="menu-list-item" @click="goToNewQuote">
+          <!-- <v-list-item class="menu-list-item" @click="goToNewQuote">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
                 <v-icon small>mdi-plus-circle-outline</v-icon>
                 New Quote
               </div>
             </v-list-item-title>
-          </v-list-item>
+          </v-list-item> -->
           <v-list-item class="menu-list-item" @click="goToLinks">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
