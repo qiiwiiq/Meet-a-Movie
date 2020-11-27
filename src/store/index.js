@@ -167,9 +167,7 @@ export default new Vuex.Store({
       }
 
       if (genres.length > 0) {
-        for (let i in genres) {
-          queryRef = queryRef.where("genre", "array-contains", genres[i]);
-        }
+        queryRef = queryRef.where("genre", "array-contains-any", genres);
       }
       queryRef = queryRef.where("id", '>=', key).limit(1);
       queryRef.get()
