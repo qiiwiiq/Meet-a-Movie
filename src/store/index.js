@@ -86,6 +86,11 @@ export default new Vuex.Store({
       // }
     ],
     isIntroShown: false,
+    quoteFilter: {
+      yearFrom: null,
+      yearTo: null,
+      genres: []
+    }
   },
   mutations: {
     setLoginStatus (state, payload) {
@@ -121,19 +126,52 @@ export default new Vuex.Store({
     },
     updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
+    },
+    setQuoteFilter ({quoteFilter}, {yearFrom, yearTo, genres}) {
+      quoteFilter.yearFrom = yearFrom;
+      quoteFilter.yearTo = yearTo;
+      quoteFilter.genres = genres;
     }
   },
   actions: {
+    initQuote ({ commit, dispatch }) {
+      const lsYearFrom = +localStorage.getItem("yearFrom");
+      const lsYearTo = +localStorage.getItem("yearTo");
+      const lsSelectedGenres = localStorage.getItem("selectedGenres");
+      const yearFrom = lsYearFrom ? lsYearFrom : null;
+      const yearTo = lsYearTo ? lsYearTo : null;
+      const genres = lsSelectedGenres ? lsSelectedGenres.split(",") : [];
+      commit("setQuoteFilter", { yearFrom, yearTo, genres });
+      dispatch("getQuote");
+    },
     getQuote ({ commit, dispatch }) {
       commit("setQuoteObj", undefined);
       commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
       dispatch("dbReadQuote");
     },
-    dbReadQuote ({ dispatch }) {
+    dbReadQuote ({ dispatch, state }) {
       const quoteRef = db.collection("quote");
       const key = quoteRef.doc().id;
-      const queryRef = quoteRef.where("id", '>=', key).limit(1)
+      const yearFrom = state.quoteFilter.yearFrom;
+      const yearTo = state.quoteFilter.yearTo;
+      const genres = state.quoteFilter.genres;
+      let queryRef = quoteRef;
+      
+      if (yearFrom && yearTo) {
+        let years = [];
+        for (let i = yearFrom; i<=yearTo; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (genres.length > 0) {
+        for (let i in genres) {
+          queryRef = queryRef.where("genre", "array-contains", genres[i]);
+        }
+      }
+      queryRef = queryRef.where("id", '>=', key).limit(1);
       queryRef.get()
         .then(snapshot => {
             if(snapshot.size > 0) {
@@ -145,9 +183,10 @@ export default new Vuex.Store({
             else {
               quoteRef.where("id", '<', key).limit(1).get()
                 .then(snapshot => {
-                    snapshot.forEach(doc => {
-                        console.log(doc.id, '=>', doc.data());
-                    });
+                  snapshot.forEach(doc => {
+                    const movieObj = doc.data();
+                    dispatch("getFilm", movieObj);
+                  });
                 })
                 .catch(err => {
                     console.log('Error getting documents', err);
@@ -180,7 +219,9 @@ export default new Vuex.Store({
         dispatch("initCollections", user);
       } else {
         commit("setLoginStatus", false);
+        localStorage.clear();
       }
+      dispatch("initQuote");
     },
     initUser ({ dispatch }, user) {
       if (user.isNewUser) {

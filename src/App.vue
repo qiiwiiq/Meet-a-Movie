@@ -145,7 +145,6 @@ export default {
     ...mapState(["isLogin", "user", "movieObj"]),
   },
   mounted() {
-    this.$store.dispatch("getQuote");
     this.initUserFromCookies();
   },
   methods: {
@@ -167,6 +166,7 @@ export default {
       this.$router.push({ name: "Settings" }).catch(() => {});
     },
     signOut() {
+      localStorage.clear();
       this.logout();
       this.signOutDialogOpened = false;
     },

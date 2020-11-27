@@ -93,8 +93,8 @@ import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 import ActionsDialog from "@/components/actionsDialog";
 import CollectionList from "@/components/collectionList";
-import DeleteListBtn from "@/components/deleteListBtn";
-import EditListBtn from "@/components/editListBtn";
+import DeleteListBtn from "@/components/buttons/deleteListBtn";
+import EditListBtn from "@/components/buttons/editListBtn";
 import MovieQuoteCard from "@/components/movieQuoteCard";
 
 export default {

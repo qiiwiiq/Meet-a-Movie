@@ -25,9 +25,9 @@
             </v-btn>
           </div>
           <div class="card-quote-actions d-flex">
-            <v-btn fab x-small class="btn-tune">
-              <v-icon>mdi-tune</v-icon>
-            </v-btn>
+            <div class="btn-filter">
+              <FilterBtn />
+            </div>
             <v-btn fab x-small @click="getQuote">
               <v-icon>mdi-autorenew</v-icon>
             </v-btn>
@@ -62,9 +62,11 @@
             </template>
             <template v-slot:topColRight>
               <div class="quote-actions--mobile flex-column">
-                <v-btn icon small outlined class="mb-3">
-                  <v-icon small>mdi-tune</v-icon>
-                </v-btn>
+                <div class="mb-3">
+                  <FilterBtn
+                    :outlinedBtn="true"
+                  />
+                </div>
                 <v-btn icon small outlined @click="getQuote">
                   <v-icon small>mdi-autorenew</v-icon>
                 </v-btn>
@@ -72,9 +74,9 @@
             </template>
             <template v-slot:colRight>
               <div class="quote-actions flex-column">
-                <v-btn fab x-small class="mb-3">
-                  <v-icon>mdi-tune</v-icon>
-                </v-btn>
+                <div class="mb-3">
+                  <FilterBtn />
+                </div>
                 <v-btn fab x-small @click="getQuote">
                   <v-icon>mdi-autorenew</v-icon>
                 </v-btn>
@@ -94,7 +96,8 @@
 </template>
 
 <script>
-import CollectBtn from "@/components/collectBtn";
+import CollectBtn from "@/components/buttons/collectBtn";
+import FilterBtn from "@/components/buttons/filterBtn";
 import MovieDetail from "@/components/movieDetail";
 import Quote from "@/components/quote";
 import { mapState } from "vuex";
@@ -107,6 +110,7 @@ export default {
   mixins: [mixin],
   components: {
     CollectBtn,
+    FilterBtn,
     MovieDetail,
     Quote,
   },
@@ -248,7 +252,7 @@ export default {
       right: 8px;
     }
 
-    .btn-tune {
+    .btn-filter {
       margin-bottom: 8px;
 
       @include respond(tab-port) {

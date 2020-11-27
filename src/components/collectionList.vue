@@ -18,8 +18,8 @@
 <script>
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
-import DeleteListBtn from "@/components/deleteListBtn";
-import EditListBtn from "@/components/editListBtn";
+import DeleteListBtn from "@/components/buttons/deleteListBtn";
+import EditListBtn from "@/components/buttons/editListBtn";
 
 export default {
   mixins: [mixin],

@@ -5,8 +5,33 @@ import "firebase/auth";
 export const mixin = {
   data () {
     return {
+      minYear: 1930,
+      currentYear: dayjs().year(),
       mainColor: "#0097A7",
       windowWidth: window.innerWidth,
+      genreOptions: [
+        "Action",
+        "Adventure",
+        "Animation",
+        "Biography",
+        "Comedy",
+        "Crime",
+        "Drama",
+        "Family",
+        "Fantasy",
+        "Film-Noir",
+        "History",
+        "Horror",
+        "Music",
+        "Musical",
+        "Mystery",
+        "Romance",
+        "Sci-Fi",
+        "Sport",
+        "Thriller",
+        "War",
+        "Western"
+      ],
     }
   },
   mounted() {

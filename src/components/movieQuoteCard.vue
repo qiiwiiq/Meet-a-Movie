@@ -86,7 +86,7 @@
 <script>
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
-import CollectBtn from "@/components/collectBtn";
+import CollectBtn from "@/components/buttons/collectBtn";
 import MovieDetail from "@/components/movieDetail";
 
 export default {
