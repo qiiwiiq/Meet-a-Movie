@@ -109,7 +109,8 @@ export default {
       let options = [];
       const lastOption = this.yearTo ? this.yearTo : null;
       if (lastOption) {
-        for (let i = lastOption; i >= (lastOption - 9); i--) {
+        const firstOption = (lastOption - 9) < this.minYear ? this.minYear : (lastOption - 9);
+        for (let i = lastOption; i >= firstOption; i--) {
           options.push(i);
         }
       } else {
@@ -123,7 +124,8 @@ export default {
       let options = [];
       const firstOption = this.yearFrom ? this.yearFrom : null;
       if (firstOption) {
-        for (let i = firstOption; i <= (firstOption + 9); i++) {
+        const lastOption = (firstOption + 9) > this.currentYear ? this.currentYear : (firstOption + 9);
+        for (let i = firstOption; i <= lastOption; i++) {
           options.unshift(i);
         }
       } else {
