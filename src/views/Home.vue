@@ -34,7 +34,7 @@
           </div>
         </v-card>
         <v-card v-if="isIntroShown" class="movie-intro">
-          <MovieDetail :movieObj="movieObj">
+          <MovieDetail :movieObj="movieQuoteObj">
             <template v-slot:movieInfo>
               <div class="mb-8">
                 <v-btn

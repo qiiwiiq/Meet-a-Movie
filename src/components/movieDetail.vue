@@ -8,16 +8,14 @@
         <div class="poster--mobile">
           <img :src="movieObj.poster" />
         </div>
-        <div  class="flex-grow-1">
+        <div class="flex-grow-1">
           <div class="movie-title mb-2">{{ movieObj.title }}</div>
           <div>
             <v-icon small color="#455A64" class="icon-film mr-1">mdi-filmstrip</v-icon>
             <span class="year pr-2">{{ movieObj.year }}</span>
             <span class="length pl-2">{{ movieObj.length }}</span>
           </div>
-          <div
-            class="movie-rating--mobile align-center"
-          >
+          <div class="movie-rating--mobile align-center">
             <v-icon small color="#FFB300" class="mr-1">mdi-star</v-icon>
             <span>
               <span class="mr-1">{{ movieObj.rating }}</span>
@@ -35,6 +33,20 @@
           </div>
         </div>
         <slot name="topColRight"></slot>
+      </div>
+      <div class="mt-2">
+        <span
+          v-for="(genre, i) in movieObj.genre"
+          :key="i"
+        >
+          <v-chip
+            label
+            small
+            class="mr-1"
+          >
+            {{ genre }}
+          </v-chip>
+        </span>
       </div>
       <div class="cast my-2">{{ actors }}</div>
       <div class="plot mb-4">{{ movieObj.plot }}</div>

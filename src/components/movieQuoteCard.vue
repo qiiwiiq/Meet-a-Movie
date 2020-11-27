@@ -15,8 +15,8 @@
               {{ movieObj.rating }}
             </span>
           </div>
-          <div class="cast mb-1">{{ actors }}</div>
-          <div class="quote ml-3 ml-sm-6 mt-3 mt-sm-4">{{ movieObj.quote }}</div>
+          <div class="genre mb-1">{{ genres }}</div>
+          <div class="quote ml-3 ml-sm-6 mt-2 mt-sm-4">{{ movieObj.quote }}</div>
         </div>
         <div class="btn-collect">
           <CollectBtn
@@ -105,11 +105,9 @@ export default {
   },
   computed: {
     ...mapState(["user"]),
-    actors() {
-      if (this.movieObj.casts) {
-        let casts = this.movieObj.cast.slice(0, 3);
-        let actors = casts.map((casts) => casts.actor);
-        return actors.join(", ");
+    genres() {
+      if (this.movieObj) {
+        return this.movieObj.genre.join(", ");
       } else {
         return "";
       }
@@ -170,7 +168,7 @@ export default {
 }
 
 .year-and-length,
-.cast {
+.genre {
   font-size: 12px;
   font-weight: 300;
   line-height: 16px;
