@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import movieQuote from "popular-movie-quotes"; // https://github.com/NikhilNamal17/popular-movie-quotes
 import { apiGetFilm } from "@/api/api.js";
 import { db, storage } from '@/assets/firebase.js';
 
@@ -22,9 +21,38 @@ export default new Vuex.Store({
       created: null
     },
     quoteObj: undefined,
+      /* data stucture */
+      // {
+      //   checked: Boolean,
+      //   genre: [...],
+      //   id: 'xxxxx',
+      //   imdbId: 'xxxxx',
+      //   name: 'xxxxx',
+      //   quote: 'xxxxx',
+      //   timestamp: number,
+      //   uploader: 'xxxxx',
+      //   year: number
+      // }
     movieObj: {
       poster: '',
     },
+      /* data stucture */
+      // {
+      //   cast: [...],
+      //   id: 'xxxxx',
+      //   length: 'xxxxx',
+      //   plot: 'xxxxx',
+      //   poster: 'xxxxx',
+      //   rating: 'xxxxx',
+      //   rating_votes: 'xxxxx',
+      //   technical_specs: [...],
+      //   title: 'xxxxx',
+      //   trailer: {
+      //      id: 'xxxxx',
+      //      link: 'xxxxx',
+      //   },
+      //   year: 'xxxxx',
+      // }
     collectionLists: [
       /* data stucture */
       // {
@@ -100,11 +128,38 @@ export default new Vuex.Store({
       commit("setQuoteObj", undefined);
       commit("setMovieObj", { poster: '' });
       commit("updateIntroShownFlag", false);
-      const movieObj = movieQuote.getSomeRandom(1)[0];
-      dispatch("getFilm", movieObj);
+      dispatch("dbReadQuote");
+    },
+    dbReadQuote ({ dispatch }) {
+      const quoteRef = db.collection("quote");
+      const key = quoteRef.doc().id;
+      const queryRef = quoteRef.where("id", '>=', key).limit(1)
+      queryRef.get()
+        .then(snapshot => {
+            if(snapshot.size > 0) {
+                snapshot.forEach(doc => {
+                  const movieObj = doc.data();
+                  dispatch("getFilm", movieObj);
+                });
+            }
+            else {
+              quoteRef.where("id", '<', key).limit(1).get()
+                .then(snapshot => {
+                    snapshot.forEach(doc => {
+                        console.log(doc.id, '=>', doc.data());
+                    });
+                })
+                .catch(err => {
+                    console.log('Error getting documents', err);
+                });
+            }
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
+        });
     },
     getFilm ({ commit, dispatch }, movieObj) {
-      apiGetFilm(movieObj.movie).then(
+      apiGetFilm(movieObj.imdbId).then(
         (res) => {
           if (res.data.title && res.data.poster) {
             commit("setQuoteObj", movieObj);

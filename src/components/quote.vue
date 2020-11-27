@@ -2,7 +2,7 @@
   <div v-if="quoteObj" class="quote w-100 d-flex flex-column align-end">
     <div class="quote-text align-self-center">{{ quoteObj.quote }}</div>
     <div class="movie">
-      <span class="movie-name pr-2">{{ quoteObj.movie }}</span>
+      <span class="movie-name pr-2">{{ quoteObj.name }}</span>
       <span class="movie-year">({{ quoteObj.year }})</span>
     </div>
   </div>

@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     checkIfMovieCollected(movieObj, collections) {
-      const value = collections.some(item => item.quote === movieObj.quote);
+      const value = collections.some(item => item.quoteId === movieObj.quoteId);
       return value;
     },
     createNewList() {

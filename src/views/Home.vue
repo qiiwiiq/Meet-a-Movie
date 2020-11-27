@@ -158,13 +158,15 @@ export default {
   methods: {
     initMovieQuoteData() {
       const movieObjInCollections = this.collections.find(
-        (item) => item.quote === this.quoteObj.quote
+        (item) => item.quoteId === this.quoteObj.id
       );
       if (movieObjInCollections) {
         this.movieQuoteObj = Object.assign(
           {
             collectionId: movieObjInCollections.collectionId,
+            quoteId: this.quoteObj.id,
             quote: this.quoteObj.quote,
+            genre: this.quoteObj.genre,
             listid: movieObjInCollections.listid,
             comments: movieObjInCollections.comments,
           },
@@ -174,7 +176,9 @@ export default {
         this.movieQuoteObj = Object.assign(
           {
             collectionId: "",
+            quoteId: this.quoteObj.id,
             quote: this.quoteObj.quote,
+            genre: this.quoteObj.genre,
             listid: "",
             comments: "",
           },
