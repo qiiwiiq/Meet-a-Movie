@@ -169,8 +169,8 @@ export default new Vuex.Store({
       if (genres.length > 0) {
         queryRef = queryRef.where("genre", "array-contains-any", genres);
       }
-      queryRef = queryRef.where("id", '>=', key).limit(1);
-      queryRef.get()
+      let pickOneRef = queryRef.where("id", '>=', key).limit(1);
+      pickOneRef.get()
         .then(snapshot => {
             if(snapshot.size > 0) {
                 snapshot.forEach(doc => {
@@ -179,7 +179,7 @@ export default new Vuex.Store({
                 });
             }
             else {
-              quoteRef.where("id", '<', key).limit(1).get()
+              queryRef.where("id", '<', key).limit(1).get()
                 .then(snapshot => {
                   snapshot.forEach(doc => {
                     const movieObj = doc.data();
