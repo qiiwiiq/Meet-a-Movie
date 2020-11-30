@@ -1,8 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import dayjs from "dayjs";
 import { apiGetFilm } from "@/api/api.js";
 import { db, storage } from '@/assets/firebase.js';
+
+const minYear = 1930;
+const currentYear = dayjs().year();
 
 Vue.use(Vuex);
 
@@ -17,6 +21,7 @@ export default new Vuex.Store({
       photo: '',
       photoURL: '',
       photoRef: '',
+      role: '',
       uid: '',
       created: null
     },
@@ -103,6 +108,7 @@ export default new Vuex.Store({
       user.email = payload.email;
       user.photoURL = payload.photoURL;
       user.photoRef = payload.photoRef;
+      user.role = payload.role;
       user.uid = payload.uid;
       user.created = payload.created;
     },
@@ -161,6 +167,22 @@ export default new Vuex.Store({
       if (yearFrom && yearTo) {
         let years = [];
         for (let i = yearFrom; i<=yearTo; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (yearFrom && !yearTo) {
+        let years = [];
+        for (let i = yearFrom; i<=currentYear; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (!yearFrom && yearTo) {
+        let years = [];
+        for (let i = minYear; i<=yearTo; i++) {
           years.push(i);
         }
         queryRef = queryRef.where("year", 'in', years)
@@ -231,6 +253,7 @@ export default new Vuex.Store({
           name: user.name,
           email: user.email,
           photoURL: user.photoURL,
+          role: "user",
           uid: user.uid,
           created: new Date().getTime()
         })
