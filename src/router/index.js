@@ -35,11 +35,12 @@ const routes = [
     name: "Links",
     component: () => import("../views/Links.vue"),
   },
-  // {
-  //   path: "/new-quote",
-  //   name: "NewQuote",
-  //   component: () => import("../views/NewQuote.vue"),
-  // },
+  {
+    path: "/management",
+    name: "Management",
+    component: () => import("../views/Management.vue"),
+  },
+  { path: '*', redirect: '/' },
 ];
 
 const router = new VueRouter({

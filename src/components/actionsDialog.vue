@@ -9,7 +9,11 @@
     >
       <v-icon small>mdi-close</v-icon>
     </v-btn>
-    <v-card-text class="dialog-title pt-5">{{ actionTitle }}</v-card-text>
+    <v-card-text
+      class="dialog-title pt-5"
+    >
+      {{ actionTitle }}
+    </v-card-text>
     <slot></slot>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -45,6 +49,9 @@ export default {
       default: false
     },
     actionTitle: {
+      type: String
+    },
+    titleColor: {
       type: String
     },
     actionText1: {
@@ -86,6 +93,7 @@ export default {
   &-title {
     font-weight: 700;
     font-size: 20px;
+    color: rgba(#000, .8) !important;
 
     @include respond(mobile) {
       font-size: 18px;

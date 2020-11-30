@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import firebase from "firebase/app";
 import "firebase/auth";
 
@@ -65,6 +65,7 @@ export const mixin = {
         email: "",
         photoURL: "",
         photoRef: "",
+        role: "",
         uid: "",
         created: null
       };

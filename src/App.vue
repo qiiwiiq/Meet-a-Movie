@@ -19,7 +19,7 @@
         exact
       >
         <v-icon class="btn-nav--icon">mdi-movie-open</v-icon>
-        <span class="btn-nav--text">Movie / Quote</span>
+        <span class="btn-nav--text">Quote / Movie</span>
       </v-btn>
       <v-btn
         dark
@@ -66,14 +66,18 @@
               <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <!-- <v-list-item class="menu-list-item" @click="goToNewQuote">
+          <v-list-item
+            v-if="user.role === 'maintainer'"
+            class="menu-list-item"
+            @click="goToManagement"
+          >
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
-                <v-icon small>mdi-plus-circle-outline</v-icon>
-                New Quote
+                <v-icon small>mdi-unicorn-variant</v-icon>
+                Management
               </div>
             </v-list-item-title>
-          </v-list-item> -->
+          </v-list-item>
           <v-list-item class="menu-list-item" @click="goToLinks">
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
@@ -156,8 +160,8 @@ export default {
       };
       this.$store.dispatch("init", user);
     },
-    goToNewQuote() {
-      this.$router.push({ name: "NewQuote" }).catch(() => {});
+    goToManagement() {
+      this.$router.push({ name: "Management" }).catch(() => {});
     },
     goToLinks() {
       this.$router.push({ name: "Links" }).catch(() => {});
@@ -216,7 +220,7 @@ export default {
   }
 
   .menu-action {
-    width: 90px;
+    width: 105px;
   }
 }
 
