@@ -1,73 +1,85 @@
 <template>
   <div class="view d-flex justify-center h-100">
     <div class="page-management w-100">
-      <div v-if="user.role === 'maintainer'">
+      <div>
         <!-- <NewQuote /> -->
         <v-card flat class="page-header">
           <v-card-title class="pa-0">Quotes Management</v-card-title>
           <div class="d-flex">
             <div class="filter">
               <div class="d-flex mb-2">
-                <div class="form-item form-item-small d-flex align-center mr-4">
+                <div class="form-item d-flex align-center mr-8">
                   <label for="movieName" class="form-item-label mr-2">Movie</label>
-                  <v-text-field
-                    v-model="filter.movie"
-                    :color="mainColor"
-                    id="movieName"
-                    hide-details
-                    class="mt-0 pt-0"
-                  ></v-text-field>
+                  <div class="form-item-content--small">
+                    <v-text-field
+                      v-model="filter.movie"
+                      :color="mainColor"
+                      id="movieName"
+                      hide-details
+                      class="mt-0 pt-0"
+                    ></v-text-field>
+                  </div>
                 </div>
-                <div class="form-item form-item-small d-flex align-center">
+                <div class="form-item d-flex align-center">
                   <label for="imdbId" class="form-item-label mr-2">IMDB ID</label>
-                  <v-text-field
-                    v-model="filter.imdbId"
-                    :color="mainColor"
-                    id="imdbId"
-                    hide-details
-                    class="mt-0 pt-0"
-                  ></v-text-field>
+                  <div class="form-item-content--small">
+                    <v-text-field
+                      v-model="filter.imdbId"
+                      :color="mainColor"
+                      id="imdbId"
+                      hide-details
+                      class="mt-0 pt-0"
+                    ></v-text-field>
+                  </div>
                 </div>
               </div>
               <div class="d-flex mb-3">
-                <div class="form-item form-item-small d-flex align-center mr-4">
+                <div class="form-item d-flex align-center mr-8">
                   <label for="movieQuote" class="form-item-label mr-2">Quote</label>
-                  <v-text-field
-                    v-model="filter.quote"
-                    :color="mainColor"
-                    id="movieQuote"
-                    hide-details
-                    class="mt-0 pt-0"
-                  ></v-text-field>
+                  <div class="form-item-content--small">
+                    <v-text-field
+                      v-model="filter.quote"
+                      :color="mainColor"
+                      id="movieQuote"
+                      hide-details
+                      class="mt-0 pt-0"
+                    ></v-text-field>
+                  </div>
                 </div>
-                <div class="form-item form-item-medium d-flex align-center">
+                <div class="form-item d-flex align-center">
                   <label for="movieQuote" class="form-item-label mr-2">Year</label>
-                  <v-select
-                    v-model="filter.yearFrom"
-                    :items="yearFromOptions"
-                    :color="mainColor"
-                    :menu-props="{ bottom: true, offsetY: true }"
-                    dense
-                    outlined
-                    hide-details
-                  ></v-select>
-                  <span class="dash mx-2"></span>
-                  <v-select
-                    v-model="filter.yearTo"
-                    :items="yearToOptions"
-                    :color="mainColor"
-                    :menu-props="{ bottom: true, offsetY: true }"
-                    dense
-                    outlined
-                    hide-details
-                  ></v-select>
+                  <div class="form-item-content--medium d-flex align-center">
+                    <v-select
+                      v-model="filter.yearFrom"
+                      :items="yearFromOptions"
+                      :color="mainColor"
+                      :menu-props="{ bottom: true, offsetY: true }"
+                      dense
+                      outlined
+                      hide-details
+                    ></v-select>
+                    <span class="dash mx-2"></span>
+                    <v-select
+                      v-model="filter.yearTo"
+                      :items="yearToOptions"
+                      :color="mainColor"
+                      :menu-props="{ bottom: true, offsetY: true }"
+                      dense
+                      outlined
+                      hide-details
+                    ></v-select>
+                  </div>
                 </div>
               </div>
               <div>
-                <div class="form-item form-item-large d-flex align-start">
+                <div class="form-item d-flex align-start">
                   <label class="form-item-label mr-2">Genre</label>
-                  <div class="d-flex flex-wrap">
-                    <div v-for="(genre, index) in genreOptions" :key="index" class="genreOption">
+                  <div class="form-item-content--large d-flex flex-wrap">
+                    <div
+                      v-for="(genre, index) in genreOptions"
+                      :key="index"
+                      class="form-item-content genreOption"
+                    >
                       <v-checkbox
                         dense
                         v-model="filter.genre"
@@ -124,9 +136,9 @@
         
         </v-data-table>
       </div>
-      <div v-else>
+      <!-- <div v-else>
         <div class="remind-no-permission">Sorry, you are not allowed to access this page.</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -136,8 +148,6 @@ import { mapState } from "vuex";
 // import NewQuote from "@/components/newQuote";
 import { mixin } from "@/utils/mixin";
 import { db } from '@/assets/firebase.js';
-
-let unsubscribe;
 
 export default {
   mixins: [mixin],
@@ -149,6 +159,7 @@ export default {
   },
   data() {
     return {
+      unsubscribe: undefined,
       filter: {
         movie: "",
         imdbId: "",
@@ -237,14 +248,14 @@ export default {
     }
   },
   mounted() {
-    this.getQuote();
+    // this.getQuote();
   },
   destroyed() {
-    unsubscribe();
+    this.unsubscribe();
   },
   methods: {
     getQuote() {
-      unsubscribe = db.collection("quote").orderBy("timestamp", "desc").limit(30)
+      this.unsubscribe = db.collection("quote").orderBy("timestamp", "desc").limit(30)
         .onSnapshot((querySnapshot) => {
             this.quotes = [];
             querySnapshot.forEach((doc) => {
@@ -287,21 +298,23 @@ export default {
   .form-item {
     font-size: 12px;
 
-    &-small {
-      width: 220px;
-    }
-
-    &-medium {
-      width: 300px;
-    }
-    
-    &-large {
-      width: 600px;
-    }
-
     &-label {
       font-weight: 500;
-      width: 40px
+      width: 50px
+    }
+
+    &-content {
+      &--small {
+        width: 150px;
+      }
+
+      &--medium {
+        width: 240px;
+      }
+
+      &--large {
+        width: 600px;
+      }
     }
 
     .genreOption {

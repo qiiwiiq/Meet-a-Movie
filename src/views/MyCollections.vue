@@ -1,6 +1,6 @@
 <template>
   <div class="view d-flex justify-center h-100">
-    <div class="page-collections w-100">
+    <div v-if="isLogin" class="page-collections w-100">
       <div class="col-left">
         <div class="col-left-header d-flex align-center">
           <div class="collection-lists--mobile align-center">

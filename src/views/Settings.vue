@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-center">
-    <div class="page-settings justify-space-around">
+    <div v-if="isLogin" class="page-settings justify-space-around">
       <div class="col-left profile d-flex flex-column justify-space-between align-center">
         <div class="d-flex flex-column align-center">
           <v-hover v-slot:default="{ hover }">
@@ -282,12 +282,19 @@ export default {
       snackbarText: "",
     }
   },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (!vm.isLogin) {
+        vm.$router.replace({ name: "SignIn" });
+      }
+    });
+  },
   mounted() {
     this.username = this.user.name;
     this.originUsername = this.username;
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["isLogin", "user"]),
     signInMethod() {
       let result = '';
       switch(this.user.signInMethod) {
@@ -322,6 +329,9 @@ export default {
     },
   },
   watch: {
+    isLogin(val) {
+      if (!val) this.$router.replace({ name: "SignIn" });
+    },
     user: {
       handler: function() {
         this.username = this.user.name;

@@ -78,6 +78,7 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/auth";
+import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 import { mailRegex } from "@/utils/regex";
 import { eliminateSuffixSpace } from "@/utils/utils";
@@ -107,6 +108,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["quoteObj"]),
     safeUserEmail() {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);

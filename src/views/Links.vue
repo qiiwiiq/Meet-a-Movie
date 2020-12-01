@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-center h-100">
-    <div class="page-links justify-center w-100">
+    <div v-if="isLogin" class="page-links justify-center w-100">
       <v-hover
         v-slot:default="{ hover }"
         open-delay="200"
@@ -33,10 +33,27 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   metaInfo: {
     title: 'Links | Meet a Movie'
   },
+  computed: {
+    ...mapState(["isLogin"]),
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      if (!vm.isLogin) {
+        vm.$router.replace({ name: "SignIn" });
+      }
+    });
+  },
+  watch: {
+    isLogin(val) {
+      if (!val) this.$router.replace({ name: "SignIn" });
+    }
+  }
 }
 </script>
 

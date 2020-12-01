@@ -124,7 +124,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isLogin"]),
+    ...mapState(["isLogin", "quoteObj"]),
     safeUserEmail() {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);

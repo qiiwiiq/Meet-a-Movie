@@ -156,7 +156,7 @@ export default new Vuex.Store({
       commit("updateIntroShownFlag", false);
       dispatch("dbReadQuote");
     },
-    dbReadQuote ({ dispatch, state }) {
+    dbReadQuote ({ commit, dispatch, state }) {
       const quoteRef = db.collection("quote");
       const key = quoteRef.doc().id;
       const yearFrom = state.quoteFilter.yearFrom;
@@ -215,6 +215,7 @@ export default new Vuex.Store({
         })
         .catch(err => {
             console.log('Error getting documents', err);
+            commit("setQuoteObj", {error: true});
         });
     },
     getFilm ({ commit, dispatch }, movieObj) {

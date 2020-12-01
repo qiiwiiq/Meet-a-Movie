@@ -6,9 +6,9 @@
         ', linear-gradient(#F1F1F1 0%, #EEE 60%, #888 100%)',
     }"
     class="page-home"
-  >
-    <div class="d-flex justify-center h-100 px-4">
-      <template v-if="quoteObj">
+  > 
+    <template v-if="quoteObj && !quoteObj.error">
+      <div class="d-flex justify-center h-100 px-4">
         <v-card
           v-if="!isIntroShown"
           class="card-quote d-flex flex-column justify-space-between align-end"
@@ -84,19 +84,25 @@
             </template>
           </MovieDetail>
         </v-card>
-      </template>
-      <template v-else>
+      </div>
+    </template>
+    <template v-else-if="quoteObj && quoteObj.error">
+      <ComingSoon />
+    </template>
+    <template v-else>
+      <div class="d-flex justify-center h-100 px-4">
         <v-skeleton-loader
           type="image"
           class="card-quote-loading"
         ></v-skeleton-loader>
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import CollectBtn from "@/components/buttons/collectBtn";
+import ComingSoon from "@/components/comingSoon";
 import FilterBtn from "@/components/buttons/filterBtn";
 import MovieDetail from "@/components/movieDetail";
 import Quote from "@/components/quote";
@@ -110,6 +116,7 @@ export default {
   mixins: [mixin],
   components: {
     CollectBtn,
+    ComingSoon,
     FilterBtn,
     MovieDetail,
     Quote,
