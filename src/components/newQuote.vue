@@ -92,9 +92,6 @@ import { mixin } from "@/utils/mixin";
 import { db } from '@/assets/firebase.js';
 
 export default {
-  metaInfo: {
-    title: 'New Quote | Meet a Movie'
-  },
   mixins: [mixin],
   data() {
     return {

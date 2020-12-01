@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-center h-100">
+  <div class="view d-flex justify-center h-100">
     <div class="page-collections w-100">
       <div class="col-left">
         <div class="col-left-header d-flex align-center">
@@ -195,19 +195,20 @@ export default {
 <style lang="scss" scoped>
 @import '@/scss/mixins.scss';
 
+.view {
+  background-color: rgba(#fff, 0.6);
+}
+
 .page-collections {
   display: flex;
   justify-content: space-around;
-  max-width: 1200px;
-  margin: 16px 20px;
+  max-width: 1100px;
+  margin: 8px 20px;
   padding: 12px 0;
-  border-radius: 4px;
-  background-color: rgba(#fff, 0.6);
 
   @include respond(tab-port) {
     display: block;
     margin: 0;
-    border-radius: 0;
     padding: 8px 0;
   }
 }
@@ -223,7 +224,7 @@ export default {
 
 .col-left,
 .col-right {
-  height: calc(var(--vh, 1vh) * 100 - 110px);
+  height: calc(var(--vh, 1vh) * 100 - 90px);
   overflow-y: scroll;
   padding: 0 12px;
 
