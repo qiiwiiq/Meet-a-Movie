@@ -46,7 +46,7 @@
         v-else
         bottom
         offset-y
-        
+        z-index="100"
         close-delay="300"
         nudge-bottom="4"
         content-class="user-menu"
@@ -61,7 +61,7 @@
         </template>
         <v-list tile dense dark color="#333" class="pa-0">
           <v-list-item  v-if="user.name || user.email" class="menu-list-item" two-line>
-            <v-list-item-content class="py-0">
+            <v-list-item-content>
               <v-list-item-title class="menu-list-item-account text-right">{{ user.name }}</v-list-item-title>
               <v-list-item-title class="menu-list-item-account text-right">{{ user.email }}</v-list-item-title>
             </v-list-item-content>
@@ -69,7 +69,7 @@
           <v-list-item
             v-if="user.role === 'maintainer'"
             class="menu-list-item"
-            @click="goToManagement"
+            :to="{ name: 'Management' }"
           >
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
@@ -78,15 +78,21 @@
               </div>
             </v-list-item-title>
           </v-list-item>
-          <v-list-item class="menu-list-item" @click="goToLinks">
+          <v-list-item
+            class="menu-list-item"
+            :to="{ name: 'Library' }"
+          >
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
                 <v-icon small>mdi-web</v-icon>
-                Links
+                Library
               </div>
             </v-list-item-title>
           </v-list-item>
-          <v-list-item class="menu-list-item" @click="goToSettings">
+          <v-list-item
+            class="menu-list-item"
+            :to="{ name: 'Settings' }"
+          >
             <v-list-item-title class="menu-list-item-text d-flex justify-end">
               <div class="menu-action d-flex justify-space-between">
                 <v-icon small>mdi-cog</v-icon>
@@ -159,15 +165,6 @@ export default {
         uid,
       };
       this.$store.dispatch("init", user);
-    },
-    goToManagement() {
-      this.$router.push({ name: "Management" }).catch(() => {});
-    },
-    goToLinks() {
-      this.$router.push({ name: "Links" }).catch(() => {});
-    },
-    goToSettings() {
-      this.$router.push({ name: "Settings" }).catch(() => {});
     },
     signOut() {
       localStorage.clear();

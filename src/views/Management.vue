@@ -5,7 +5,7 @@
         <v-card flat class="page-header">
           <v-card-title class="pa-0 mb-2">
             Quotes Management
-            <span class="note">Note: 30 records at most for each search</span>
+            <span class="note">Note: 30 quotes at most for each search</span>
           </v-card-title>
           <div class="d-flex justify-center">
             <div class="filter">
@@ -424,10 +424,12 @@ export default {
     &--rect {
       display: block;
       width: 90px;
+      text-transform: none;
     }
 
     &--square {
       height: 80px;
+      text-transform: none;
     }
   }
 }
