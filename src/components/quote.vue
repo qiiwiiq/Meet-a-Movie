@@ -21,7 +21,7 @@ export default {
   padding: 0 30px 16px 16px;
 
   @include respond(large-mobile) {
-    padding: 0 20px 8px 8px;
+    padding: 0 20px 16px 8px;
   }
 
   &-text {

@@ -15,6 +15,11 @@
         >
           <Quote :quoteObj="quoteObj" />
           <div>
+            <CopyBtn
+              class="mr-1"
+              :quote="quoteObj.quote"
+              :movie="quoteObj.name"
+            />
             <CollectBtn
               v-if="isLogin"
               class="mr-1"
@@ -103,6 +108,7 @@
 <script>
 import CollectBtn from "@/components/buttons/collectBtn";
 import ComingSoon from "@/components/comingSoon";
+import CopyBtn from "@/components/buttons/copyBtn";
 import FilterBtn from "@/components/buttons/filterBtn";
 import MovieDetail from "@/components/movieDetail";
 import Quote from "@/components/quote";
@@ -117,6 +123,7 @@ export default {
   components: {
     CollectBtn,
     ComingSoon,
+    CopyBtn,
     FilterBtn,
     MovieDetail,
     Quote,
@@ -243,7 +250,7 @@ export default {
   }
 
   @include respond(large-mobile) {
-    padding: 24px 20px;
+    padding: 24px 20px 20px;
     min-width: 250px;
   }
 

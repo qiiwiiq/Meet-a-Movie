@@ -6,8 +6,9 @@ import vuetify from "./plugins/vuetify";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
-import MetaInfo from 'vue-meta-info';
+import MetaInfo from "vue-meta-info";
 import VueCookies from "vue-cookies";
+import VueClipboard from "vue-clipboard2";
 
 import "./assets/firebase.js";
 import "./registerServiceWorker";
@@ -52,6 +53,7 @@ Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 Vue.use(MetaInfo);
 Vue.use(VueCookies);
+Vue.use(VueClipboard);
 
 new Vue({
   router,

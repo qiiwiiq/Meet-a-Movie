@@ -18,9 +18,14 @@
           <div class="genre mb-1">{{ genres }}</div>
           <div class="quote ml-3 ml-sm-6 mt-2 mt-sm-4">{{ movieObj.quote }}</div>
         </div>
-        <div class="btn-collect">
+        <div class="btn-actions">
           <CollectBtn
             :movieObj="movieObj"
+            class="mb-2"
+          />
+          <CopyBtn
+            :quote="movieObj.quote"
+            :movie="movieObj.title"
           />
         </div>
       </div>
@@ -87,6 +92,7 @@
 import { mapState } from "vuex";
 import { mixin } from "@/utils/mixin";
 import CollectBtn from "@/components/buttons/collectBtn";
+import CopyBtn from "@/components/buttons/copyBtn";
 import MovieDetail from "@/components/movieDetail";
 
 export default {
@@ -94,6 +100,7 @@ export default {
   props: ["movieObj", "collectionId"],
   components: {
     CollectBtn,
+    CopyBtn,
     MovieDetail,
   },
   data() {
@@ -191,7 +198,8 @@ export default {
   }
 }
 
-.btn-collect {
+.btn-actions {
+  width: 30px;
   margin-right: 8px;
 
   @include respond(large-mobile) {
