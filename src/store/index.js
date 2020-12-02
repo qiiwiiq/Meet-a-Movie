@@ -358,12 +358,25 @@ export default new Vuex.Store({
         })
     },
     dbDeleteCollectionList ({ dispatch }, {uid, listid}) {
+      // delete list
       const collectionName = `lists-${uid}`;
       db.collection(collectionName)
         .doc(listid)
         .delete()
         .then(() => dispatch("dbReadCollectionLists", uid))
         .catch((error) => console.error('Error deleting document: ', error))
+
+      // delete collections in list
+      dispatch("dbDeleteListCollections", {uid, listid})
+    },
+    dbDeleteListCollections (context, {uid, listid}) {
+      const collectionName = `collections-${uid}`;
+      const queryRef = db.collection(collectionName).where("listid", "==", listid);
+      queryRef.get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          doc.ref.delete();
+        });
+      });
     },
     dbReadCollectionLists ({ commit }, uid) {
       const collectionName = `lists-${uid}`;
