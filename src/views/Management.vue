@@ -1,46 +1,22 @@
 <template>
   <div class="view d-flex justify-center h-100">
     <div class="page-management w-100">
-      <div>
-        <!-- <NewQuote /> -->
+      <div v-if="user.role === 'maintainer'">
         <v-card flat class="page-header">
-          <v-card-title class="pa-0">Quotes Management</v-card-title>
-          <div class="d-flex">
+          <v-card-title class="pa-0 mb-2">
+            Quotes Management
+            <span class="note">Note: 30 records at most for each search</span>
+          </v-card-title>
+          <div class="d-flex justify-center">
             <div class="filter">
-              <div class="d-flex mb-2">
+              <div class="d-flex mb-3">
                 <div class="form-item d-flex align-center mr-8">
-                  <label for="movieName" class="form-item-label mr-2">Movie</label>
-                  <div class="form-item-content--small">
-                    <v-text-field
-                      v-model="filter.movie"
-                      :color="mainColor"
-                      id="movieName"
-                      hide-details
-                      class="mt-0 pt-0"
-                    ></v-text-field>
-                  </div>
-                </div>
-                <div class="form-item d-flex align-center">
                   <label for="imdbId" class="form-item-label mr-2">IMDB ID</label>
                   <div class="form-item-content--small">
                     <v-text-field
                       v-model="filter.imdbId"
                       :color="mainColor"
                       id="imdbId"
-                      hide-details
-                      class="mt-0 pt-0"
-                    ></v-text-field>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex mb-3">
-                <div class="form-item d-flex align-center mr-8">
-                  <label for="movieQuote" class="form-item-label mr-2">Quote</label>
-                  <div class="form-item-content--small">
-                    <v-text-field
-                      v-model="filter.quote"
-                      :color="mainColor"
-                      id="movieQuote"
                       hide-details
                       class="mt-0 pt-0"
                     ></v-text-field>
@@ -95,6 +71,36 @@
                 </div>
               </div>
             </div>
+            <div class="actions">
+              <div class="mr-4">
+                <v-btn
+                  :outlined="!isFiltered"
+                  :depressed="isFiltered"
+                  :dark="isFiltered"
+                  color="#424242"
+                  class="btn-actions--rect mb-2"
+                  @click="filterQuotes"
+                >
+                  Filter
+                </v-btn>
+                <v-btn
+                  outlined
+                  color="#424242"
+                  class="btn-actions--rect"
+                  @click="reset"
+                >
+                  Reset
+                </v-btn>
+              </div>
+              <v-btn
+                outlined
+                color="#E57373"
+                class="btn-actions--square"
+                @click="newQuoteDialogOpened = true"
+              >
+                New<br />Quote
+              </v-btn>
+            </div>
           </div>
         </v-card>
         <v-data-table
@@ -116,36 +122,66 @@
             </div>
           </template>
           <template v-slot:[`item.checked`]="{ item }">
-            <v-simple-checkbox v-model="item.checked" :ripple="false"></v-simple-checkbox>
+            <v-simple-checkbox
+              v-model="item.checked"
+              :ripple="false"
+              disabled
+            ></v-simple-checkbox>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon
               small
               class="mr-2"
-              @click="editItem(item)"
+              @click="editQuote(item)"
             >
               mdi-pencil
             </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
           </template>
-        
         </v-data-table>
       </div>
-      <!-- <div v-else>
+      <div v-else>
         <div class="remind-no-permission">Sorry, you are not allowed to access this page.</div>
-      </div> -->
+      </div>
     </div>
+    <v-dialog v-model="newQuoteDialogOpened" width="550" persistent>
+      <div class="quote-dialog">
+        <v-btn
+          icon
+          small
+          class="close-btn"
+          @click="newQuoteDialogOpened = false"
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+        <QuoteEditor
+          :title="'New Quote'"
+          :purpose="'new'"
+        />
+      </div>
+    </v-dialog>
+    <v-dialog v-model="editQuoteDialogOpened" width="550" persistent>
+      <div class="quote-dialog">
+        <v-btn
+          icon
+          small
+          class="close-btn"
+          @click="closeEditQuoteDialog"
+        >
+          <v-icon small>mdi-close</v-icon>
+        </v-btn>
+        <QuoteEditor
+          :title="'Edit Quote'"
+          :purpose="'edit'"
+          :quote="selectedQuote"
+        />
+      </div>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-// import NewQuote from "@/components/newQuote";
+import QuoteEditor from "@/components/quoteEditor";
 import { mixin } from "@/utils/mixin";
 import { db } from '@/assets/firebase.js';
 
@@ -155,20 +191,20 @@ export default {
     title: 'Management | Meet a Movie'
   },
   components: {
-    // NewQuote,
+    QuoteEditor,
   },
   data() {
     return {
       unsubscribe: undefined,
+      isFiltered: false,
       filter: {
-        movie: "",
         imdbId: "",
         yearFrom: null,
         yearTo: null,
         genre: [],
-        quote: "",
-        checked: false
       },
+      newQuoteDialogOpened: false,
+      editQuoteDialogOpened: false,
       tableHeaders: [
         {
           text: 'Movie',
@@ -206,12 +242,13 @@ export default {
         },
         {
           text: 'Actions',
-          align: 'start',
+          align: 'center',
           sortable: false,
           value: 'actions',
         },
       ],
-      quotes: []
+      quotes: [],
+      selectedQuote: undefined
     }
   },
   computed: {
@@ -247,15 +284,52 @@ export default {
       return options;
     }
   },
-  mounted() {
-    // this.getQuote();
-  },
   destroyed() {
-    this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   },
   methods: {
     getQuote() {
-      this.unsubscribe = db.collection("quote").orderBy("timestamp", "desc").limit(30)
+      if (this.unsubscribe) {
+        this.unsubscribe();
+      }
+      this.quotes = [];
+      let queryRef = db.collection("quote");
+
+      if (this.filter.imdbId) {
+        queryRef = queryRef.where("imdbId", "==", this.filter.imdbId);
+      }
+
+      if (this.filter.yearFrom && this.filter.yearTo) {
+        let years = [];
+        for (let i = this.filter.yearFrom; i<=this.filter.yearTo; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (this.filter.yearFrom && !this.filter.yearTo) {
+        let years = [];
+        for (let i = this.filter.yearFrom; i<=this.currentYear; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (!this.filter.yearFrom && this.filter.yearTo) {
+        let years = [];
+        for (let i = this.minYear; i<=this.filter.yearTo; i++) {
+          years.push(i);
+        }
+        queryRef = queryRef.where("year", 'in', years)
+      }
+
+      if (this.filter.genre.length > 0) {
+        queryRef = queryRef.where("genre", "array-contains-any", this.filter.genre);
+      }
+
+      this.unsubscribe = queryRef.orderBy("timestamp", "desc").limit(30)
         .onSnapshot((querySnapshot) => {
             this.quotes = [];
             querySnapshot.forEach((doc) => {
@@ -263,11 +337,26 @@ export default {
             });
         });
     },
-    editItem(item) {
-      console.log(item);
+    filterQuotes() {
+      this.isFiltered = true;
+      this.getQuote();
     },
-    deleteItem(item) {
-      console.log(item);
+    reset() {
+      this.isFiltered = false;
+      this.filter.movie = "";
+      this.filter.imdbId = "";
+      this.filter.yearFrom = null;
+      this.filter.yearTo = null;
+      this.filter.genre = [];
+      this.filter.quote = "";
+    },
+    editQuote(item) {
+      this.selectedQuote = item;
+      this.editQuoteDialogOpened = true;
+    },
+    closeEditQuoteDialog() {
+      this.editQuoteDialogOpened = false;
+      this.selectedQuote = undefined;
     }
   }
 }
@@ -282,6 +371,7 @@ export default {
 
 .page-management {
   max-width: 1100px;
+  min-width: 970px;
   height: calc(var(--vh, 1vh) * 100 - 56px);
   padding: 12px 20px;
   overflow: scroll;
@@ -290,11 +380,15 @@ export default {
 .page-header {
   padding: 8px 16px 12px 16px;
   margin-bottom: 12px;
+
+  .note {
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 8px;
+  }
 }
 
 .filter {
-  width: 85%;
-
   .form-item {
     font-size: 12px;
 
@@ -305,20 +399,35 @@ export default {
 
     &-content {
       &--small {
-        width: 150px;
+        width: 180px;
       }
 
       &--medium {
-        width: 240px;
+        width: 260px;
       }
 
       &--large {
-        width: 600px;
+        width: 630px;
       }
     }
 
     .genreOption {
       width: 90px;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+
+  .btn-actions {
+    &--rect {
+      display: block;
+      width: 90px;
+    }
+
+    &--square {
+      height: 80px;
     }
   }
 }
@@ -344,6 +453,17 @@ export default {
   @include respond(tab-port) {
     font-size: 18px;
   }
+}
+
+.quote-dialog {
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 10;
 }
 </style>
 
