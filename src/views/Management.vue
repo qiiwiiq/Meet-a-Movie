@@ -1,16 +1,25 @@
 <template>
-  <div class="view d-flex justify-center h-100">
+  <div class="view h-100">
     <div class="page-management w-100">
       <div v-if="user.role === 'maintainer'">
         <v-card flat class="page-header">
-          <v-card-title class="pa-0 mb-2">
-            Quotes Management
+          <v-btn
+            outlined
+            small
+            color="#E57373"
+            class="btn-new-quote--mobile"
+            @click="newQuoteDialogOpened = true"
+          >
+            New<br />Quote
+          </v-btn>
+          <v-card-title class="page-title pa-0 mb-2">
+            <span>Quotes Management</span>
             <span class="note">Note: 30 quotes at most for each search</span>
           </v-card-title>
-          <div class="d-flex justify-center">
+          <div class="section-filter">
             <div class="filter">
-              <div class="d-flex mb-3">
-                <div class="form-item d-flex align-center mr-8">
+              <div class="form-item-row">
+                <div class="form-item d-flex align-center mr-8 mb-3">
                   <label for="imdbId" class="form-item-label mr-2">IMDB ID</label>
                   <div class="form-item-content--small">
                     <v-text-field
@@ -22,7 +31,7 @@
                     ></v-text-field>
                   </div>
                 </div>
-                <div class="form-item d-flex align-center">
+                <div class="form-item d-flex align-center mb-3">
                   <label for="movieQuote" class="form-item-label mr-2">Year</label>
                   <div class="form-item-content--medium d-flex align-center">
                     <v-select
@@ -72,19 +81,21 @@
               </div>
             </div>
             <div class="actions">
-              <div class="mr-4">
+              <div class="btn-filter-reset">
                 <v-btn
                   :outlined="!isFiltered"
                   :depressed="isFiltered"
                   :dark="isFiltered"
+                  :small="windowWidth <= 1024"
                   color="#424242"
-                  class="btn-actions--rect mb-2"
+                  class="btn-actions--rect"
                   @click="filterQuotes"
                 >
                   Filter
                 </v-btn>
                 <v-btn
                   outlined
+                  :small="windowWidth <= 1024"
                   color="#424242"
                   class="btn-actions--rect"
                   @click="reset"
@@ -94,6 +105,7 @@
               </div>
               <v-btn
                 outlined
+                :small="windowWidth <= 1024"
                 color="#E57373"
                 class="btn-actions--square"
                 @click="newQuoteDialogOpened = true"
@@ -289,6 +301,20 @@ export default {
       this.unsubscribe();
     }
   },
+  watch: {
+    filter: {
+      handler: function() {
+        if (this.filter.yearFrom && !this.filter.yearTo) {
+          this.filter.yearTo = this.filter.yearFrom;
+        }
+
+        if (this.filter.To && !this.filter.yearFrom) {
+          this.filter.yearFrom = this.filter.yearTo;
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
     getQuote() {
       if (this.unsubscribe) {
@@ -367,69 +393,188 @@ export default {
 
 .view {
   background-color: rgba(#fff, 0.6);
+  display: flex;
+  justify-content: center;
 }
 
 .page-management {
   max-width: 1100px;
-  min-width: 970px;
   height: calc(var(--vh, 1vh) * 100 - 56px);
   padding: 12px 20px;
   overflow: scroll;
+
+  @include respond(large-mobile) {
+    padding: 8px;
+  }
 }
 
 .page-header {
+  position: relative;
   padding: 8px 16px 12px 16px;
   margin-bottom: 12px;
+
+  .btn-new-quote--mobile {
+    display: none;
+
+    @include respond(tab-port) {
+      display: block;
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      width: 65px;
+      height: 65px;
+      text-transform: none;
+    }
+
+    @include respond(large-mobile) {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  .page-title {
+    word-break: unset;
+
+    @include respond(tab-port) {
+      display: block;
+    }
+  }
 
   .note {
     font-size: 14px;
     font-weight: 400;
     margin-left: 8px;
-  }
-}
 
-.filter {
-  .form-item {
-    font-size: 12px;
-
-    &-label {
-      font-weight: 500;
-      width: 50px
+    @include respond(tab-port) {
+      display: block;
+      margin-left: 0;
+      line-height: 12px;
     }
 
-    &-content {
-      &--small {
-        width: 180px;
-      }
-
-      &--medium {
-        width: 260px;
-      }
-
-      &--large {
-        width: 630px;
-      }
+    @include respond(large-mobile) {
+      font-size: 12px;
     }
-
-    .genreOption {
-      width: 90px;
+    
+    @include respond(small-mobile) {
+      width: 60%;
     }
   }
 }
+
+.section-filter {
+  display: flex;
+  justify-content: center;
+
+  @include respond(tab-port) {
+    display: block;
+  }
+
+  .filter {
+    .form-item-row {
+      display: flex;
+
+      @include respond(tab-port) {
+        display: block;
+      }      
+    }
+
+    .form-item {
+      font-size: 12px;
+
+      &-label {
+        font-weight: 500;
+        width: 50px;
+
+        @include respond(tab-land) {
+          width: 45px;
+        }
+      }
+
+      &-content {
+        &--small {
+          width: 180px;
+        }
+
+        &--medium {
+          width: 260px;
+
+          @include respond(tab-land) {
+            width: 240px;
+          }
+
+          @include respond(small-mobile) {
+            width: 100%;
+          }
+        }
+
+        &--large {
+          width: 630px;
+
+          @include respond(tab-land) {
+            width: 540px;
+          }
+
+          @include respond(tab-port) {
+            width: 100%;
+          }
+        }
+      }
+
+      .genreOption {
+        width: 90px;
+      }
+    }
+  }
+}
+
+
 
 .actions {
   display: flex;
+
+  @include respond(tab-land) {
+    display: block;
+  }
+
+  .btn-filter-reset {
+    @include respond(tab-port) {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-top: 20px;
+    }
+  }
 
   .btn-actions {
     &--rect {
       display: block;
       width: 90px;
       text-transform: none;
+      margin-right: 16px;
+      margin-bottom: 8px;
+
+      @include respond(tab-land) {
+        width: 65px;
+      }
+
+      @include respond(tab-port) {
+        display: inline-block;
+        margin: 0 0 0 16px;
+      }
     }
 
     &--square {
+      width: 80px;
       height: 80px;
       text-transform: none;
+
+      @include respond(tab-land) {
+        width: 65px;
+        height: 65px;
+      }
+
+      @include respond(tab-port) {
+        display: none;
+      }
     }
   }
 }

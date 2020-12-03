@@ -88,6 +88,15 @@
             </div>
           </div>
           <div class="actions">
+            <v-btn
+              outlined
+              small
+              color="#E57373"
+              class="btn-new-quote--mobile"
+              @click="newQuoteDialogOpened = true"
+            >
+              New Quote
+            </v-btn>
             <div class="btn-filter-reset">
               <v-btn
                 :outlined="!isFiltered"
@@ -112,7 +121,7 @@
             </div>
             <v-btn
               outlined
-              :small="windowWidth < 1000"
+              :small="windowWidth <= 1024"
               color="#E57373"
               class="btn-actions--square"
               @click="newQuoteDialogOpened = true"
@@ -398,6 +407,10 @@ export default {
   height: calc(var(--vh, 1vh) * 100 - 56px);
   padding: 12px 20px;
   overflow: scroll;
+
+  @include respond(large-mobile) {
+    padding: 8px;
+  }
 }
 
 .page-header {
@@ -496,10 +509,25 @@ export default {
       display: block;
     }
 
+    @include respond(tab-port) {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-new-quote--mobile {
+      display: none;
+
+      @include respond(tab-port) {
+        display: block;
+        margin-top: 20px;
+        text-transform: none;
+      }
+    }
+
     .btn-filter-reset {
       @include respond(tab-port) {
         display: flex;
-        justify-content: flex-end;
+        flex-direction: row-reverse;
         margin-top: 20px;
       }
     }
