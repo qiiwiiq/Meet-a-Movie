@@ -46,7 +46,7 @@
         v-else
         bottom
         offset-y
-        z-index="100"
+        z-index="9999"
         close-delay="300"
         nudge-bottom="4"
         content-class="user-menu"
