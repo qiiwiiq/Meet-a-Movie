@@ -373,6 +373,10 @@ export default {
   border-radius: 4px 0 0 4px;
   z-index: 10;
 
+  @include respond(large-mobile) {
+    top: 8px;
+  }
+
   .btn-link {
     width: 40px;
     min-width: 40px;

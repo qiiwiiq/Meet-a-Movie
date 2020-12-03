@@ -1,7 +1,7 @@
 <template>
   <v-card class="card-new-quote px-2 pb-2">
-    <v-card-title>{{ title }}</v-card-title>
-    <v-card-text>
+    <v-card-title class="px-2 px-sm-4">{{ title }}</v-card-title>
+    <v-card-text class="px-2 px-sm-4">
       <div class="d-flex align-center mb-2">
         <div class="d-flex align-center w-100">
           <label for="movieName" class="form-item-label">Movie</label>
@@ -74,7 +74,7 @@
         class="mt-1"
       ></v-textarea>
     </v-card-text>
-    <v-card-actions class="justify-end px-4">
+    <v-card-actions class="justify-end px-2 px-sm-4">
       <v-btn
         v-if="purpose == 'new'"
         color="#FFF"
@@ -256,7 +256,6 @@ export default {
 .card-new-quote {
   width: 100%;
   background-color: #FFF;
-  max-height: calc(var(--vh, 1vh) * 100 - 110px);
   overflow-y: scroll;
 }
 
