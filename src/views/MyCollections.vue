@@ -46,7 +46,7 @@
         </v-list>
       </div>
       <div class="divider"></div>
-      <div class="col-right">
+      <Simplebar class="col-right">
         <div
           v-for="item in listCollections"
           :key="item.collectionId"
@@ -63,7 +63,7 @@
         >
           Go explore some movies !
         </div>
-      </div>
+      </Simplebar>
 
       <v-dialog v-model="createNewListDialogOpened" width="400" persistent>
         <ActionsDialog
@@ -96,6 +96,8 @@ import CollectionList from "@/components/collectionList";
 import DeleteListBtn from "@/components/buttons/deleteListBtn";
 import EditListBtn from "@/components/buttons/editListBtn";
 import MovieQuoteCard from "@/components/movieQuoteCard";
+import Simplebar from 'simplebar-vue';
+import 'simplebar/dist/simplebar.min.css';
 
 export default {
   metaInfo: {
@@ -108,6 +110,7 @@ export default {
     DeleteListBtn,
     EditListBtn,
     MovieQuoteCard,
+    Simplebar
   },
   data() {
     return {

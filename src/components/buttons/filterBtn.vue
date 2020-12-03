@@ -136,6 +136,18 @@ export default {
       return options;
     }
   },
+  watch: {
+    yearFrom() {
+      if (this.yearFrom && !this.yearTo) {
+        this.yearTo = this.yearFrom;
+      }
+    },
+    yearTo() {
+      if (this.yearTo && !this.yearFrom) {
+        this.yearFrom = this.yearTo;
+      }
+    }
+  },
   methods: {
     commitQuoteFilterParams() {
       this.$store.commit("setQuoteFilter", {

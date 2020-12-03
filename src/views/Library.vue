@@ -282,7 +282,7 @@ export default {
           this.filter.yearTo = this.filter.yearFrom;
         }
 
-        if (this.filter.To && !this.filter.yearFrom) {
+        if (this.filter.yearTo && !this.filter.yearFrom) {
           this.filter.yearFrom = this.filter.yearTo;
         }
       },

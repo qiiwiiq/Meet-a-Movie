@@ -4,9 +4,9 @@
       <v-list-item-content>
         <v-list-item-title>
           <span>{{ list.name }}</span>
-          <span class="list-item-count ml-1"
-            >({{ countListItems(collections, list.id) }})</span
-          >
+          <span class="list-item-count ml-1">
+            ({{ countListItems(collections, list.id) }})
+          </span>
         </v-list-item-title>
       </v-list-item-content>
       <EditListBtn :list="list" />

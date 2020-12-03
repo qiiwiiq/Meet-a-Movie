@@ -17,3 +17,12 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+// simplebar
+.simplebar-scrollbar::before {
+  width: 5px;
+}
+
+.simplebar-track.simplebar-vertical {
+  width: 6px !important;
+}
