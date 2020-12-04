@@ -72,7 +72,13 @@
         >
           Sign In
         </v-btn>
-        <div class="signin my-2">
+        <button
+          class="link-forget-pw align-self-end mt-2 mr-4"
+          @click="forgotPWDialogOpened = true"
+        >
+          Forgot Password ?
+        </button>
+        <div class="signin align-self-end my-2 mr-4">
           <span>Sign in with other methods </span>
           <button class="link-signin" @click="isEmailSignin = false">
             Click here
@@ -80,6 +86,41 @@
         </div>
       </div>
     </v-card>
+    <v-dialog
+      v-model="forgotPWDialogOpened"
+      width="400"
+      class="dialog-reset-pw"
+      persistent
+    >
+      <Loading
+        :active="loading"
+        :is-full-page="false"
+        :color="mainColor"
+        loader="dots"
+      />
+      <ActionsDialog
+        :showCloseBtn="true"
+        :actionTitle="'Password Reset'"
+        :actionText1="'Cancel'"
+        :actionText2="'Send'"
+        @action1="forgotPWDialogOpened = false"
+        @action2="sendPWResetEmail"
+        @close="forgotPWDialogOpened = false"
+      >
+        <v-card-text>
+          Please provide your sign-in account, we will send you an email for password reset.
+        </v-card-text>
+        <div class="px-6">
+          <v-text-field
+            v-model="email"
+            dense
+            placeholder="Your Account (Email)"
+            :color="mainColor"
+            class="dialog-reset-pw-input"
+          ></v-text-field>
+        </div>
+      </ActionsDialog>
+    </v-dialog>
     <v-snackbar
       v-model="snackbar"
       color="blue-grey"
@@ -98,6 +139,7 @@ import { mixin } from "@/utils/mixin";
 import { mailRegex } from "@/utils/regex";
 import { eliminateSuffixSpace } from "@/utils/utils";
 import { mapState } from "vuex";
+import ActionsDialog from "@/components/actionsDialog";
 import Loading from "vue-loading-overlay";
 import PasswordInput from "@/components/passwordInput";
 import "vue-loading-overlay/dist/vue-loading.css";
@@ -107,6 +149,7 @@ export default {
     title: 'Sign In | Meet a Movie'
   },
   components: {
+    ActionsDialog,
     Loading,
     PasswordInput
   },
@@ -119,6 +162,8 @@ export default {
         email: "",
         password: "",
       },
+      email: "",
+      forgotPWDialogOpened: false,
       snackbar: false,
       snackbarText: "",
     };
@@ -129,11 +174,8 @@ export default {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);
     },
-    validEmail() {
-      return this.safeUserEmail.match(mailRegex) ? true : false;
-    },
     isFormFilled() {
-      return this.validEmail && this.user.password ? true : false;
+      return this.safeUserEmail.match(mailRegex) && this.user.password ? true : false;
     },
   },
   watch: {
@@ -228,6 +270,28 @@ export default {
           vm.snackbar = true;
         });
     },
+    sendPWResetEmail() {
+      const isValidEmail = eliminateSuffixSpace(this.email).match(mailRegex);
+
+      if (isValidEmail) {
+        firebase
+        .auth()
+        .sendPasswordResetEmail(this.email)
+        .then(() => {
+          this.snackbarText = "Email sent!";
+          this.snackbar = true;
+          this.forgotPWDialogOpened = false;
+        }).catch((error) => {
+          this.snackbarText = "Something wrong happened.";
+          this.snackbar = true;
+          console.log(error);
+          this.forgotPWDialogOpened = false;
+        });
+      } else {
+        this.snackbarText = "Please provide correct email";
+        this.snackbar = true;
+      }
+    }
   },
 };
 </script>
@@ -315,6 +379,15 @@ export default {
   }
 }
 
+.link-forget-pw {
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  outline: none;
+}
+
 .signin {
   color: #151515;
   font-size: 14px;
@@ -327,6 +400,14 @@ export default {
     text-decoration: underline;
     text-decoration-skip-ink: none;
     outline: none;
+  }
+}
+
+.dialog-reset-pw {
+  position: relative;
+
+  &-input {
+    font-size: 14px;
   }
 }
 </style>
