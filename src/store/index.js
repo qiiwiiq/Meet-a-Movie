@@ -168,22 +168,6 @@ export default new Vuex.Store({
         queryRef = queryRef.where("year", 'in', years)
       }
 
-      if (yearFrom && !yearTo) {
-        let years = [];
-        for (let i = yearFrom; i<=currentYear; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
-      if (!yearFrom && yearTo) {
-        let years = [];
-        for (let i = minYear; i<=yearTo; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
       if (genres.length > 0) {
         queryRef = queryRef.where("genre", "array-contains-any", genres);
       }
@@ -197,7 +181,7 @@ export default new Vuex.Store({
               });
           }
           else {
-            if (year || genres.length > 0) {
+            if (yearFrom || yearTo || genres.length > 0) {
               // 篩選條件為空集合時
               commit("setQuoteObj", {nodata: true});
             } else {
