@@ -7,7 +7,7 @@
     }"
     class="page-home"
   > 
-    <template v-if="quoteObj && !quoteObj.error">
+    <template v-if="quoteObj && !quoteObj.nodata && !quoteObj.error">
       <div class="d-flex justify-center h-100 px-4">
         <v-card
           v-if="!isIntroShown"
@@ -88,6 +88,21 @@
               </div>
             </template>
           </MovieDetail>
+        </v-card>
+      </div>
+    </template>
+    <template v-else-if="quoteObj && quoteObj.nodata">
+      <div class="d-flex justify-center h-100 px-4">
+        <v-card class="card-quote card-quote--nodata d-flex justify-center align-center">
+          <div>Sorry, we cannot find a data that fit the conditions.</div>
+          <div class="card-quote-actions d-flex">
+            <div class="btn-filter">
+              <FilterBtn />
+            </div>
+            <v-btn fab x-small @click="getQuote">
+              <v-icon>mdi-autorenew</v-icon>
+            </v-btn>
+          </div>
         </v-card>
       </div>
     </template>
@@ -252,6 +267,21 @@ export default {
   @include respond(large-mobile) {
     padding: 24px 20px 20px;
     min-width: 250px;
+  }
+
+  &--nodata {
+    width: 400px;
+    height: 150px;
+    text-align: center;
+    word-break: unset;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 32px;
+
+    @include respond(large-mobile) {
+      width: 350px;
+      font-size: 18px;
+    }
   }
 
   &-actions {
