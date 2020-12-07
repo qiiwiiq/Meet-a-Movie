@@ -302,34 +302,15 @@ export default {
       }
 
       if (this.filter.yearFrom && this.filter.yearTo) {
-        let years = [];
-        for (let i = this.filter.yearFrom; i<=this.filter.yearTo; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
-      if (this.filter.yearFrom && !this.filter.yearTo) {
-        let years = [];
-        for (let i = this.filter.yearFrom; i<=this.currentYear; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
-      if (!this.filter.yearFrom && this.filter.yearTo) {
-        let years = [];
-        for (let i = this.minYear; i<=this.filter.yearTo; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
+        queryRef = queryRef.where("year", '>=', this.filter.yearFrom);
+        queryRef = queryRef.where("year", '<=', this.filter.yearTo);
       }
 
       if (this.filter.genre.length > 0) {
         queryRef = queryRef.where("genre", "array-contains-any", this.filter.genre);
       }
 
-      this.unsubscribe = queryRef.orderBy("timestamp", "desc").limit(10)
+      this.unsubscribe = queryRef.orderBy("year", "desc").limit(10)
         .onSnapshot((querySnapshot) => {
             this.quotes = [];
             querySnapshot.forEach((doc) => {

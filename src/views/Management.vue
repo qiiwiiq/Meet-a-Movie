@@ -353,27 +353,8 @@ export default {
       }
 
       if (this.filter.yearFrom && this.filter.yearTo) {
-        let years = [];
-        for (let i = this.filter.yearFrom; i<=this.filter.yearTo; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
-      if (this.filter.yearFrom && !this.filter.yearTo) {
-        let years = [];
-        for (let i = this.filter.yearFrom; i<=this.currentYear; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
-      }
-
-      if (!this.filter.yearFrom && this.filter.yearTo) {
-        let years = [];
-        for (let i = this.minYear; i<=this.filter.yearTo; i++) {
-          years.push(i);
-        }
-        queryRef = queryRef.where("year", 'in', years)
+        queryRef = queryRef.where("year", '>=', this.filter.yearFrom);
+        queryRef = queryRef.where("year", '<=', this.filter.yearTo).orderBy("year", "desc");
       }
 
       if (this.filter.genre.length > 0) {
