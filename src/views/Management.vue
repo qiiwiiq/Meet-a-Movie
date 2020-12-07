@@ -316,6 +316,31 @@ export default {
     }
   },
   methods: {
+    batchRun() {
+      let queryRef = db.collection("quote");
+      queryRef.limit(1).get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          let quoteId = doc.data().id;
+          let data = doc.data();
+          let obj = {
+            checked: data.checked,
+            genre: data.genre,
+            id: data.id,
+            imdbId: data.imdbId,
+            name: data.name,
+            quote: data.quote,
+            timestamp: data.timestamp,
+            uploader: data.uploader,
+            year: data.year
+          }
+          console.log(quoteId);
+          let quoteRef = db.collection("quote").doc(quoteId);
+          quoteRef
+          .set(obj)
+        })
+      })
+    },
     getQuote() {
       if (this.unsubscribe) {
         this.unsubscribe();
