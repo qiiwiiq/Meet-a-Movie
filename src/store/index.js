@@ -1,12 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import dayjs from "dayjs";
 import { apiGetFilm } from "@/api/api.js";
 import { db, storage } from '@/assets/firebase.js';
-
-const minYear = 1930;
-const currentYear = dayjs().year();
 
 Vue.use(Vuex);
 
@@ -194,13 +190,17 @@ export default new Vuex.Store({
       let pickOneRef = queryRef.where("id", '>=', key).limit(1);
       pickOneRef.get()
         .then(snapshot => {
-            if(snapshot.size > 0) {
-                snapshot.forEach(doc => {
-                  const movieObj = doc.data();
-                  dispatch("getFilm", movieObj);
-                });
-            }
-            else {
+          if(snapshot.size > 0) {
+              snapshot.forEach(doc => {
+                const movieObj = doc.data();
+                dispatch("getFilm", movieObj);
+              });
+          }
+          else {
+            if (year || genres.length > 0) {
+              // 篩選條件為空集合時
+              commit("setQuoteObj", {nodata: true});
+            } else {
               queryRef.where("id", '<', key).limit(1).get()
                 .then(snapshot => {
                   snapshot.forEach(doc => {
@@ -212,6 +212,7 @@ export default new Vuex.Store({
                     console.log('Error getting documents', err);
                 });
             }
+          }
         })
         .catch(err => {
             console.log('Error getting documents', err);
