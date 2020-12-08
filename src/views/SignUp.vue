@@ -83,8 +83,8 @@ import { mixin } from "@/utils/mixin";
 import { mailRegex } from "@/utils/regex";
 import { eliminateSuffixSpace } from "@/utils/utils";
 import Loading from "vue-loading-overlay";
-import PasswordInput from "@/components/passwordInput";
 import "vue-loading-overlay/dist/vue-loading.css";
+import PasswordInput from "@/components/passwordInput";
 
 export default {
   metaInfo: {

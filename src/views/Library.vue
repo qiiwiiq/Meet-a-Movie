@@ -149,6 +149,29 @@
             <div class="genre">{{ genre }}</div> 
           </div>
         </template>
+        <template v-slot:[`item.collect`]="{ item }">
+          <v-icon
+            v-if="isCollected(item, collections)"
+            class="mr-2"
+            color="#B71C1C"
+          >
+            mdi-heart
+          </v-icon>
+          <v-icon
+            v-else
+            class="mr-2"
+          >
+            mdi-heart-outline
+          </v-icon>
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-icon
+            class="mr-2"
+            @click="showIntro(item)"
+          >
+            mdi-clipboard-text-outline
+          </v-icon>
+        </template>
       </v-data-table>
     </div>
     <v-dialog v-model="newQuoteDialogOpened" width="550" persistent>
@@ -156,6 +179,7 @@
         <v-btn
           icon
           small
+          :ripple="false"
           class="close-btn"
           @click="newQuoteDialogOpened = false"
         >
@@ -167,13 +191,63 @@
         />
       </div>
     </v-dialog>
+    <v-dialog v-model="isIntroShown" max-width="900" persistent>
+      <v-card class="movie-detail-card pa-4">
+        <v-btn
+          icon
+          small
+          :ripple="false"
+          class="close-btn"
+          @click="closeIntro"
+        >
+          <v-icon>mdi-close-circle-outline</v-icon>
+        </v-btn>
+        <template v-if="movieObj">
+          <MovieDetail :movieObj="movieObj" class="mr-2">
+            <template v-slot:movieInfo>
+              <div class="d-flex justify-space-between">
+                <v-btn
+                  depressed
+                  class="text-none"
+                  tag="a"
+                  :small="windowWidth <= 560"
+                  :href="movieObj.trailer.link"
+                  target="_blank"
+                >
+                  Watch Trailer
+                </v-btn>
+                <CollectBtn
+                  :movieObj="movieObj"
+                />
+              </div>
+              <div class="quote text-center px-4 py-3 py-sm-6 flex-grow-1 d-flex justify-center align-center">
+                {{ movieObj.quote }}
+              </div>
+            </template>
+          </MovieDetail>
+        </template>
+        <template v-else>
+          <Loading
+            :active="!movieObj"
+            :is-full-page="false"
+            :color="mainColor"
+            loader="dots"
+          />
+        </template>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import CollectBtn from "@/components/buttons/collectBtn";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+import MovieDetail from "@/components/movieDetail";
 import QuoteEditor from "@/components/quoteEditor";
 import { mixin } from "@/utils/mixin";
+import { apiGetFilm } from "@/api/api.js";
 import { db } from '@/assets/firebase.js';
 
 export default {
@@ -182,6 +256,9 @@ export default {
     title: 'Library | Meet a Movie'
   },
   components: {
+    CollectBtn,
+    Loading,
+    MovieDetail,
     QuoteEditor,
   },
   data() {
@@ -223,12 +300,26 @@ export default {
           sortable: false,
           value: 'quote',
         },
+        {
+          text: 'Collect',
+          align: 'center',
+          sortable: false,
+          value: 'collect',
+        },
+        {
+          text: 'Actions',
+          align: 'center',
+          sortable: false,
+          value: 'actions',
+        },
       ],
       quotes: [],
+      isIntroShown: false,
+      movieObj: undefined
     }
   },
   computed: {
-    ...mapState(["isLogin", "user"]),
+    ...mapState(["isLogin", "user", "collections"]),
     yearFromOptions() {
       let options = [];
       const lastOption = this.filter.yearTo ? this.filter.yearTo : null;
@@ -287,9 +378,28 @@ export default {
         }
       },
       deep: true
+    },
+    collections() {
+      if (this.movieObj) {
+        const movieObjInCollections = this.collections.find(
+          (item) => item.quoteId === this.movieObj.quoteId
+        );
+        if (movieObjInCollections) {
+          this.movieObj.collectionId = movieObjInCollections.collectionId;
+          this.movieObj.listid = movieObjInCollections.listid;
+          this.movieObj.comments = movieObjInCollections.comments;
+        } else {
+          this.movieObj.collectionId = "";
+          this.movieObj.listid = "";
+          this.movieObj.comments = "";
+        }
+      }
     }
   },
   methods: {
+    isCollected(quoteObj, collections) {
+      return collections.some(item => item.quoteId === quoteObj.id)
+    },
     getQuote() {
       if (this.unsubscribe) {
         this.unsubscribe();
@@ -310,7 +420,7 @@ export default {
         queryRef = queryRef.where("genre", "array-contains-any", this.filter.genre);
       }
 
-      this.unsubscribe = queryRef.orderBy("year", "desc").limit(10)
+      this.unsubscribe = queryRef.orderBy("year", "desc")
         .onSnapshot((querySnapshot) => {
             this.quotes = [];
             querySnapshot.forEach((doc) => {
@@ -330,6 +440,51 @@ export default {
       this.filter.yearTo = null;
       this.filter.genre = [];
       this.filter.quote = "";
+    },
+    getMovieObj(quoteObj) {
+      const movieObjInCollections = this.collections.find(
+        (item) => item.quoteId === quoteObj.id
+      );
+
+      apiGetFilm(quoteObj.imdbId).then(
+        (res) => {
+          if (movieObjInCollections) {
+            this.movieObj = Object.assign(
+              {
+                collectionId: movieObjInCollections.collectionId,
+                quoteId: quoteObj.id,
+                quote: quoteObj.quote,
+                genre: quoteObj.genre,
+                listid: movieObjInCollections.listid,
+                comments: movieObjInCollections.comments,
+              },
+              {...res.data}
+            );
+          } else {
+            this.movieObj = Object.assign(
+              {
+                collectionId: "",
+                quoteId: quoteObj.id,
+                quote: quoteObj.quote,
+                genre: quoteObj.genre,
+                listid: "",
+                comments: "",
+              },
+              {...res.data}
+            );
+          }
+        },
+        () => {
+          console.log('err');
+        });
+    },
+    showIntro(item) {
+      this.getMovieObj(item);
+      this.isIntroShown = true;
+    },
+    closeIntro() {
+      this.isIntroShown = false;
+      this.movieObj = undefined;
     }
   }
 }
@@ -564,6 +719,23 @@ export default {
 
 .quote-dialog {
   position: relative;
+}
+
+.movie-detail-card {
+  position: relative;
+  min-height: 100px;
+
+  .quote {
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 20px;
+
+    @include respond(tab-port) {
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
 }
 
 .close-btn {
