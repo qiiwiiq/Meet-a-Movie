@@ -51,20 +51,29 @@
             ></v-select>
           </div>
           <div class="form-item-title">Movie Genre</div>
-          <div class="d-flex flex-wrap">
-            <div v-for="(genre, index) in genreOptions" :key="index" class="genre">
-              <v-checkbox
-                dense
-                v-model="selectedGenres"
-                :label="genre"
-                :value="genre"
-                :color="mainColor"
-                :ripple="false"
-                hide-details
-                class="mt-0 pt-0 mr-6"
-              ></v-checkbox>
-            </div>
-          </div>
+          <v-radio-group
+            v-model="selectedGenre"
+            dense
+            row
+            class="mt-0"
+          >
+            <v-radio
+              label="All"
+              value="All"
+              :color="mainColor"
+              :ripple="false"
+              class="genre mr-0"
+            ></v-radio>
+            <v-radio
+              v-for="(genre, index) in genreOptions"
+              :key="index"
+              :label="genre"
+              :value="genre"
+              :color="mainColor"
+              :ripple="false"
+              class="genre mr-0"
+            ></v-radio>
+          </v-radio-group>
         </div>
       </ActionsDialog>
     </v-dialog>
@@ -91,17 +100,17 @@ export default {
       filterSettingDialogOpened: false,
       yearFrom: null,
       yearTo: null,
-      selectedGenres: []
+      selectedGenre: "All"
     }
   },
   mounted() {
     this.$nextTick(() => {
       const lsYearFrom = +localStorage.getItem("yearFrom");
       const lsYearTo = +localStorage.getItem("yearTo");
-      const lsSelectedGenres = localStorage.getItem("selectedGenres");
+      const lsSelectedGenre = localStorage.getItem("selectedGenre");
       this.yearFrom = lsYearFrom ? lsYearFrom : null;
       this.yearTo = lsYearTo ? lsYearTo : null;
-      this.selectedGenres = lsSelectedGenres ? lsSelectedGenres.split(",") : [];
+      this.selectedGenre = lsSelectedGenre ? lsSelectedGenre : "All";
     });
   },
   computed: {
@@ -153,20 +162,20 @@ export default {
       this.$store.commit("setQuoteFilter", {
         yearFrom: this.yearFrom,
         yearTo: this.yearTo,
-        genres: this.selectedGenres
+        genre: this.selectedGenre
       });
     },
     reset() {
       this.yearFrom = null;
       this.yearTo = null;
-      this.selectedGenres = [];
+      this.selectedGenre = "All";
       localStorage.clear();
       this.commitQuoteFilterParams();
     },
     filter() {
       localStorage.setItem('yearFrom', this.yearFrom);
       localStorage.setItem('yearTo', this.yearTo);
-      localStorage.setItem('selectedGenres', this.selectedGenres);
+      localStorage.setItem('selectedGenre', this.selectedGenre);
       this.commitQuoteFilterParams();
       this.filterSettingDialogOpened = false;
     }

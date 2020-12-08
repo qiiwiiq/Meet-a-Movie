@@ -90,7 +90,7 @@ export default new Vuex.Store({
     quoteFilter: {
       yearFrom: null,
       yearTo: null,
-      genres: []
+      genre: "All"
     }
   },
   mutations: {
@@ -129,21 +129,21 @@ export default new Vuex.Store({
     updateIntroShownFlag (state, payload) {
       state.isIntroShown = payload;
     },
-    setQuoteFilter ({quoteFilter}, {yearFrom, yearTo, genres}) {
+    setQuoteFilter ({quoteFilter}, {yearFrom, yearTo, genre}) {
       quoteFilter.yearFrom = yearFrom;
       quoteFilter.yearTo = yearTo;
-      quoteFilter.genres = genres;
+      quoteFilter.genre = genre;
     }
   },
   actions: {
     initQuote ({ commit, dispatch }) {
       const lsYearFrom = +localStorage.getItem("yearFrom");
       const lsYearTo = +localStorage.getItem("yearTo");
-      const lsSelectedGenres = localStorage.getItem("selectedGenres");
+      const lsSelectedGenre = localStorage.getItem("selectedGenre");
       const yearFrom = lsYearFrom ? lsYearFrom : null;
       const yearTo = lsYearTo ? lsYearTo : null;
-      const genres = lsSelectedGenres ? lsSelectedGenres.split(",") : [];
-      commit("setQuoteFilter", { yearFrom, yearTo, genres });
+      const genre = lsSelectedGenre ? lsSelectedGenre : "All";
+      commit("setQuoteFilter", { yearFrom, yearTo, genre });
       dispatch("getQuote");
     },
     getQuote ({ commit, dispatch }) {
@@ -157,7 +157,7 @@ export default new Vuex.Store({
       const key = quoteRef.doc().id;
       const yearFrom = state.quoteFilter.yearFrom;
       const yearTo = state.quoteFilter.yearTo;
-      const genres = state.quoteFilter.genres;
+      const genre = state.quoteFilter.genre;
       let queryRef = quoteRef;
       
       if (yearFrom && yearTo) {
@@ -168,8 +168,8 @@ export default new Vuex.Store({
         queryRef = queryRef.where("year", 'in', years)
       }
 
-      if (genres.length > 0) {
-        queryRef = queryRef.where("genre", "array-contains-any", genres);
+      if (genre !== "All") {
+        queryRef = queryRef.where("genre", "array-contains", genre);
       }
       let pickOneRef = queryRef.where("id", '>=', key).limit(1);
       pickOneRef.get()
@@ -181,7 +181,7 @@ export default new Vuex.Store({
               });
           }
           else {
-            if (yearFrom || yearTo || genres.length > 0) {
+            if (yearFrom || yearTo || genre !== "All") {
               // 篩選條件為空集合時
               commit("setQuoteObj", {nodata: true});
             } else {
