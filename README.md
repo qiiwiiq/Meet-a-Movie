@@ -9,4 +9,4 @@ Try this app:
 - Upload the quote and the movie you loved
 - Copy quotes and share with your friends
 
-[Launch Demo](https://meet-a-movie.web.app/)
+[▶️ Launch Demo](https://meet-a-movie.web.app/)
