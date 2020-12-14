@@ -1,24 +1,12 @@
-# movie-picker
+# Meet a movie by a quote
 
-## Project setup
-```
-npm install
-```
+Wanna see a movie but have no idea what to see?  
+  
+Try this app:  
+- Randomly pick up a movie quote for you  
+- Filter the movies by publish years or by genres  
+- Create your own movie collection lists 
+- Upload the quote and the movie you loved
+- Copy quotes and share with your friends
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Launch Demo](https://meet-a-movie.web.app/)
