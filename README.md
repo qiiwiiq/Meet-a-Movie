@@ -1,4 +1,4 @@
-# Meet a movie by a quote
+# Meet a movie from a quote
 
 Wanna see a movie but have no idea what to see?  
   
