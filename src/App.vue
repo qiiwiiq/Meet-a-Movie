@@ -1,11 +1,10 @@
 <template>
   <v-app>
     <v-app-bar app dark height="56" class="navbar">
-      <div class="d-flex align-center">
-        <router-link to="/">
-          <v-img width="50" height="50" src="./assets/movie-film.png"></v-img>
+        <router-link to="/" class="app-logo d-flex align-center" tag="div">
+          <v-img width="40" height="40" src="./assets/movie-logo.png"></v-img>
+          <div class="app-title">Meet a Movie</div>
         </router-link>
-      </div>
 
       <v-spacer></v-spacer>
       <v-btn
@@ -186,6 +185,23 @@ export default {
     #555 90%,
     #444 100%
   );
+}
+
+.app-logo {
+  cursor: pointer;
+}
+
+.app-title {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 20px;
+  color: #FFF;
+  margin-left: 8px;
+  padding-top: 4px;
+
+  @include respond(tab-port) {
+    font-size: 16px;
+    line-height: 16px;
+  }
 }
 
 .main {
