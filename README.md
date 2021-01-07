@@ -10,3 +10,7 @@ Try this app:
 - Copy quotes and share with your friends
 
 [▶️ Launch Demo](https://meet-a-movie.web.app/)
+
+![Demo](public/img/demo-1.jpg)
+
+![Demo](public/img/demo-2.jpg)
