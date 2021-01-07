@@ -3,9 +3,9 @@
 Wanna see a movie but have no idea what to see?  
   
 Try this app:  
-- Randomly pick a movie quote for you  
+- Randomly pick a movie with a quote for you  
 - Filter the movies by publish years or by genres  
-- Create your own movie collection lists 
+- Sign up and create your own movie collection lists 
 - Upload the quote and the movie you loved
 - Copy quotes and share with your friends
 
