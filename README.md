@@ -1,5 +1,7 @@
 # Meet a movie from a quote
 
+### Intro
+
 Wanna see a movie but have no idea what to see?  
   
 Try this app: 
@@ -14,3 +16,18 @@ Try this app:
 [▶️ Launch Demo](https://meet-a-movie.web.app/)
 
 ![Demo](public/img/demo-1.jpg)
+
+### TechStacks
+- vue2
+- vuex
+- vue-router
+- vue-clipboard2
+- cookies
+- vuetify
+- scss
+- rwd (both desktop and mobile supported)
+- firebase authentication
+- firebase firestore (store quotes and user data)
+- firebase storage (store user photos)
+- firebase hosting
+- IMDB api (get movie infos)
