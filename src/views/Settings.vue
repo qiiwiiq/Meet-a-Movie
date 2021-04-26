@@ -5,14 +5,8 @@
         <div class="d-flex flex-column align-center">
           <v-hover v-slot:default="{ hover }">
             <div class="profile-image mt-2 mb-4">
-              <v-img
-                v-if="user.photo"
-                :src="user.photo"
-              />
-              <v-img
-                v-else
-                src="../assets/user-default.jpg"
-              />
+              <v-img v-if="user.photo" :src="user.photo" />
+              <v-img v-else src="../assets/user-default.jpg" />
               <v-btn
                 small
                 depressed
@@ -26,19 +20,16 @@
             </div>
           </v-hover>
           <div class="profile-name d-flex justify-center align-center mb-2">
-            <span class="ml-4 mr-2">{{ user.name || "Your Name" }}</span>
-            <v-btn
-              icon
-              small
-              @click="editNameDialogOpened = true"
-            >
+            <span class="ml-4 mr-2">{{ user.name || 'Your Name' }}</span>
+            <v-btn icon small @click="editNameDialogOpened = true">
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
           </div>
           <div class="profile-email mb-1">{{ user.email }}</div>
           <div v-if="user.signInMethod !== 'email'" class="profile-signin">
-            (sign in with 
-            <span class="profile-signin-method">{{ signInMethod }}</span>)
+            (sign in with
+            <span class="profile-signin-method">{{ signInMethod }}</span
+            >)
           </div>
         </div>
         <div class="profile-created">Joined at {{ formatTime(user.created) }}</div>
@@ -56,7 +47,7 @@
                   :placeholder="'Current Password'"
                   :height="40"
                   :clearFlag="clearFlag"
-                  @value="oldPassword = $event"
+                  v-model="oldPassword"
                   @updateClearFlag="clearFlag = $event"
                 />
                 <v-progress-linear
@@ -81,18 +72,10 @@
                   Check
                 </v-btn>
                 <template v-else>
-                  <v-icon
-                    v-if="validOldPassword"
-                    small
-                    :color="mainColor"
-                  >
+                  <v-icon v-if="validOldPassword" small :color="mainColor">
                     mdi-check-bold
                   </v-icon>
-                  <v-icon
-                    v-else
-                    small
-                    color="#CF0000"
-                  >
+                  <v-icon v-else small color="#CF0000">
                     mdi-close-thick
                   </v-icon>
                 </template>
@@ -103,7 +86,7 @@
               :placeholder="'New Password (at least 6 characters)'"
               :height="40"
               :clearFlag="clearFlag"
-              @value="password.new = $event"
+              v-model="password.new"
               @updateClearFlag="clearFlag = $event"
               class="mb-2"
             />
@@ -112,33 +95,23 @@
               :placeholder="'Confrim Password'"
               :height="40"
               :clearFlag="clearFlag"
-              @value="password.confirm = $event"
+              v-model="password.confirm"
               @updateClearFlag="clearFlag = $event"
             />
             <div class="input-invalid py-1">
               <div
                 v-if="
-                  (password.new && !validPassword) ||
-                    (password.confirm && !validPasswordConfirm)
+                  (password.new && !validPassword) || (password.confirm && !validPasswordConfirm)
                 "
               >
                 At least 6 characters
               </div>
-              <div
-                v-else-if="password.new && password.confirm && !samePasswords"
-              >
+              <div v-else-if="password.new && password.confirm && !samePasswords">
                 Password not match
               </div>
             </div>
           </div>
-          <v-btn
-            small
-            dark
-            depressed
-            :color="mainColor"
-            class="text-none ml-2"
-            @click="changePW"
-          >
+          <v-btn small dark depressed :color="mainColor" class="text-none ml-2" @click="changePW">
             Change Password
           </v-btn>
         </div>
@@ -146,8 +119,8 @@
           <div class="item-title">Delete Account</div>
           <v-divider></v-divider>
           <div class="item-desc mx-2 my-2">
-            Once you delete your account, all the data will be removed from database.
-            There is no going back. Please be certain.
+            Once you delete your account, all the data will be removed from database. There is no
+            going back. Please be certain.
           </div>
           <v-btn
             small
@@ -172,25 +145,25 @@
         @action2="updatePhoto"
       >
         <div class="px-6">
-            <div class="body-2 mb-4">
-              Select image from your device<br />
-              The image size should be smaller than 3 MB
+          <div class="body-2 mb-4">
+            Select image from your device<br />
+            The image size should be smaller than 3 MB
+          </div>
+          <div class="d-flex">
+            <div class="photo-uploader">
+              <ImageUploader
+                :defaultLogo="user.photo"
+                @setImage="setImage"
+                @resetImage="resetImage"
+              />
             </div>
-            <div class="d-flex">
-              <div class="photo-uploader">
-                <ImageUploader
-                  :defaultLogo="user.photo"
-                  @setImage="setImage"
-                  @resetImage="resetImage"
-                />
-              </div>
-              <div
-                v-if="photo && photo.size > 3000000"
-                class="caption pt-2 red--text text--lighten-2"
-              >
-                The image size is larger than 5 MB 
-              </div>
+            <div
+              v-if="photo && photo.size > 3000000"
+              class="caption pt-2 red--text text--lighten-2"
+            >
+              The image size is larger than 5 MB
             </div>
+          </div>
         </div>
       </ActionsDialog>
     </v-dialog>
@@ -242,18 +215,18 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/storage";
-import { mapState } from "vuex";
-import { mixin } from "@/utils/mixin";
-import ActionsDialog from "@/components/actionsDialog";
-import ImageUploader from "@/components/imageUploader";
-import PasswordInput from "@/components/passwordInput";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/storage';
+import { mapState } from 'vuex';
+import { mixin } from '@/utils/mixin';
+import ActionsDialog from '@/components/actionsDialog';
+import ImageUploader from '@/components/imageUploader';
+import PasswordInput from '@/components/passwordInput';
 
 export default {
   metaInfo: {
-    title: 'Settings | Meet a Movie'
+    title: 'Settings | Meet a Movie',
   },
   mixins: [mixin],
   components: {
@@ -263,29 +236,29 @@ export default {
   },
   data() {
     return {
-      photo: "",
-      username: "",
-      originUsername: "",
-      oldPassword: "",
+      photo: '',
+      username: '',
+      originUsername: '',
+      oldPassword: '',
       validOldPassword: false,
       isChecking: false,
       isOldPasswordChecked: false,
       password: {
-        new: "",
-        confirm: ""
+        new: '',
+        confirm: '',
       },
       clearFlag: false,
       editPhotoDialogOpened: false,
       editNameDialogOpened: false,
       delAccountDialogOpened: false,
       snackbar: false,
-      snackbarText: "",
-    }
+      snackbarText: '',
+    };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (!vm.isLogin) {
-        vm.$router.replace({ name: "SignIn" });
+        vm.$router.replace({ name: 'SignIn' });
       }
     });
   },
@@ -294,28 +267,24 @@ export default {
     this.originUsername = this.username;
   },
   computed: {
-    ...mapState(["isLogin", "user"]),
+    ...mapState(['isLogin', 'user']),
     signInMethod() {
       let result = '';
-      switch(this.user.signInMethod) {
-        case "fb":
-          result = "Facebook";
+      switch (this.user.signInMethod) {
+        case 'fb':
+          result = 'Facebook';
           break;
-        case "google":
-          result = "Google";
+        case 'google':
+          result = 'Google';
           break;
       }
       return result;
     },
     validPassword() {
-      return this.password.new && this.password.new.length >= 6
-        ? true
-        : false;
+      return this.password.new && this.password.new.length >= 6 ? true : false;
     },
     validPasswordConfirm() {
-      return this.password.confirm && this.password.confirm.length >= 6
-        ? true
-        : false;
+      return this.password.confirm && this.password.confirm.length >= 6 ? true : false;
     },
     samePasswords() {
       if (this.password.new && this.password.confirm) {
@@ -325,24 +294,29 @@ export default {
       }
     },
     isFormFilled() {
-      return this.oldPassword && this.validPassword && this.validPasswordConfirm && this.samePasswords ? true : false;
+      return this.oldPassword &&
+        this.validPassword &&
+        this.validPasswordConfirm &&
+        this.samePasswords
+        ? true
+        : false;
     },
   },
   watch: {
     isLogin(val) {
-      if (!val) this.$router.replace({ name: "SignIn" });
+      if (!val) this.$router.replace({ name: 'SignIn' });
     },
     user: {
       handler: function() {
         this.username = this.user.name;
         this.originUsername = this.username;
       },
-      deep: true
+      deep: true,
     },
     oldPassword() {
       this.validOldPassword = false;
       this.isOldPasswordChecked = false;
-    }
+    },
   },
   methods: {
     setImage(file) {
@@ -355,9 +329,10 @@ export default {
     updatePhoto() {
       let storageRef = firebase.storage().ref(`photo/${this.user.uid}`);
       if (this.photo) {
-        storageRef.put(this.photo)
-          .then(snapshot => {
-            this.$store.dispatch("dbUpdateUser", {
+        storageRef
+          .put(this.photo)
+          .then((snapshot) => {
+            this.$store.dispatch('dbUpdateUser', {
               uid: this.user.uid,
               obj: {
                 photoRef: snapshot.ref.location.path_,
@@ -367,26 +342,25 @@ export default {
           })
           .catch(() => {
             this.editPhotoDialogOpened = false;
-            this.snackbarText = "Something wrong";
+            this.snackbarText = 'Something wrong';
             this.snackbar = true;
-          })
-      } else {
-        storageRef.delete()
-          .then(() => {
-            this.$store.dispatch("dbUpdateUser", {
-              uid: this.user.uid,
-              obj: {
-                photoRef: "",
-              },
-            });
           });
+      } else {
+        storageRef.delete().then(() => {
+          this.$store.dispatch('dbUpdateUser', {
+            uid: this.user.uid,
+            obj: {
+              photoRef: '',
+            },
+          });
+        });
         this.editPhotoDialogOpened = false;
       }
     },
     updateUser() {
       if (this.username.length > 20) return;
       if (this.username !== this.originUsername) {
-        this.$store.dispatch("dbUpdateUser", {
+        this.$store.dispatch('dbUpdateUser', {
           uid: this.user.uid,
           obj: {
             name: this.username,
@@ -395,7 +369,7 @@ export default {
       }
       this.editNameDialogOpened = false;
     },
-    checkPW(action = "") {
+    checkPW(action = '') {
       const vm = this;
       vm.isChecking = true;
       firebase
@@ -412,8 +386,8 @@ export default {
           vm.isChecking = false;
           vm.isOldPasswordChecked = true;
           vm.validOldPassword = false;
-          if (error.code === "auth/wrong-password") {
-            vm.snackbarText = "Incorrect password";
+          if (error.code === 'auth/wrong-password') {
+            vm.snackbarText = 'Incorrect password';
             vm.snackbar = true;
           } else {
             vm.snackbarText = error.message;
@@ -423,55 +397,57 @@ export default {
     },
     changePW() {
       if (!this.isFormFilled) {
-        this.snackbarText = "Please fill in the form";
+        this.snackbarText = 'Please fill in the form';
         this.snackbar = true;
         return;
       }
 
       if (this.oldPassword === this.password.new) {
-        this.snackbarText = "New password is the same as current password. Please check.";
+        this.snackbarText = 'New password is the same as current password. Please check.';
         this.snackbar = true;
         return;
       }
 
       if (!this.validOldPassword) {
-        this.checkPW('changePW')
+        this.checkPW('changePW');
         return;
       }
 
       const user = firebase.auth().currentUser;
-      user.updatePassword(this.password.new)
+      user
+        .updatePassword(this.password.new)
         .then(() => {
-          this.snackbarText = "Password updated";
+          this.snackbarText = 'Password updated';
           this.snackbar = true;
-          this.oldPassword = "";
-          this.password.new = "";
-          this.password.confirm = "";
+          this.oldPassword = '';
+          this.password.new = '';
+          this.password.confirm = '';
           this.clearFlag = true;
         })
         .catch(() => {
-          this.snackbarText = "Password not updated. Please try again.";
+          this.snackbarText = 'Password not updated. Please try again.';
           this.snackbar = true;
         });
     },
     delAccount() {
-      this.$store.dispatch("dbDeleteUser", {
+      this.$store.dispatch('dbDeleteUser', {
         uid: this.user.uid,
-        obj: this.user
+        obj: this.user,
       });
       // TODO: delete user's collection lists
       // TODO: delete user's collections
       const user = firebase.auth().currentUser;
-      user.delete()
-      .then(() => {
-        this.logout();
-      })
-      .catch(() => {
-        console.log("something wrong");
-      });
-    }
-  }
-}
+      user
+        .delete()
+        .then(() => {
+          this.logout();
+        })
+        .catch(() => {
+          console.log('something wrong');
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -625,7 +601,7 @@ export default {
 
 .show-btns {
   background-color: #272727 !important;
-  color:  #FFF !important;
+  color: #fff !important;
 }
 
 .photo-uploader {
@@ -644,7 +620,6 @@ export default {
     margin: 0 auto;
   }
 }
-  
 
 .user-input {
   font-size: 14px;

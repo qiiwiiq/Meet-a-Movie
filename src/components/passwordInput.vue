@@ -4,7 +4,7 @@
       :value="password"
       @input="onInput"
       class="user-input"
-      :style="{height: height + 'px'}"
+      :style="{ height: height + 'px' }"
       :type="showPW ? 'text' : 'password'"
       :placeholder="placeholder"
       @keyup.enter="onEnter"
@@ -13,10 +13,10 @@
       icon
       v-if="password"
       class="reveal-pw"
-      :style="{top: (height - 36) / 2 + 'px'}"
+      :style="{ top: (height - 36) / 2 + 'px' }"
       @click="showPW = !showPW"
     >
-      <v-icon>mdi-{{ showPW ? "eye-off" : "eye" }}</v-icon>
+      <v-icon>mdi-{{ showPW ? 'eye-off' : 'eye' }}</v-icon>
     </v-btn>
   </div>
 </template>
@@ -24,45 +24,49 @@
 <script>
 export default {
   props: {
+    value: {
+      type: String,
+      default: '',
+    },
     placeholder: {
       type: String,
-      default: ""
+      default: '',
     },
     height: {
       type: Number,
-      default: 50
+      default: 50,
     },
     clearFlag: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      password: "",
-      showPW: false
-    }
+      password: this.value,
+      showPW: false,
+    };
   },
   watch: {
     clearFlag(val) {
       if (val) {
-        this.password = "";
+        this.password = '';
       }
-    }
+    },
   },
   methods: {
     onInput(e) {
       this.password = e.target.value;
-      this.$emit("value", this.password);
-      if (this.password === "") {
-        this.$emit("updateClearFlag", false);
+      this.$emit('input', this.password);
+      if (this.password === '') {
+        this.$emit('updateClearFlag', false);
       }
     },
     onEnter() {
-      this.$emit("onEnter")
-    }
-  }
-}
+      this.$emit('onEnter');
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

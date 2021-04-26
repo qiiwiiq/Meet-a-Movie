@@ -1,12 +1,7 @@
 <template>
   <div class="page-sign-in d-flex justify-center align-center">
     <v-card class="card-sign-in">
-      <Loading
-        :active="loading"
-        :is-full-page="false"
-        :color="mainColor"
-        loader="dots"
-      />
+      <Loading :active="loading" :is-full-page="false" :color="mainColor" loader="dots" />
       <div class="title-sign-in text-center mb-4">Sign In</div>
       <div v-if="!isEmailSignin" class="d-flex flex-column">
         <v-btn
@@ -59,7 +54,7 @@
         />
         <PasswordInput
           :placeholder="'Password'"
-          @value="user.password = $event"
+          v-model="user.password"
           @onEnter="signInEmail"
           class="input-pw"
         />
@@ -86,18 +81,8 @@
         </div>
       </div>
     </v-card>
-    <v-dialog
-      v-model="forgotPWDialogOpened"
-      width="400"
-      class="dialog-reset-pw"
-      persistent
-    >
-      <Loading
-        :active="loading"
-        :is-full-page="false"
-        :color="mainColor"
-        loader="dots"
-      />
+    <v-dialog v-model="forgotPWDialogOpened" width="400" class="dialog-reset-pw" persistent>
+      <Loading :active="loading" :is-full-page="false" :color="mainColor" loader="dots" />
       <ActionsDialog
         :showCloseBtn="true"
         :actionTitle="'Password Reset'"
@@ -121,37 +106,32 @@
         </div>
       </ActionsDialog>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar"
-      color="blue-grey"
-      rounded="pill"
-      :timeout="6000"
-    >
+    <v-snackbar v-model="snackbar" color="blue-grey" rounded="pill" :timeout="6000">
       <div class="text-center">{{ snackbarText }}</div>
     </v-snackbar>
   </div>
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-import { mixin } from "@/utils/mixin";
-import { mailRegex } from "@/utils/regex";
-import { eliminateSuffixSpace } from "@/utils/utils";
-import { mapState } from "vuex";
-import ActionsDialog from "@/components/actionsDialog";
-import Loading from "vue-loading-overlay";
-import PasswordInput from "@/components/passwordInput";
-import "vue-loading-overlay/dist/vue-loading.css";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { mixin } from '@/utils/mixin';
+import { mailRegex } from '@/utils/regex';
+import { eliminateSuffixSpace } from '@/utils/utils';
+import { mapState } from 'vuex';
+import ActionsDialog from '@/components/actionsDialog';
+import Loading from 'vue-loading-overlay';
+import PasswordInput from '@/components/passwordInput';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   metaInfo: {
-    title: 'Sign In | Meet a Movie'
+    title: 'Sign In | Meet a Movie',
   },
   components: {
     ActionsDialog,
     Loading,
-    PasswordInput
+    PasswordInput,
   },
   mixins: [mixin],
   data() {
@@ -159,17 +139,17 @@ export default {
       loading: false,
       isEmailSignin: false,
       user: {
-        email: "",
-        password: "",
+        email: '',
+        password: '',
       },
-      email: "",
+      email: '',
       forgotPWDialogOpened: false,
       snackbar: false,
-      snackbarText: "",
+      snackbarText: '',
     };
   },
   computed: {
-    ...mapState(["isLogin", "quoteObj"]),
+    ...mapState(['isLogin', 'quoteObj']),
     safeUserEmail() {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);
@@ -181,22 +161,22 @@ export default {
   watch: {
     user: {
       handler: function() {
-        this.snackbarText = "";
+        this.snackbarText = '';
         this.snackbar = false;
       },
       deep: true,
     },
     isEmailSignin(val) {
       if (!val) {
-        this.user.email = "";
-        this.user.password = "";
+        this.user.email = '';
+        this.user.password = '';
       }
-    }
+    },
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       if (vm.isLogin) {
-        vm.$router.replace({ name: "Home" });
+        vm.$router.replace({ name: 'Home' });
       }
     });
   },
@@ -205,10 +185,10 @@ export default {
       const vm = this;
       let provider;
       switch (signInMethod) {
-        case "fb":
+        case 'fb':
           provider = new firebase.auth.FacebookAuthProvider();
           break;
-        case "google":
+        case 'google':
           provider = new firebase.auth.GoogleAuthProvider();
           break;
       }
@@ -224,12 +204,12 @@ export default {
             name: user.displayName,
             email: user.email,
             photoURL: user.photoURL,
-            photoRef: "",
+            photoRef: '',
             uid: user.uid,
           };
-          vm.$cookies.set("uid", user.uid);
-          vm.$store.dispatch("init", payload);
-          vm.$router.replace({ name: "Home" });
+          vm.$cookies.set('uid', user.uid);
+          vm.$store.dispatch('init', payload);
+          vm.$router.replace({ name: 'Home' });
         })
         .catch(function(error) {
           console.log(error);
@@ -238,7 +218,7 @@ export default {
     signInEmail() {
       const vm = this;
       if (!this.isFormFilled) {
-        this.snackbarText = "Please fill in the form";
+        this.snackbarText = 'Please fill in the form';
         this.snackbar = true;
         return;
       }
@@ -251,18 +231,18 @@ export default {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod: "email",
-            token: "",
-            name: "",
+            signInMethod: 'email',
+            token: '',
+            name: '',
             email: user.email,
-            photoURL: "",
-            photoRef: "",
+            photoURL: '',
+            photoRef: '',
             uid: user.uid,
           };
-          vm.$cookies.set("uid", user.uid);
-          vm.$store.dispatch("init", payload);
+          vm.$cookies.set('uid', user.uid);
+          vm.$store.dispatch('init', payload);
           vm.loading = false;
-          vm.$router.replace({ name: "Home" });
+          vm.$router.replace({ name: 'Home' });
         })
         .catch(function(error) {
           vm.loading = false;
@@ -275,23 +255,24 @@ export default {
 
       if (isValidEmail) {
         firebase
-        .auth()
-        .sendPasswordResetEmail(this.email)
-        .then(() => {
-          this.snackbarText = "Email sent!";
-          this.snackbar = true;
-          this.forgotPWDialogOpened = false;
-        }).catch((error) => {
-          this.snackbarText = "Something wrong happened.";
-          this.snackbar = true;
-          console.log(error);
-          this.forgotPWDialogOpened = false;
-        });
+          .auth()
+          .sendPasswordResetEmail(this.email)
+          .then(() => {
+            this.snackbarText = 'Email sent!';
+            this.snackbar = true;
+            this.forgotPWDialogOpened = false;
+          })
+          .catch((error) => {
+            this.snackbarText = 'Something wrong happened.';
+            this.snackbar = true;
+            console.log(error);
+            this.forgotPWDialogOpened = false;
+          });
       } else {
-        this.snackbarText = "Please provide correct email";
+        this.snackbarText = 'Please provide correct email';
         this.snackbar = true;
       }
-    }
+    },
   },
 };
 </script>
@@ -332,7 +313,7 @@ export default {
 .divider-text span:before,
 .divider-text span:after {
   border-top: 0.5px solid #555555;
-  content: "";
+  content: '';
   position: absolute;
   height: 5px;
   top: 50%;

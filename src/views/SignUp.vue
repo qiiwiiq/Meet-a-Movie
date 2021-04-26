@@ -1,12 +1,7 @@
 <template>
   <div class="page-sign-up d-flex flex-column align-center">
     <v-card class="card-sign-up d-flex flex-column pa-4">
-      <Loading
-        :active="loading"
-        :is-full-page="false"
-        :color="mainColor"
-        loader="dots"
-      />
+      <Loading :active="loading" :is-full-page="false" :color="mainColor" loader="dots" />
       <div class="title-sign-up text-center mb-6">Create New Account</div>
       <div class="section">
         <input
@@ -24,37 +19,28 @@
       </div>
       <PasswordInput
         :placeholder="'Password (at least 6 characters)'"
-        @value="user.password = $event"
+        v-model="user.password"
         @onEnter="signup"
         class="input-pw"
       />
       <PasswordInput
         :placeholder="'Confirm Password'"
-        @value="user.passwordConfirm = $event"
+        v-model="user.passwordConfirm"
         @onEnter="signup"
       />
       <div class="input-invalid pl-2 mb-1">
         <div
           v-if="
-            (user.password && !validPassword) ||
-              (user.passwordConfirm && !validPasswordConfirm)
+            (user.password && !validPassword) || (user.passwordConfirm && !validPasswordConfirm)
           "
         >
           At least 6 characters
         </div>
-        <div
-          v-else-if="user.password && user.passwordConfirm && !samePasswords"
-        >
+        <div v-else-if="user.password && user.passwordConfirm && !samePasswords">
           Password not match
         </div>
       </div>
-      <v-btn
-        dark
-        depressed
-        :color="mainColor"
-        class="btn-sign-up mb-4"
-        @click="signup"
-      >
+      <v-btn dark depressed :color="mainColor" class="btn-sign-up mb-4" @click="signup">
         Sign Up
       </v-btn>
       <div class="signin mb-2">
@@ -64,51 +50,46 @@
         </router-link>
       </div>
     </v-card>
-    <v-snackbar
-      v-model="snackbar"
-      color="blue-grey"
-      rounded="pill"
-      :timeout="-1"
-    >
+    <v-snackbar v-model="snackbar" color="blue-grey" rounded="pill" :timeout="-1">
       <div class="text-center">{{ snackbarText }}</div>
     </v-snackbar>
   </div>
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-import { mapState } from "vuex";
-import { mixin } from "@/utils/mixin";
-import { mailRegex } from "@/utils/regex";
-import { eliminateSuffixSpace } from "@/utils/utils";
-import Loading from "vue-loading-overlay";
-import "vue-loading-overlay/dist/vue-loading.css";
-import PasswordInput from "@/components/passwordInput";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { mapState } from 'vuex';
+import { mixin } from '@/utils/mixin';
+import { mailRegex } from '@/utils/regex';
+import { eliminateSuffixSpace } from '@/utils/utils';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import PasswordInput from '@/components/passwordInput';
 
 export default {
   metaInfo: {
-    title: 'Sign Up | Meet a Movie'
+    title: 'Sign Up | Meet a Movie',
   },
   components: {
     Loading,
-    PasswordInput
+    PasswordInput,
   },
   mixins: [mixin],
   data() {
     return {
       loading: false,
       user: {
-        email: "",
-        password: "",
-        passwordConfirm: "",
+        email: '',
+        password: '',
+        passwordConfirm: '',
       },
       snackbar: false,
-      snackbarText: "",
+      snackbarText: '',
     };
   },
   computed: {
-    ...mapState(["quoteObj"]),
+    ...mapState(['quoteObj']),
     safeUserEmail() {
       // eliminate suffix space. Ex: 'a@b.c ' => 'a@b.c'
       return eliminateSuffixSpace(this.user.email);
@@ -120,14 +101,10 @@ export default {
       return this.validEmail && this.user.password ? true : false;
     },
     validPassword() {
-      return this.user.password && this.user.password.length >= 6
-        ? true
-        : false;
+      return this.user.password && this.user.password.length >= 6 ? true : false;
     },
     validPasswordConfirm() {
-      return this.user.passwordConfirm && this.user.passwordConfirm.length >= 6
-        ? true
-        : false;
+      return this.user.passwordConfirm && this.user.passwordConfirm.length >= 6 ? true : false;
     },
     samePasswords() {
       if (this.user.password && this.user.passwordConfirm) {
@@ -148,7 +125,7 @@ export default {
   watch: {
     user: {
       handler: function() {
-        this.snackbarText = "";
+        this.snackbarText = '';
         this.snackbar = false;
       },
       deep: true,
@@ -158,7 +135,7 @@ export default {
     signup() {
       const vm = this;
       if (!this.isFormFilled) {
-        this.snackbarText = "Please fill in the form";
+        this.snackbarText = 'Please fill in the form';
         this.snackbar = true;
         return;
       }
@@ -173,18 +150,18 @@ export default {
           const user = result.user;
           let payload = {
             isNewUser: result.additionalUserInfo.isNewUser,
-            signInMethod: "email",
-            token: "",
-            name: "",
+            signInMethod: 'email',
+            token: '',
+            name: '',
             email: user.email,
-            photoURL: "",
-            photoRef: "",
+            photoURL: '',
+            photoRef: '',
             uid: user.uid,
           };
-          vm.$cookies.set("uid", user.uid);
-          vm.$store.dispatch("init", payload);
+          vm.$cookies.set('uid', user.uid);
+          vm.$store.dispatch('init', payload);
           vm.loading = false;
-          vm.$router.replace({ name: "Home" });
+          vm.$router.replace({ name: 'Home' });
         })
         .catch((error) => {
           vm.loading = false;
